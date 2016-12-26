@@ -958,7 +958,8 @@ class BookManagementApiController extends Controller
         $params["Timestamp"] = gmdate("Y-m-d\TH:i:s\Z");
         $params["Version"] = $amazonApiInfo['version'];
         $params["Power"] = "binding:hardcover or library or paperback";
-
+        $params['Condition'] = "New";
+        $params['MerchantId'] = 'All';
 
         return array(
             'apiInfo' => $apiInfo,
