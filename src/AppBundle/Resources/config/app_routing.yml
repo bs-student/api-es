@@ -680,7 +680,3 @@ clear_public_database_directory:
 #    path: /get_db_backup
 #    defaults:  {_controller: AppBundle:DBManagement:getDatabaseBackup}
 #    methods: [GET]
-get_amazon_prices:
-    path: /get_amazon_prices
-    defaults:  {_controller: AppBundle:DBManagement:getAmazonPrices}
-    methods: [GET]

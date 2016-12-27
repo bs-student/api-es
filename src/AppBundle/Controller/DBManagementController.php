@@ -10,7 +10,6 @@ namespace AppBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use FOS\UserBundle\Model\UserInterface;
 use FOS\UserBundle\Controller\ChangePasswordController as BaseController;
@@ -147,8 +146,7 @@ class DBManagementController extends Controller
 
     }
 
-    public function addBookDealsFromOldToNewAction()
-    {
+    public function addBookDealsFromOldToNewAction(){
         $em = $this->getDoctrine()->getManager();
         $connection = $em->getConnection();
 
@@ -229,8 +227,7 @@ class DBManagementController extends Controller
         die();
     }
 
-    public function addContactsFromOldToNewAction()
-    {
+    public function addContactsFromOldToNewAction(){
         $em = $this->getDoctrine()->getManager();
         $connection = $em->getConnection();
 
@@ -262,8 +259,7 @@ class DBManagementController extends Controller
         die();
     }
 
-    public function addMessagesFromOldToNewAction()
-    {
+    public function addMessagesFromOldToNewAction(){
         $em = $this->getDoctrine()->getManager();
         $connection = $em->getConnection();
 
@@ -292,8 +288,7 @@ class DBManagementController extends Controller
         die();
     }
 
-    public function getBookImagesFromAmazonAction()
-    {
+    public function getBookImagesFromAmazonAction(){
         $fileDir = '/../web/bookImages/';
         $fileNameDir = '/bookImages/';
         $fileDirHost = $this->container->getParameter('kernel.root_dir');
@@ -311,16 +306,16 @@ class DBManagementController extends Controller
 
 //        $query = 'UPDATE books SET book_image = CASE';
 
-        foreach ($result as $row) {
-            if ($row['book_image'] == null) {
+        foreach($result as $row){
+            if($row['book_image']==null){
                 //Book Image Not Found
-                $row['book_image'] = $fileNameDir . "no_image.jpg";
+                $row['book_image'] = $fileNameDir."no_image.jpg";
 
                 var_dump(">>>>>>>>>>>>>>>>>>>>>>>>>>>>");
                 echo "<br/>";
                 var_dump($row['book_image']);
                 echo "<br/>";
-            } else {
+            }else{
                 //Curl for Image
                 $ch = curl_init();
                 curl_setopt($ch, CURLOPT_URL, $row['book_image']);
@@ -328,13 +323,13 @@ class DBManagementController extends Controller
                 $imageOutput = curl_exec($ch);
                 curl_close($ch);
 
-                if (strpos($imageOutput, 'Not Found') !== false || $imageOutput == '') {
+                if(strpos($imageOutput,'Not Found')!==false || $imageOutput==''){
                     //No Image Found
-                    $row['book_image'] = $fileNameDir . "no_image.jpg";
+                    $row['book_image'] = $fileNameDir."no_image.jpg";
 
                     var_dump(">>>>>>>>>>>>>>>>>>>>>>>>>>>>");
                     echo "<br/>";
-                } else {
+                }else{
 
                     //Image Found
                     $fileSaveName = gmdate("Y-d-m_h_i_s_") . rand(0, 99999999) . ".jpg";
@@ -349,7 +344,7 @@ class DBManagementController extends Controller
             }
 
             $fa = fopen($fileDirHost . $fileDir . "file.txt", 'a+');
-            fwrite($fa, $row['id'] . "," . $row['book_image'] . "\r\n");
+            fwrite($fa,$row['id'].",".$row['book_image']."\r\n");
             fclose($fa);
         }
 
@@ -359,8 +354,7 @@ class DBManagementController extends Controller
     }
 
 
-    public function updateBookTableForPicturesAction()
-    {
+    public function updateBookTableForPicturesAction(){
         $fileDir = '/../web/bookImages/';
         $fileDirHost = $this->container->getParameter('kernel.root_dir');
 
@@ -368,27 +362,27 @@ class DBManagementController extends Controller
 
         $query = 'UPDATE books SET book_image = CASE <br/>';
 
-        while (!feof($fa)) {
+        while(! feof($fa))
+        {
             $line = fgets($fa);
-            $id = substr($line, 0, strpos($line, ","));
-            $bookImage = substr($line, strpos($line, ",") + 1, strpos($line, "\r\n") - 1);
+            $id = substr($line,0,strpos($line, ","));
+            $bookImage =  substr($line,strpos($line, ",")+1,strpos($line, "\r\n")-1);
 //            var_dump($id);
 //            var_dump($bookImage);
 
-            $query .= ' WHEN id = ' . $id . ' THEN "' . $bookImage . '" <br/>';
+            $query.= ' WHEN id = '.$id.' THEN "'.$bookImage.'" <br/>';
 
         }
-        $query .= '<br/> ELSE book_image <br/>
+        $query.='<br/> ELSE book_image <br/>
             END;';
-        echo($query);
-        die();
+       echo($query);
+       die();
     }
 
-    public function getImagesFromAmazonAction()
-    {
+    public function getImagesFromAmazonAction(){
 
 
-        $data = file_get_contents('./assets/books.json');
+        $data = file_get_contents ('./assets/books.json');
         $json = json_decode($data, TRUE);
 
 
@@ -399,22 +393,24 @@ class DBManagementController extends Controller
         $amazonCredentials['params']["ResponseGroup"] = "Images";
 
 
-        foreach ($json as $row) {
-            if ($row['book_image'] != "/bookImages/no_image.jpg") {
+
+
+        foreach( $json as $row ){
+            if($row['book_image']!="/bookImages/no_image.jpg"){
                 $amazonCredentials['params']["ItemId"] = $row['book_isbn10'];
                 $getUrl = $this->_getUrlWithSignature($amazonCredentials);
 
                 $ch = curl_init();
                 curl_setopt($ch, CURLOPT_URL, $getUrl);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-                $xmlOutput = curl_exec($ch);
+                $xmlOutput  = curl_exec($ch);
                 curl_close($ch);
                 $booksLargeImage = $this->_parseMultipleBooksAmazonXmlResponse($xmlOutput);
-                if ($booksLargeImage) {
+                if($booksLargeImage){
 
 
                     $fa = fopen("./bookImages/new/file.txt", 'a+');
-                    fwrite($fa, $row['id'] . "===" . $row['book_image'] . "===" . $booksLargeImage . "\r\n");
+                    fwrite($fa,$row['id']."===".$row['book_image']."===".$booksLargeImage."\r\n");
                     fclose($fa);
 
 //                    //Curl for Image
@@ -445,16 +441,16 @@ class DBManagementController extends Controller
 //                    }
 
 
-                } else {
+                }else{
                     $fk = fopen("./bookImages/new/file_could_not_get_link.txt", 'a+');
-                    fwrite($fk, $row['id'] . "===" . $row['book_isbn10'] . "===" . $row['book_image'] . "\r\n");
+                    fwrite($fk,$row['id']."===".$row['book_isbn10']."===".$row['book_image']."\r\n");
                     fclose($fk);
 
                 }
 
-            } else {
+            }else{
                 $fy = fopen("./bookImages/new/file_was_not_there.txt", 'a+');
-                fwrite($fy, $row['id'] . "===" . $row['book_isbn10'] . " = " . $row['book_image'] . "\r\n");
+                fwrite($fy,$row['id']."===".$row['book_isbn10']." = ".$row['book_image']."\r\n");
                 fclose($fy);
             }
         }
@@ -469,8 +465,7 @@ class DBManagementController extends Controller
         die();
     }
 
-    public function getFailedImageLinkAction()
-    {
+    public function getFailedImageLinkAction(){
 
 
         $fa = fopen("./assets/file_could_not_get_link_test.txt", 'r');
@@ -480,12 +475,13 @@ class DBManagementController extends Controller
 
         $amazonCredentials['params']["ResponseGroup"] = "Images";
 
-        while (!feof($fa)) {
+        while(! feof($fa))
+        {
             $line = fgets($fa);
-            $array = explode("===", $line);
+            $array = explode("===",$line);
 
 
-            if (count($array) == 3) {
+            if(count($array)==3){
 
                 $amazonCredentials['params']["ItemId"] = $array[1];
                 $getUrl = $this->_getUrlWithSignature($amazonCredentials);
@@ -493,27 +489,30 @@ class DBManagementController extends Controller
                 $ch = curl_init();
                 curl_setopt($ch, CURLOPT_URL, $getUrl);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-                $xmlOutput = curl_exec($ch);
+                $xmlOutput  = curl_exec($ch);
                 curl_close($ch);
 
 
                 $booksLargeImage = $this->_parseMultipleBooksAmazonXmlResponse($xmlOutput);
-                if ($booksLargeImage) {
+                if($booksLargeImage){
                     $fx = fopen("./assets/file_newly_link_found.txt", 'a+');
-                    fwrite($fx, $array[0] . "===" . substr($array[2], 0, strlen($array[2]) - 1) . "===" . $booksLargeImage . "\r\n");
+                    fwrite($fx,$array[0]."===".substr($array[2],0,strlen($array[2])-1)."===".$booksLargeImage."\r\n");
                     fclose($fx);
-                } else {
+                }else{
                     $fk = fopen("./assets/file_newly_link_not_found.txt", 'a+');
-                    fwrite($fk, $array[0] . "===" . $array[1] . "===" . substr($array[2], 0, strlen($array[2]) - 1) . "\r\n");
+                    fwrite($fk,$array[0]."===".$array[1]."===".substr($array[2],0,strlen($array[2])-1)."\r\n");
                     fclose($fk);
 
                 }
 
-            } else {
+            }else{
                 $fw = fopen("./assets/file_newly_link_tried_asin_not_found.txt", 'a+');
-                fwrite($fw, $array[0] . "===" . $array[1] . "===" . substr($array[2], 0, strlen($array[2]) - 1) . "\r\n");
+                fwrite($fw,$array[0]."===".$array[1]."===".substr($array[2],0,strlen($array[2])-1)."\r\n");
                 fclose($fw);
             }
+
+
+
 
 
         }
@@ -521,6 +520,7 @@ class DBManagementController extends Controller
 
         die();
     }
+
 
 
     public function _getAmazonSearchParams()
@@ -544,9 +544,7 @@ class DBManagementController extends Controller
         $params["Timestamp"] = gmdate("Y-m-d\TH:i:s\Z");
         $params["Version"] = $amazonApiInfo['version'];
         $params["Power"] = "binding:hardcover or library or paperback";
-        $params['Condition'] = "New";
 
-        $params['MerchantId'] = 'All';
 
         return array(
             'apiInfo' => $apiInfo,
@@ -588,143 +586,45 @@ class DBManagementController extends Controller
         $fileContents = trim(str_replace('"', "'", $fileContents));
         $simpleXml = simplexml_load_string($fileContents);
 
-        echo "<pre>";
-        print_r(($simpleXml));
-        echo "</pre>";
-        die();
+        var_dump( (string)$simpleXml)."<br/>";
 
-        if (!empty($simpleXml->Items)) {
+        if($simpleXml!=null){
 
-            if (!empty($simpleXml->Items->Item)) {
+            if($simpleXml->Items!=null){
 
-                foreach ($simpleXml->Items->Item as $item) {
-
-                    if (!empty($item->Offers)) {
-
-                        if (!empty($item->Offers->Offer)) {
-
-                            if (!empty($item->Offers->Offer->OfferListing)) {
-
-                                if (!empty($item->Offers->Offer->OfferListing->Price)) {
-
-                                    if (!empty($item->Offers->Offer->OfferListing->Price->FormattedPrice)) {
-
-                                        return substr((string)$item->Offers->Offer->OfferListing->Price->FormattedPrice, 1);
-//                                                echo "<pre>";
-//                                                print_r(substr((string)$item->Offers->Offer->OfferListing->Price->FormattedPrice,1));
-//
-//                                                die();
-                                    } else {
-                                        continue;
-                                    }
-                                } else {
-                                    continue;
-                                }
-                            } else {
-
-                                continue;
-                            }
-                        } else {
-                            continue;
-                        }
-                    } else {
-                        continue;
-                    }
-                }
-            } else {
-
-                return false;
-            }
-        } else {
-            return false;
-        }
-        return false;
-//        echo "<pre>";
-//        print_r($simpleXml);
-//        echo "</pre>";
-//        die();
-//        $item =$simpleXml->Items->Item->OfferSummary->LowestNewPrice->FormattedPrice;
-
-
-        if ($simpleXml != null) {
-
-            if ($simpleXml->Items != null) {
-
-                if ($simpleXml->Items->Item != null) {
-
-                    if ($simpleXml->Items->Item->OfferSummary != null) {
-                        echo "<pre>";
-                        print_r($simpleXml->Items);
-                        echo "</pre>";
-                        die();
-                        if ($simpleXml->Items->Item->OfferSummary->LowestNewPrice != null) {
-
-                            if ($simpleXml->Items->Item->OfferSummary->FormattedPrice != null) {
-                                $price = $simpleXml->Items->Item->OfferSummary->FormattedPrice;
-                                var_dump($price);
-                                die();
-                                return (substr((string)$price[0], 1));
-                            } else {
-                                return false;
-                            }
-                        } else {
-                            return false;
-                        }
-                    } else {
+                if($simpleXml->Items->Item!=null){
+                    if($simpleXml->Items->Item->LargeImage!=null){
+                        return((string)$simpleXml->Items->Item->LargeImage->URL);
+                    }else{
                         return false;
                     }
-                } else {
+                }else{
                     return false;
                 }
-            } else {
+            }else{
                 return false;
             }
 
-        } else {
+        }else{
             return false;
         }
-
-
-//        return (substr((string)$item[0],1));
-
-
-//        if($simpleXml!=null){
-//
-//            if($simpleXml->Items!=null){
-//
-//                if($simpleXml->Items->Item!=null){
-//                    if($simpleXml->Items->Item->LargeImage!=null){
-//                        return((string)$simpleXml->Items->Item->LargeImage->URL);
-//                    }else{
-//                        return false;
-//                    }
-//                }else{
-//                    return false;
-//                }
-//            }else{
-//                return false;
-//            }
-//
-//        }else{
-//            return false;
-//        }
 
     }
 
 
-    public function getRealImagesFromAmazonAction()
-    {
+    public function getRealImagesFromAmazonAction(){
         $fa = fopen("./assets/file_test.txt", 'r');
 
 
-        while (!feof($fa)) {
+        while(! feof($fa))
+        {
             $line = fgets($fa);
-            $array = explode("===", $line);
+            $array = explode("===",$line);
 
 
-            if (count($array) == 3) {
+            if(count($array)==3){
 
-                $link = (substr($array[2], 0, strlen($array[2]) - 2));
+                $link = (substr($array[2],0,strlen($array[2])-2));
 
 //                Curl for Image
                 $ch = curl_init();
@@ -732,7 +632,7 @@ class DBManagementController extends Controller
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
                 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
 
-                curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                curl_setopt($ch,CURLOPT_HTTPHEADER,array(
                     'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.143 Safari/537.36',
                     'Accept-Encoding: gzip, deflate, sdch',
                     'Accept-Language: en-US,en;q=0.8',
@@ -745,24 +645,24 @@ class DBManagementController extends Controller
                 $imageOutput = curl_exec($ch);
                 curl_close($ch);
 
-                if (strpos($imageOutput, 'Not Found') !== false || $imageOutput == '') {
+                    if(strpos($imageOutput,'Not Found')!==false || $imageOutput==''){
 
-                    $fx = fopen("./assets/image_not_found.txt", 'a+');
-                    fwrite($fx, $array[0] . "===" . $array[1] . "===" . $link . "\r\n");
-                    fclose($fx);
+                        $fx = fopen("./assets/image_not_found.txt", 'a+');
+                        fwrite($fx,$array[0]."===".$array[1]."===".$link."\r\n");
+                        fclose($fx);
 
-                } else {
-                    //Image Found
+                    }else{
+                        //Image Found
 
-                    $fp = fopen("." . $array[1], 'x');
-                    fwrite($fp, $imageOutput);
-                    fclose($fp);
+                        $fp = fopen(".".$array[1], 'x');
+                        fwrite($fp, $imageOutput);
+                        fclose($fp);
 
-                    $fq = fopen("./assets/image_file_found.txt", 'a+');
-                    fwrite($fq, $array[0] . "===" . $array[1] . "===" . $link . "\r\n");
-                    fclose($fq);
+                        $fq = fopen("./assets/image_file_found.txt", 'a+');
+                        fwrite($fq,$array[0]."===".$array[1]."===".$link."\r\n");
+                        fclose($fq);
 
-                }
+                    }
 
             }
 
@@ -774,67 +674,12 @@ class DBManagementController extends Controller
     }
 
 
-    public function getDatabaseBackupAction()
-    {
+
+    public function getDatabaseBackupAction(){
 
 
-        $this->get('backup_manager')->makeBackup()->run('development', array('local'), 'gzip');
+        $this->get('backup_manager')->makeBackup()->run('development', array('local'),'gzip');
 
-        die();
-    }
-
-    public function getAmazonPricesAction(Request $request)
-    {
-        $json = file_get_contents('test.json');
-        $arrayData = json_decode($json, true);
-
-        $fx = fopen("sql.sql", 'a+');
-        $fe = fopen("error.txt", 'a+');
-        fwrite($fx, "UPDATE books SET book_amazon_price = CASE id \r\n");
-        foreach ($arrayData as $row) {
-
-            $amazonCredentials = $this->_getAmazonSearchParams();
-
-//            $amazonCredentials['params']['Operation'] = "ItemLookup";
-//            $amazonCredentials['params']["ItemId"] = $row['book_isbn10'] ? $row['book_isbn10'] : $row['book_isbn13'];
-//            $amazonCredentials['params']["ResponseGroup"] = "Medium,Offers";
-//            $amazonCredentials['params']["IdType"] = "ISBN";
-//            $amazonCredentials['params']["SearchIndex"] = "All";
-
-            $amazonCredentials['params']['Operation'] = "ItemSearch";
-            $amazonCredentials['params']["ItemPage"] = 1;
-            $amazonCredentials['params']["Keywords"] = $row['book_isbn10'] ? $row['book_isbn10'] : $row['book_isbn13'];
-            $amazonCredentials['params']["SearchIndex"] = "Books";
-            $amazonCredentials['params']["ResponseGroup"] = "Medium,Offers";
-
-
-            $getUrl = $this->_getUrlWithSignature($amazonCredentials);
-
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $getUrl);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-            $xmlOutput = curl_exec($ch);
-            curl_close($ch);
-
-
-            $booksArray = $this->_parseMultipleBooksAmazonXmlResponse($xmlOutput);
-//            var_dump($booksArray);
-//            die();
-            if (($booksArray)) {
-                fwrite($fx, " WHEN " . $row['id'] . " THEN " . $booksArray . " \r\n");
-                echo "<pre>";
-                print_r($booksArray);
-                echo "</pre>";
-
-            } else {
-                fwrite($fe, json_encode($row). " \r\n");
-            }
-
-
-        }
-        fwrite($fx, " ELSE book_amazon_price END");
-        fclose($fx);
-        fclose($fe);
         die();
     }
 
