@@ -43,13 +43,22 @@ class BookManagementApiController extends Controller
         } else {
             $keyword = null;
         }
+        if (array_key_exists('campus', $data)) {
+            $campusId = $data['campus'];
+        } else {
+            $campusId = null;
+        }
         if (array_key_exists('page', $data)) {
             $page = $data['page'];
         } else {
             $page = null;
         }
-        return $this->_getBooksByKeywordAmazon($keyword, $page);
-
+//        return $this->_getBooksByKeywordAmazon($keyword, $page);
+        if(is_numeric($keyword ) && (strlen($keyword)==10 || strlen($keyword)==13)){
+            return $this->_getBooksByIsbnAmazon($keyword,$campusId);
+        }else{
+            return $this->_getBooksByKeywordAmazon($keyword, $page);
+        }
     }
 
     /**
@@ -71,7 +80,13 @@ class BookManagementApiController extends Controller
         } else {
             $page = null;
         }
-        return $this->_getBooksByKeywordAmazon($keyword, $page);
+        $campusId = $this->container->get('security.context')->getToken()->getUser()->getCampus()->getId();
+        if(is_numeric($keyword ) && (strlen($keyword)==10 || strlen($keyword)==13)){
+            return $this->_getBooksByIsbnAmazon($keyword,$campusId);
+        }else{
+            return $this->_getBooksByKeywordAmazon($keyword, $page);
+        }
+
 
     }
 
@@ -129,8 +144,8 @@ class BookManagementApiController extends Controller
         } else {
             $isbn = "";
         }
-
-        return $this->_getBooksByIsbnAmazon($isbn);
+        $campusId = $this->container->get('security.context')->getToken()->getUser()->getCampus()->getId();
+        return $this->_getBooksByIsbnAmazon($isbn,$campusId);
 
     }
 
@@ -380,6 +395,8 @@ class BookManagementApiController extends Controller
                     fclose($fp);
                     $bookData['bookImage'] = $fileNameDir . $fileSaveName;
 
+                    $bookData['bookAmazonPrice'] = str_replace(".","",$bookData['bookAmazonPrice']);
+                    $bookData['bookAmazonPrice'] = str_replace(",",".",$bookData['bookAmazonPrice']);
 
                 }elseif(!strcmp('newSellCustomBook',$bookData['bookType'])){
 
@@ -402,6 +419,7 @@ class BookManagementApiController extends Controller
                 if(array_key_exists('bookSubTitle',$bookData)){
                     $bookData['bookTitle']=$bookData['bookTitle'].": ".$bookData['bookSubTitle'];
                 }
+
 
                 $bookForm->submit($bookData);
 
@@ -447,6 +465,7 @@ class BookManagementApiController extends Controller
                 $bookDealData['bookContactEmail'] = $this->container->get('security.token_storage')->getToken()->getUser()->getEmail();
             }
 
+            $bookDealData['bookPriceSell']= str_replace(",",".",$bookDealData['bookPriceSell']);
 
             $bookDealForm->submit($bookDealData);
 
@@ -500,14 +519,13 @@ class BookManagementApiController extends Controller
 
     function _getBooksByKeywordAmazon($keyword, $page)
     {
-
         $amazonCredentials = $this->_getAmazonSearchParams();
 
         $amazonCredentials['params']['Operation'] = "ItemSearch";
         $amazonCredentials['params']["ItemPage"] = $page;
         $amazonCredentials['params']["Keywords"] = $keyword;
         $amazonCredentials['params']["SearchIndex"] = "Books";
-        $amazonCredentials['params']["ResponseGroup"] = "Medium,Offers";
+        $amazonCredentials['params']["ResponseGroup"] = "Images,ItemAttributes,Offers";
         $getUrl = $this->_getUrlWithSignature($amazonCredentials);
 
 
@@ -745,7 +763,6 @@ class BookManagementApiController extends Controller
             $book['bookPublishDate'] = (new \DateTime($book['bookPublishDate']))->format("Y-m-d");
             $book['bookPage'] = $book['bookPages'];
             $book['bookDescription'] = strip_tags($book['bookDescription']);
-            $book['bookAmazonPrice'] = substr($book['bookPriceAmazon'],2);
 
             $bookForm->submit($book);
 
@@ -762,7 +779,7 @@ class BookManagementApiController extends Controller
         }
     }
 
-    function _getBooksByIsbnAmazon($isbn)
+    function _getBooksByIsbnAmazon($isbn,$campusId)
     {
 
 
@@ -802,14 +819,19 @@ class BookManagementApiController extends Controller
 
         //Getting Lowest Price In campus
         if(count($newBookArray)>0){
-            $userCampusId = $this->container->get('security.token_storage')->getToken()->getUser()->getCampus()->getId();
+
+            $user = $this->container->get('security.token_storage')->getToken()->getUser();
+
+            if ($user != "anon.") {
+                $campusId = $user->getCampus()->getId();
+            }
+
             $em = $this->getDoctrine()->getManager();
             $bookDealRepo=$em->getRepository('AppBundle:BookDeal');
-            $lowestPriceOnCampus = $bookDealRepo->getLowestDealPriceInCampus($userCampusId,$newBookArray[0]['bookIsbn']);
+            $lowestPriceOnCampus = $bookDealRepo->getLowestDealPriceInCampus($campusId,$newBookArray[0]['bookIsbn']);
 
             if($lowestPriceOnCampus[0][1]!=null){
-                $newBookArray[0]['campusLowestPrice']= "$".$lowestPriceOnCampus[0][1];
-
+                $newBookArray[0]['campusLowestPrice'] = "€".str_replace(",",".",$lowestPriceOnCampus[0][1]);
             }
         }
 
@@ -957,7 +979,7 @@ class BookManagementApiController extends Controller
         $params["Service"] = "AWSECommerceService";
         $params["Timestamp"] = gmdate("Y-m-d\TH:i:s\Z");
         $params["Version"] = $amazonApiInfo['version'];
-        $params["Power"] = "binding:hardcover or library or paperback";
+//        $params["Power"] = "binding:hardcover or library or paperback";
         $params['Condition'] = "New";
         $params['MerchantId'] = 'All';
 
@@ -977,12 +999,21 @@ class BookManagementApiController extends Controller
 
         $simpleXml = simplexml_load_string($fileContents);
 
+//        echo "<pre>";
+//        print_r($simpleXml);
+//        echo "</pre>";
+//        die();
+
         $booksArray = array();
 
         if($simpleXml!=null){
             foreach ($simpleXml->Items->Item as $item) {
                 $book = $this->_createJsonFromItemAmazon($item);
                 if($book['bookIsbn']!='' && strcmp($book['bookPriceAmazon'],"Not Found")){
+                    $book['bookPriceAmazon'] = "€".substr($book['bookPriceAmazon'],4,strlen($book['bookPriceAmazon']));
+                    $book['bookAmazonPrice'] = str_replace(".","",substr($book['bookPriceAmazon'],3));
+                    $book['bookAmazonPrice'] = str_replace(",",".",substr($book['bookPriceAmazon'],3));
+
                     array_push($booksArray,$book);
                 }
 

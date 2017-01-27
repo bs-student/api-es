@@ -2,21 +2,19 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6bc89763-47a2-4b10-a11c-84c5fc3a4994" name="Default" comment="">
-      <change type="DELETED" beforePath="D:\Projects\WampServerProjects\wamp\www\Student2StudentApiEs\.idea\.name" afterPath="" />
-      <change type="DELETED" beforePath="D:\Projects\WampServerProjects\wamp\www\Student2StudentApiEs\.idea\Student2StudentApi.iml" afterPath="" />
-      <change type="DELETED" beforePath="D:\Projects\WampServerProjects\wamp\www\Student2StudentApiEs\.idea\dictionaries\Sujit.xml" afterPath="" />
-      <change type="DELETED" beforePath="D:\Projects\WampServerProjects\wamp\www\Student2StudentApiEs\.idea\encodings.xml" afterPath="" />
-      <change type="DELETED" beforePath="D:\Projects\WampServerProjects\wamp\www\Student2StudentApiEs\.idea\inspectionProfiles\Project_Default.xml" afterPath="" />
-      <change type="DELETED" beforePath="D:\Projects\WampServerProjects\wamp\www\Student2StudentApiEs\.idea\inspectionProfiles\profiles_settings.xml" afterPath="" />
-      <change type="DELETED" beforePath="D:\Projects\WampServerProjects\wamp\www\Student2StudentApiEs\.idea\misc.xml" afterPath="" />
-      <change type="DELETED" beforePath="D:\Projects\WampServerProjects\wamp\www\Student2StudentApiEs\.idea\modules.xml" afterPath="" />
-      <change type="DELETED" beforePath="D:\Projects\WampServerProjects\wamp\www\Student2StudentApiEs\.idea\scopes\scope_settings.xml" afterPath="" />
-      <change type="DELETED" beforePath="D:\Projects\WampServerProjects\wamp\www\Student2StudentApiEs\.idea\vcs.xml" afterPath="" />
-      <change type="DELETED" beforePath="D:\Projects\WampServerProjects\wamp\www\Student2StudentApiEs\.idea\workspace.xml" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/AppBundle/Controller/Api/AdminNewsApiController.php" afterPath="$PROJECT_DIR$/src/AppBundle/Controller/Api/AdminNewsApiController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/AppBundle/Controller/Api/BookDealManagementApiController.php" afterPath="$PROJECT_DIR$/src/AppBundle/Controller/Api/BookDealManagementApiController.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/AppBundle/Controller/Api/BookManagementApiController.php" afterPath="$PROJECT_DIR$/src/AppBundle/Controller/Api/BookManagementApiController.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/AppBundle/Controller/DBManagementController.php" afterPath="$PROJECT_DIR$/src/AppBundle/Controller/DBManagementController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/AppBundle/Resources/config/doctrine/News.orm.yml" afterPath="$PROJECT_DIR$/src/AppBundle/Resources/config/doctrine/News.orm.yml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/AppBundle/Entity/News.php" afterPath="$PROJECT_DIR$/src/AppBundle/Entity/News.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/AppBundle/Controller/Api/NewsApiController.php" afterPath="$PROJECT_DIR$/src/AppBundle/Controller/Api/NewsApiController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/AppBundle/Repository/NewsRepository.php" afterPath="$PROJECT_DIR$/src/AppBundle/Repository/NewsRepository.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/AppBundle/Form/Type/NewsType.php" afterPath="$PROJECT_DIR$/src/AppBundle/Form/Type/NewsType.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/AppBundle/Controller/SecurityController.php" afterPath="$PROJECT_DIR$/src/AppBundle/Controller/SecurityController.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/AppBundle/Controller/Api/WishlistManagementApiController.php" afterPath="$PROJECT_DIR$/src/AppBundle/Controller/Api/WishlistManagementApiController.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/AppBundle/Resources/config/app_routing.yml" afterPath="$PROJECT_DIR$/src/AppBundle/Resources/config/app_routing.yml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Student2StudentApiEs.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -33,11 +31,115 @@
   <component name="DaemonCodeAnalyzer">
     <disable_hints />
   </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FavoritesManager">
     <favorites_list name="Student2StudentApiEs" />
   </component>
+  <component name="FileEditorManager">
+    <leaf>
+      <file leaf-file-name="parameters.yml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/config/parameters.yml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="25" column="66" selection-start="871" selection-end="911" vertical-scroll-proportion="0.0" vertical-offset="425" max-vertical-offset="867">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BookManagementApiController.php" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/AppBundle/Controller/Api/BookManagementApiController.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="253" column="0" selection-start="7890" selection-end="7890" vertical-scroll-proportion="-0.3984375" vertical-offset="4301" max-vertical-offset="18955">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BookDealRepository.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/AppBundle/Repository/BookDealRepository.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="48" column="33" selection-start="1487" selection-end="1507" vertical-scroll-proportion="0.0" vertical-offset="526" max-vertical-offset="18003">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="DBManagementController.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/AppBundle/Controller/DBManagementController.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="807" column="89" selection-start="26682" selection-end="26710" vertical-scroll-proportion="0.0" vertical-offset="13719" max-vertical-offset="14467">
+              <folding>
+                <marker date="1483360337352" expanded="true" signature="1044:1115" placeholder="INSERT INTO ..." />
+                <marker date="1483360337352" expanded="true" signature="1128:1394" placeholder="SELECT gl_su..gl_subsystem..." />
+                <marker date="1483360337352" expanded="true" signature="1915:2152" placeholder="INSERT INTO ..." />
+                <marker date="1483360337352" expanded="true" signature="2165:2602" placeholder="SELECT gl_bo..gl_book..." />
+                <marker date="1483360337352" expanded="true" signature="3124:3353" placeholder="INSERT INTO ..." />
+                <marker date="1483360337352" expanded="true" signature="3366:4272" placeholder="SELECT gl_in..gl_info_members..." />
+                <marker date="1483360337352" expanded="true" signature="4740:5197" placeholder="INSERT INTO ..." />
+                <marker date="1483360337352" expanded="true" signature="5210:7025" placeholder="SELECT gl_se..gl_sell_book..." />
+                <marker date="1483360337352" expanded="true" signature="5210:6971" placeholder="SELECT gl_se..gl_sell_book..." />
+                <marker date="1483360337352" expanded="true" signature="7353:7507" placeholder="INSERT INTO ..." />
+                <marker date="1483360337352" expanded="true" signature="7520:8073" placeholder="SELECT gl_se..gl_sell_contact..." />
+                <marker date="1483360337352" expanded="true" signature="7520:8017" placeholder="SELECT gl_se..gl_sell_contact..." />
+                <marker date="1483360337352" expanded="true" signature="8399:8499" placeholder="INSERT INTO ..." />
+                <marker date="1483360337352" expanded="true" signature="8512:8982" placeholder="SELECT (case..gl_sell_contact..." />
+                <marker date="1483360337352" expanded="true" signature="8512:8926" placeholder="SELECT (case..gl_sell_contact..." />
+                <marker date="1483360337352" expanded="true" signature="9464:9544" placeholder="SELECT id,bo..books..." />
+                <marker date="1483360337352" expanded="true" signature="25714:25758" placeholder="UPDATE books..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="app_routing.yml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/AppBundle/Resources/config/app_routing.yml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="170" column="84" selection-start="4771" selection-end="4794" vertical-scroll-proportion="0.0" vertical-offset="2574" max-vertical-offset="11747">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="WishlistManagementApiController.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/AppBundle/Controller/Api/WishlistManagementApiController.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="105" column="39" selection-start="3904" selection-end="3904" vertical-scroll-proportion="0.0" vertical-offset="1785" max-vertical-offset="3366">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BookDealManagementApiController.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/AppBundle/Controller/Api/BookDealManagementApiController.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="686" column="17" selection-start="26829" selection-end="26829" vertical-scroll-proportion="0.0" vertical-offset="11662" max-vertical-offset="20689">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FindManager">
+    <FindUsagesManager>
+      <setting name="OPEN_NEW_TAB" value="false" />
+    </FindUsagesManager>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="changedFiles">
+      <list>
+        <option value="$PROJECT_DIR$/src/AppBundle/Resources/config/app_routing.yml" />
+        <option value="$PROJECT_DIR$/web/test.json" />
+        <option value="$PROJECT_DIR$/app/config/parameters.yml" />
+        <option value="$PROJECT_DIR$/src/AppBundle/Controller/DBManagementController.php" />
+        <option value="$PROJECT_DIR$/src/AppBundle/Controller/Api/WishlistManagementApiController.php" />
+        <option value="$PROJECT_DIR$/src/AppBundle/Controller/Api/BookDealManagementApiController.php" />
+        <option value="$PROJECT_DIR$/src/AppBundle/Controller/Api/BookManagementApiController.php" />
+      </list>
+    </option>
   </component>
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
   <component name="ProjectFrameBounds">
@@ -81,14 +183,234 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Student2StudentApiEs" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Student2StudentApiEs" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Student2StudentApiEs" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Student2StudentApiEs" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="web" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Student2StudentApiEs" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Student2StudentApiEs" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Student2StudentApiEs" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Student2StudentApiEs" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="AppBundle" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Student2StudentApiEs" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Student2StudentApiEs" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="AppBundle" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Resources" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Student2StudentApiEs" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Student2StudentApiEs" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="AppBundle" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Resources" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="config" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Student2StudentApiEs" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Student2StudentApiEs" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="AppBundle" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Repository" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Student2StudentApiEs" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Student2StudentApiEs" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="AppBundle" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Controller" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Student2StudentApiEs" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Student2StudentApiEs" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="AppBundle" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Controller" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Api" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Student2StudentApiEs" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Student2StudentApiEs" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Student2StudentApiEs" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Student2StudentApiEs" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="config" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="FullScreen" value="false" />
   </component>
   <component name="RunManager">
+    <configuration default="true" type="PHPUnitRunConfigurationType" factoryName="PHPUnit">
+      <TestRunner />
+      <method />
+    </configuration>
+    <configuration default="true" type="PhpLocalRunConfigurationType" factoryName="PHP Console">
+      <method />
+    </configuration>
+    <configuration default="true" type="JavascriptDebugType" factoryName="JavaScript Debug" singleton="true">
+      <method />
+    </configuration>
+    <configuration default="true" type="PhpUnitRemoteRunConfigurationType" factoryName="PHPUnit on Server">
+      <method />
+    </configuration>
     <list size="0" />
   </component>
   <component name="ShelveChangesManager" show_recycled="false" />
@@ -104,24 +426,24 @@
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="false" />
     <layout>
-      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32911393" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -139,6 +461,442 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/app/config/parameters.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="25" column="66" selection-start="871" selection-end="911" vertical-scroll-proportion="0.0" vertical-offset="425" max-vertical-offset="867">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/AppBundle/Controller/Api/BookManagementApiController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="388" column="74" selection-start="12949" selection-end="12949" vertical-scroll-proportion="0.0" vertical-offset="6596" max-vertical-offset="18751">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/AppBundle/Controller/DBManagementController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="807" column="89" selection-start="26682" selection-end="26710" vertical-scroll-proportion="0.0" vertical-offset="13719" max-vertical-offset="14467">
+          <folding>
+            <marker date="1483360337352" expanded="true" signature="1044:1115" placeholder="INSERT INTO ..." />
+            <marker date="1483360337352" expanded="true" signature="1128:1394" placeholder="SELECT gl_su..gl_subsystem..." />
+            <marker date="1483360337352" expanded="true" signature="1915:2152" placeholder="INSERT INTO ..." />
+            <marker date="1483360337352" expanded="true" signature="2165:2602" placeholder="SELECT gl_bo..gl_book..." />
+            <marker date="1483360337352" expanded="true" signature="3124:3353" placeholder="INSERT INTO ..." />
+            <marker date="1483360337352" expanded="true" signature="3366:4272" placeholder="SELECT gl_in..gl_info_members..." />
+            <marker date="1483360337352" expanded="true" signature="4740:5197" placeholder="INSERT INTO ..." />
+            <marker date="1483360337352" expanded="true" signature="5210:7025" placeholder="SELECT gl_se..gl_sell_book..." />
+            <marker date="1483360337352" expanded="true" signature="5210:6971" placeholder="SELECT gl_se..gl_sell_book..." />
+            <marker date="1483360337352" expanded="true" signature="7353:7507" placeholder="INSERT INTO ..." />
+            <marker date="1483360337352" expanded="true" signature="7520:8073" placeholder="SELECT gl_se..gl_sell_contact..." />
+            <marker date="1483360337352" expanded="true" signature="7520:8017" placeholder="SELECT gl_se..gl_sell_contact..." />
+            <marker date="1483360337352" expanded="true" signature="8399:8499" placeholder="INSERT INTO ..." />
+            <marker date="1483360337352" expanded="true" signature="8512:8982" placeholder="SELECT (case..gl_sell_contact..." />
+            <marker date="1483360337352" expanded="true" signature="8512:8926" placeholder="SELECT (case..gl_sell_contact..." />
+            <marker date="1483360337352" expanded="true" signature="9464:9544" placeholder="SELECT id,bo..books..." />
+            <marker date="1483360337352" expanded="true" signature="25714:25758" placeholder="UPDATE books..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/AppBundle/Resources/config/app_routing.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="186" column="75" selection-start="5294" selection-end="5308" vertical-scroll-proportion="0.0" vertical-offset="3162" max-vertical-offset="11747">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/AppBundle/Controller/Api/WishlistManagementApiController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="105" column="39" selection-start="3904" selection-end="3904" vertical-scroll-proportion="0.0" vertical-offset="1785" max-vertical-offset="3366">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/AppBundle/Controller/Api/BookDealManagementApiController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="226" column="0" selection-start="8044" selection-end="8044" vertical-scroll-proportion="0.0" vertical-offset="3842" max-vertical-offset="20672">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/config/parameters.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="25" column="66" selection-start="871" selection-end="911" vertical-scroll-proportion="0.0" vertical-offset="425" max-vertical-offset="867">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/AppBundle/Controller/Api/BookManagementApiController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="433" column="0" selection-start="14828" selection-end="14828" vertical-scroll-proportion="0.0" vertical-offset="7361" max-vertical-offset="18972">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/AppBundle/Controller/DBManagementController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="807" column="89" selection-start="26682" selection-end="26710" vertical-scroll-proportion="0.0" vertical-offset="13719" max-vertical-offset="14467">
+          <folding>
+            <marker date="1483360337352" expanded="true" signature="1044:1115" placeholder="INSERT INTO ..." />
+            <marker date="1483360337352" expanded="true" signature="1128:1394" placeholder="SELECT gl_su..gl_subsystem..." />
+            <marker date="1483360337352" expanded="true" signature="1915:2152" placeholder="INSERT INTO ..." />
+            <marker date="1483360337352" expanded="true" signature="2165:2602" placeholder="SELECT gl_bo..gl_book..." />
+            <marker date="1483360337352" expanded="true" signature="3124:3353" placeholder="INSERT INTO ..." />
+            <marker date="1483360337352" expanded="true" signature="3366:4272" placeholder="SELECT gl_in..gl_info_members..." />
+            <marker date="1483360337352" expanded="true" signature="4740:5197" placeholder="INSERT INTO ..." />
+            <marker date="1483360337352" expanded="true" signature="5210:7025" placeholder="SELECT gl_se..gl_sell_book..." />
+            <marker date="1483360337352" expanded="true" signature="5210:6971" placeholder="SELECT gl_se..gl_sell_book..." />
+            <marker date="1483360337352" expanded="true" signature="7353:7507" placeholder="INSERT INTO ..." />
+            <marker date="1483360337352" expanded="true" signature="7520:8073" placeholder="SELECT gl_se..gl_sell_contact..." />
+            <marker date="1483360337352" expanded="true" signature="7520:8017" placeholder="SELECT gl_se..gl_sell_contact..." />
+            <marker date="1483360337352" expanded="true" signature="8399:8499" placeholder="INSERT INTO ..." />
+            <marker date="1483360337352" expanded="true" signature="8512:8982" placeholder="SELECT (case..gl_sell_contact..." />
+            <marker date="1483360337352" expanded="true" signature="8512:8926" placeholder="SELECT (case..gl_sell_contact..." />
+            <marker date="1483360337352" expanded="true" signature="9464:9544" placeholder="SELECT id,bo..books..." />
+            <marker date="1483360337352" expanded="true" signature="25714:25758" placeholder="UPDATE books..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/AppBundle/Resources/config/app_routing.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="373" column="85" selection-start="11497" selection-end="11517" vertical-scroll-proportion="0.0" vertical-offset="6341" max-vertical-offset="11747">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/AppBundle/Controller/Api/WishlistManagementApiController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="105" column="39" selection-start="3904" selection-end="3904" vertical-scroll-proportion="0.0" vertical-offset="1785" max-vertical-offset="3366">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/AppBundle/Controller/Api/BookDealManagementApiController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="226" column="0" selection-start="8044" selection-end="8044" vertical-scroll-proportion="0.0" vertical-offset="3842" max-vertical-offset="20264">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/config/parameters.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="25" column="66" selection-start="871" selection-end="911" vertical-scroll-proportion="0.0" vertical-offset="425" max-vertical-offset="867">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/AppBundle/Controller/Api/BookManagementApiController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="433" column="0" selection-start="14828" selection-end="14828" vertical-scroll-proportion="0.0" vertical-offset="7361" max-vertical-offset="18972">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/AppBundle/Controller/DBManagementController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="807" column="89" selection-start="26682" selection-end="26710" vertical-scroll-proportion="0.0" vertical-offset="13719" max-vertical-offset="14467">
+          <folding>
+            <marker date="1483360337352" expanded="true" signature="1044:1115" placeholder="INSERT INTO ..." />
+            <marker date="1483360337352" expanded="true" signature="1128:1394" placeholder="SELECT gl_su..gl_subsystem..." />
+            <marker date="1483360337352" expanded="true" signature="1915:2152" placeholder="INSERT INTO ..." />
+            <marker date="1483360337352" expanded="true" signature="2165:2602" placeholder="SELECT gl_bo..gl_book..." />
+            <marker date="1483360337352" expanded="true" signature="3124:3353" placeholder="INSERT INTO ..." />
+            <marker date="1483360337352" expanded="true" signature="3366:4272" placeholder="SELECT gl_in..gl_info_members..." />
+            <marker date="1483360337352" expanded="true" signature="4740:5197" placeholder="INSERT INTO ..." />
+            <marker date="1483360337352" expanded="true" signature="5210:7025" placeholder="SELECT gl_se..gl_sell_book..." />
+            <marker date="1483360337352" expanded="true" signature="5210:6971" placeholder="SELECT gl_se..gl_sell_book..." />
+            <marker date="1483360337352" expanded="true" signature="7353:7507" placeholder="INSERT INTO ..." />
+            <marker date="1483360337352" expanded="true" signature="7520:8073" placeholder="SELECT gl_se..gl_sell_contact..." />
+            <marker date="1483360337352" expanded="true" signature="7520:8017" placeholder="SELECT gl_se..gl_sell_contact..." />
+            <marker date="1483360337352" expanded="true" signature="8399:8499" placeholder="INSERT INTO ..." />
+            <marker date="1483360337352" expanded="true" signature="8512:8982" placeholder="SELECT (case..gl_sell_contact..." />
+            <marker date="1483360337352" expanded="true" signature="8512:8926" placeholder="SELECT (case..gl_sell_contact..." />
+            <marker date="1483360337352" expanded="true" signature="9464:9544" placeholder="SELECT id,bo..books..." />
+            <marker date="1483360337352" expanded="true" signature="25714:25758" placeholder="UPDATE books..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/AppBundle/Resources/config/app_routing.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="373" column="85" selection-start="11497" selection-end="11517" vertical-scroll-proportion="0.0" vertical-offset="6341" max-vertical-offset="11747">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/AppBundle/Controller/Api/WishlistManagementApiController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="105" column="39" selection-start="3904" selection-end="3904" vertical-scroll-proportion="0.0" vertical-offset="1785" max-vertical-offset="3366">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/AppBundle/Controller/Api/BookDealManagementApiController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="195" column="68" selection-start="7135" selection-end="7135" vertical-scroll-proportion="0.0" vertical-offset="3315" max-vertical-offset="20264">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/config/parameters.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="25" column="66" selection-start="871" selection-end="911" vertical-scroll-proportion="0.0" vertical-offset="425" max-vertical-offset="867">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/AppBundle/Controller/Api/BookManagementApiController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="433" column="0" selection-start="14828" selection-end="14828" vertical-scroll-proportion="0.0" vertical-offset="7361" max-vertical-offset="18972">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/AppBundle/Controller/DBManagementController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="807" column="89" selection-start="26682" selection-end="26710" vertical-scroll-proportion="0.0" vertical-offset="13719" max-vertical-offset="14467">
+          <folding>
+            <marker date="1483360337352" expanded="true" signature="1044:1115" placeholder="INSERT INTO ..." />
+            <marker date="1483360337352" expanded="true" signature="1128:1394" placeholder="SELECT gl_su..gl_subsystem..." />
+            <marker date="1483360337352" expanded="true" signature="1915:2152" placeholder="INSERT INTO ..." />
+            <marker date="1483360337352" expanded="true" signature="2165:2602" placeholder="SELECT gl_bo..gl_book..." />
+            <marker date="1483360337352" expanded="true" signature="3124:3353" placeholder="INSERT INTO ..." />
+            <marker date="1483360337352" expanded="true" signature="3366:4272" placeholder="SELECT gl_in..gl_info_members..." />
+            <marker date="1483360337352" expanded="true" signature="4740:5197" placeholder="INSERT INTO ..." />
+            <marker date="1483360337352" expanded="true" signature="5210:7025" placeholder="SELECT gl_se..gl_sell_book..." />
+            <marker date="1483360337352" expanded="true" signature="5210:6971" placeholder="SELECT gl_se..gl_sell_book..." />
+            <marker date="1483360337352" expanded="true" signature="7353:7507" placeholder="INSERT INTO ..." />
+            <marker date="1483360337352" expanded="true" signature="7520:8073" placeholder="SELECT gl_se..gl_sell_contact..." />
+            <marker date="1483360337352" expanded="true" signature="7520:8017" placeholder="SELECT gl_se..gl_sell_contact..." />
+            <marker date="1483360337352" expanded="true" signature="8399:8499" placeholder="INSERT INTO ..." />
+            <marker date="1483360337352" expanded="true" signature="8512:8982" placeholder="SELECT (case..gl_sell_contact..." />
+            <marker date="1483360337352" expanded="true" signature="8512:8926" placeholder="SELECT (case..gl_sell_contact..." />
+            <marker date="1483360337352" expanded="true" signature="9464:9544" placeholder="SELECT id,bo..books..." />
+            <marker date="1483360337352" expanded="true" signature="25714:25758" placeholder="UPDATE books..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/AppBundle/Resources/config/app_routing.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="373" column="85" selection-start="11497" selection-end="11517" vertical-scroll-proportion="0.0" vertical-offset="6025" max-vertical-offset="11747">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/AppBundle/Controller/Api/WishlistManagementApiController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="105" column="39" selection-start="3904" selection-end="3904" vertical-scroll-proportion="0.0" vertical-offset="1785" max-vertical-offset="3366">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/AppBundle/Controller/Api/BookDealManagementApiController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="195" column="68" selection-start="7135" selection-end="7135" vertical-scroll-proportion="0.0" vertical-offset="3315" max-vertical-offset="20264">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/config/parameters.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="25" column="66" selection-start="871" selection-end="911" vertical-scroll-proportion="0.0" vertical-offset="425" max-vertical-offset="867">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/AppBundle/Controller/Api/BookManagementApiController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="759" column="48" selection-start="29400" selection-end="29400" vertical-scroll-proportion="0.0" vertical-offset="12903" max-vertical-offset="18921">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/AppBundle/Controller/DBManagementController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="807" column="89" selection-start="26682" selection-end="26710" vertical-scroll-proportion="0.0" vertical-offset="13719" max-vertical-offset="14467">
+          <folding>
+            <marker date="1483360337352" expanded="true" signature="1044:1115" placeholder="INSERT INTO ..." />
+            <marker date="1483360337352" expanded="true" signature="1128:1394" placeholder="SELECT gl_su..gl_subsystem..." />
+            <marker date="1483360337352" expanded="true" signature="1915:2152" placeholder="INSERT INTO ..." />
+            <marker date="1483360337352" expanded="true" signature="2165:2602" placeholder="SELECT gl_bo..gl_book..." />
+            <marker date="1483360337352" expanded="true" signature="3124:3353" placeholder="INSERT INTO ..." />
+            <marker date="1483360337352" expanded="true" signature="3366:4272" placeholder="SELECT gl_in..gl_info_members..." />
+            <marker date="1483360337352" expanded="true" signature="4740:5197" placeholder="INSERT INTO ..." />
+            <marker date="1483360337352" expanded="true" signature="5210:7025" placeholder="SELECT gl_se..gl_sell_book..." />
+            <marker date="1483360337352" expanded="true" signature="5210:6971" placeholder="SELECT gl_se..gl_sell_book..." />
+            <marker date="1483360337352" expanded="true" signature="7353:7507" placeholder="INSERT INTO ..." />
+            <marker date="1483360337352" expanded="true" signature="7520:8073" placeholder="SELECT gl_se..gl_sell_contact..." />
+            <marker date="1483360337352" expanded="true" signature="7520:8017" placeholder="SELECT gl_se..gl_sell_contact..." />
+            <marker date="1483360337352" expanded="true" signature="8399:8499" placeholder="INSERT INTO ..." />
+            <marker date="1483360337352" expanded="true" signature="8512:8982" placeholder="SELECT (case..gl_sell_contact..." />
+            <marker date="1483360337352" expanded="true" signature="8512:8926" placeholder="SELECT (case..gl_sell_contact..." />
+            <marker date="1483360337352" expanded="true" signature="9464:9544" placeholder="SELECT id,bo..books..." />
+            <marker date="1483360337352" expanded="true" signature="25714:25758" placeholder="UPDATE books..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/AppBundle/Resources/config/app_routing.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="418" column="100" selection-start="13190" selection-end="13225" vertical-scroll-proportion="0.0" vertical-offset="6790" max-vertical-offset="11747">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/AppBundle/Controller/Api/WishlistManagementApiController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="105" column="39" selection-start="3904" selection-end="3904" vertical-scroll-proportion="0.0" vertical-offset="1785" max-vertical-offset="3366">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/AppBundle/Controller/Api/BookDealManagementApiController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1104" column="0" selection-start="44419" selection-end="44472" vertical-scroll-proportion="0.0" vertical-offset="18768" max-vertical-offset="20247">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/config/parameters.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="25" column="66" selection-start="871" selection-end="911" vertical-scroll-proportion="0.0" vertical-offset="425" max-vertical-offset="867">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/AppBundle/Controller/Api/BookManagementApiController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="722" column="45" selection-start="28035" selection-end="28035" vertical-scroll-proportion="0.0" vertical-offset="12274" max-vertical-offset="18564">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/AppBundle/Controller/DBManagementController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="807" column="89" selection-start="26682" selection-end="26710" vertical-scroll-proportion="0.0" vertical-offset="13719" max-vertical-offset="14467">
+          <folding>
+            <marker date="1483360337352" expanded="true" signature="1044:1115" placeholder="INSERT INTO ..." />
+            <marker date="1483360337352" expanded="true" signature="1128:1394" placeholder="SELECT gl_su..gl_subsystem..." />
+            <marker date="1483360337352" expanded="true" signature="1915:2152" placeholder="INSERT INTO ..." />
+            <marker date="1483360337352" expanded="true" signature="2165:2602" placeholder="SELECT gl_bo..gl_book..." />
+            <marker date="1483360337352" expanded="true" signature="3124:3353" placeholder="INSERT INTO ..." />
+            <marker date="1483360337352" expanded="true" signature="3366:4272" placeholder="SELECT gl_in..gl_info_members..." />
+            <marker date="1483360337352" expanded="true" signature="4740:5197" placeholder="INSERT INTO ..." />
+            <marker date="1483360337352" expanded="true" signature="5210:7025" placeholder="SELECT gl_se..gl_sell_book..." />
+            <marker date="1483360337352" expanded="true" signature="5210:6971" placeholder="SELECT gl_se..gl_sell_book..." />
+            <marker date="1483360337352" expanded="true" signature="7353:7507" placeholder="INSERT INTO ..." />
+            <marker date="1483360337352" expanded="true" signature="7520:8073" placeholder="SELECT gl_se..gl_sell_contact..." />
+            <marker date="1483360337352" expanded="true" signature="7520:8017" placeholder="SELECT gl_se..gl_sell_contact..." />
+            <marker date="1483360337352" expanded="true" signature="8399:8499" placeholder="INSERT INTO ..." />
+            <marker date="1483360337352" expanded="true" signature="8512:8982" placeholder="SELECT (case..gl_sell_contact..." />
+            <marker date="1483360337352" expanded="true" signature="8512:8926" placeholder="SELECT (case..gl_sell_contact..." />
+            <marker date="1483360337352" expanded="true" signature="9464:9544" placeholder="SELECT id,bo..books..." />
+            <marker date="1483360337352" expanded="true" signature="25714:25758" placeholder="UPDATE books..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/AppBundle/Resources/config/app_routing.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="145" column="82" selection-start="3828" selection-end="3849" vertical-scroll-proportion="0.0" vertical-offset="2132" max-vertical-offset="11747">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/config/parameters.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="31" column="39" selection-start="1160" selection-end="1160" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="867">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/AppBundle/Controller/Api/BookManagementApiController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="984" column="30" selection-start="37270" selection-end="37270" vertical-scroll-proportion="0.0" vertical-offset="16728" max-vertical-offset="18513">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vendor/symfony/symfony/src/Symfony/Bundle/FrameworkBundle/Controller/Controller.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="358" column="23" selection-start="11747" selection-end="11747" vertical-scroll-proportion="0.49037373" vertical-offset="5296" max-vertical-offset="6205">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/AppBundle/Controller/Api/WishlistManagementApiController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="105" column="39" selection-start="3904" selection-end="3904" vertical-scroll-proportion="0.0" vertical-offset="1785" max-vertical-offset="3366">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/AppBundle/Controller/DBManagementController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="807" column="89" selection-start="26682" selection-end="26710" vertical-scroll-proportion="0.0" vertical-offset="13719" max-vertical-offset="14467">
+          <folding>
+            <marker date="1483360337352" expanded="true" signature="1044:1115" placeholder="INSERT INTO ..." />
+            <marker date="1483360337352" expanded="true" signature="1128:1394" placeholder="SELECT gl_su..gl_subsystem..." />
+            <marker date="1483360337352" expanded="true" signature="1915:2152" placeholder="INSERT INTO ..." />
+            <marker date="1483360337352" expanded="true" signature="2165:2602" placeholder="SELECT gl_bo..gl_book..." />
+            <marker date="1483360337352" expanded="true" signature="3124:3353" placeholder="INSERT INTO ..." />
+            <marker date="1483360337352" expanded="true" signature="3366:4272" placeholder="SELECT gl_in..gl_info_members..." />
+            <marker date="1483360337352" expanded="true" signature="4740:5197" placeholder="INSERT INTO ..." />
+            <marker date="1483360337352" expanded="true" signature="5210:7025" placeholder="SELECT gl_se..gl_sell_book..." />
+            <marker date="1483360337352" expanded="true" signature="5210:6971" placeholder="SELECT gl_se..gl_sell_book..." />
+            <marker date="1483360337352" expanded="true" signature="7353:7507" placeholder="INSERT INTO ..." />
+            <marker date="1483360337352" expanded="true" signature="7520:8073" placeholder="SELECT gl_se..gl_sell_contact..." />
+            <marker date="1483360337352" expanded="true" signature="7520:8017" placeholder="SELECT gl_se..gl_sell_contact..." />
+            <marker date="1483360337352" expanded="true" signature="8399:8499" placeholder="INSERT INTO ..." />
+            <marker date="1483360337352" expanded="true" signature="8512:8982" placeholder="SELECT (case..gl_sell_contact..." />
+            <marker date="1483360337352" expanded="true" signature="8512:8926" placeholder="SELECT (case..gl_sell_contact..." />
+            <marker date="1483360337352" expanded="true" signature="9464:9544" placeholder="SELECT id,bo..books..." />
+            <marker date="1483360337352" expanded="true" signature="25714:25758" placeholder="UPDATE books..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/AppBundle/Controller/Api/BookDealManagementApiController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="686" column="17" selection-start="26829" selection-end="26829" vertical-scroll-proportion="0.0" vertical-offset="11662" max-vertical-offset="20689">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/config/parameters.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="25" column="66" selection-start="871" selection-end="911" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="867">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/AppBundle/Resources/config/app_routing.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="170" column="84" selection-start="4771" selection-end="4794" vertical-scroll-proportion="0.0" vertical-offset="2574" max-vertical-offset="11747">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/AppBundle/Repository/BookDealRepository.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="48" column="33" selection-start="1487" selection-end="1507" vertical-scroll-proportion="0.0" vertical-offset="526" max-vertical-offset="18003">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/AppBundle/Controller/Api/BookManagementApiController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="253" column="0" selection-start="7890" selection-end="7890" vertical-scroll-proportion="-0.3984375" vertical-offset="4301" max-vertical-offset="18955">
+          <folding />
+        </state>
+      </provider>
+    </entry>
   </component>
 </project>
 

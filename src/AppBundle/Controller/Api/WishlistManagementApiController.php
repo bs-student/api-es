@@ -103,7 +103,7 @@ class WishListManagementApiController extends Controller
             $book['bookIsbn10']=$bookEntity->getBookIsbn10();
             $book['bookIsbn13']=$bookEntity->getBookIsbn13();
             $book['bookImage']=$bookEntity->getBookImage();
-            $book['bookAmazonPrice']="£".$bookEntity->getBookAmazonPrice();
+            $book['bookAmazonPrice']="€".str_replace(".",",",$bookEntity->getBookAmazonPrice());
 
 
             //Formatting Date
