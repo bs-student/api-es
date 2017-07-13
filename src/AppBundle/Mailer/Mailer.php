@@ -29,7 +29,7 @@ class Mailer extends BaseClass
     public function sendConfirmationEmailMessage(UserInterface $user)
     {
         $message = \Swift_Message::newInstance();
-        $url = "http://student2student.com/confirmRegistration/".$user->getConfirmationToken();
+        $url = "http://student2student.es/confirmRegistration/".$user->getConfirmationToken();
         $data = array(
             'user' => $user->getUsername(),
             'confirmationUrl' =>  $url,
@@ -44,14 +44,14 @@ class Mailer extends BaseClass
             $this->templating->render('mail_templates/registration_confirmation.html.twig',$data),'text/html'
         );
 
-        $this->_sendMail($message,"Student2Student.com : Confirm Registration Process",$this->parameters['from_email']['confirmation'],$user->getEmail());
+        $this->_sendMail($message,"Student2Student.es : Confirm Registration Process",$this->parameters['from_email']['confirmation'],$user->getEmail());
     }
 
     public function sendResettingEmailMessage(UserInterface $user)
     {
 
         $message = \Swift_Message::newInstance();
-        $url = "http://student2student.com/resetPassword/".$user->getConfirmationToken();
+        $url = "http://student2student.es/resetPassword/".$user->getConfirmationToken();
         $data = array(
             'user' => $user->getUsername(),
             'confirmationUrl' =>  $url,
@@ -66,7 +66,7 @@ class Mailer extends BaseClass
             $this->templating->render('mail_templates/reset_mail.html.twig',$data),'text/html'
         );
 
-        $this->_sendMail($message,"Student2Student.com : Reset Password",$this->parameters['from_email']['resetting'],$user->getEmail());
+        $this->_sendMail($message,"Student2Student.es : Reset Password",$this->parameters['from_email']['resetting'],$user->getEmail());
 
     }
 
@@ -435,7 +435,7 @@ class Mailer extends BaseClass
         $message1 = \Swift_Message::newInstance();
         $rendered = $this->templating->render("mail_templates/contact_us_email.html.twig",$data);
         $message1->setBody($rendered,'text/html');
-        $this->_sendContactUsMail($message1,"Student2Student: Contact Message",$this->parameters['from_email']['resetting'], 'support@student2student.com');
+        $this->_sendContactUsMail($message1,"Student2Student.es: Contact Message",$this->parameters['from_email']['resetting'], 'support@student2student.com');
     }
 
     function sendFriendsEmail($data){
@@ -472,7 +472,7 @@ class Mailer extends BaseClass
 
     public function _sendMail($message,$subject,$from,$to){
         $transport = \Swift_SmtpTransport::newInstance('smtp.student2student.com', 25)
-            ->setUsername('no-reply@student2student.com')
+            ->setUsername('no-reply@student2student.es')
             ->setPassword('wWoc$868');
 //        $transport = \Swift_SmtpTransport::newInstance('smtp.gmail.com', 465,'ssl')
 //            ->setUsername('sujit.developer.136661@gmail.com')
@@ -482,38 +482,38 @@ class Mailer extends BaseClass
 
         $message
             ->setSubject($subject)
-            ->setFrom('no-reply@student2student.com')
+            ->setFrom('no-reply@student2student.es')
             ->setTo($to);
         $mailer->send($message);
     }
     public function _sendContactUsMail($message,$subject,$from,$to){
         $transport = \Swift_SmtpTransport::newInstance('smtp.student2student.com', 25)
-            ->setUsername('no-reply@student2student.com')
+            ->setUsername('no-reply@student2student.es')
             ->setPassword('wWoc$868');
 
         $mailer = \Swift_Mailer::newInstance($transport);
 
         $message
             ->setSubject($subject)
-            ->setFrom('no-reply@student2student.com')
+            ->setFrom('no-reply@student2student.es')
             ->setTo($to);
         $mailer->send($message);
     }
     public function _sendMailToMultiple($message,$subject,$from,$toes){
         $transport = \Swift_SmtpTransport::newInstance('smtp.student2student.com', 25)
-            ->setUsername('no-reply@student2student.com')
+            ->setUsername('no-reply@student2student.es')
             ->setPassword('wWoc$868');
 
         $mailer = \Swift_Mailer::newInstance($transport);
 
         $message
             ->setSubject($subject)
-            ->setFrom('no-reply@student2student.com');
+            ->setFrom('no-reply@student2student.es');
 
         foreach($toes as $to){
             $message->addBcc($to['email']);
         }
-        $message->setTo('no-reply@student2student.com');
+        $message->setTo('no-reply@student2student.es');
 
         $mailer->send($message);
     }

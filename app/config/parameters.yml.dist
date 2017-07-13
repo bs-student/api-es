@@ -1,19 +1,39 @@
-# This file is a "template" of what your parameters.yml file should look like
-# Set parameters here that may be different on each deployment target of the app, e.g. development, staging, production.
-# http://symfony.com/doc/current/best_practices/configuration.html#infrastructure-related-configuration
+# This file is auto-generated during the composer install
 parameters:
-    database_host:     127.0.0.1
-    database_port:     ~
-    database_name:     symfony
-    database_user:     root
-    database_password: ~
-    # You should uncomment this if you want use pdo_sqlite
-    # database_path: "%kernel.root_dir%/data.db3"
-
-    mailer_transport:  smtp
-    mailer_host:       127.0.0.1
-    mailer_user:       ~
-    mailer_password:   ~
-
-    # A secret key that's used to generate certain security-related tokens
-    secret:            ThisTokenIsNotSoSecretChangeIt
+    database_host: 127.0.0.1
+    database_port: null
+    database_name: stu2stu_es_final
+    database_user: root
+    database_password: null
+    mailer_transport: gmail
+    mailer_host: 127.0.0.1
+    mailer_user: sujit.developer.136661@gmail.com
+    mailer_password: maniac.sujit
+    secret: 75e9cf9f480fc773a62960621300f2b6ba0577ec
+    amazon_api_info:
+            host : webservices.amazon.es
+            uri : /onca/xml
+            method: GET
+            private_key: RTBhZb/XIdaaPZvg4nfWAAKICREnH2vawxX+0aVU
+            aws_access_key_id: AKIAJPTFUP4HCJFII7MQ
+            associate_tag: stud2stud09f-21
+            version: '2011-08-01'
+    ebay_api_info:
+            host: "http://svcs.ebay.com"
+            uri: "/services/search/FindingService/v1?"
+            global_id: "EBAY-ES"
+            operation_name: "findItemsAdvanced"
+            service_version: "1.13.0"
+            security_app_name: "WEBcareG-student2-PRD-0090fc79c-aaf38b06"
+            affiliate_network_id : "9"
+            affiliate_tracking_id : "5338069756"
+            geo_targeting : "ES"
+    google_re_captcha_info:
+            host: "https://www.google.com/recaptcha/api/siteverify"
+            secret: "6LeMeykTAAAAAGkVzMSHjJCBxAP_LmQ4BdmEm0YI"
+    google_app_info:
+            client_id: "19322012790-7i3k71ps5r6cujo4h87j9husfvjombsn.apps.googleusercontent.com"
+            client_secret: "BiJIVDdNpq9MhyfEIyEyrp72"
+    facebook_app_info:
+            client_id: "214816590624"
+            client_secret: "e88addcbad3ec32a03c135b7a9050b43"

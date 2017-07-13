@@ -4,14 +4,12 @@ namespace AppBundle\Controller\Api;
 
 use AppBundle\Entity\Book;
 use AppBundle\Entity\BookDeal;
-use AppBundle\Entity\BookImage;
 use AppBundle\Entity\Campus;
 use AppBundle\Entity\Log;
 use AppBundle\Form\Type\BookDealType;
 use AppBundle\Form\Type\LogType;
 use AppBundle\Form\Type\UniversityType;
 use Doctrine\Common\Collections\ArrayCollection;
-
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use AppBundle\Form\Type\CampusType;
@@ -20,8 +18,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Response;
-use Lsw\ApiCallerBundle\Call\HttpGetJson;
-use Lsw\ApiCallerBundle\Call\HttpGetHtml;
 use AppBundle\Form\Type\BookType;
 use Symfony\Component\HttpFoundation\FileBag;
 
@@ -53,7 +49,7 @@ class BookManagementApiController extends Controller
         } else {
             $page = null;
         }
-//        return $this->_getBooksByKeywordAmazon($keyword, $page);
+
         if(is_numeric($keyword ) && (strlen($keyword)==10 || strlen($keyword)==13)){
             return $this->_getBooksByIsbnAmazon($keyword,$campusId);
         }else{
@@ -93,7 +89,7 @@ class BookManagementApiController extends Controller
     /**
      * Get Lowest Online Price Campus Books Api
      */
-    public function getLowestPriceByIsbnCampusBooksApiAction(Request $request)
+    /*public function getLowestPriceByIsbnCampusBooksApiAction(Request $request)
     {
         $isbn = $request->query->get('isbn');
         if ($isbn != null) {
@@ -108,6 +104,44 @@ class BookManagementApiController extends Controller
             return $this->_createJsonResponse('error', array('errorTitle' => "Invalid Isbn"), 400);
         }
 
+    }*/
+
+    /**
+     * Get Lowest Online Price Third Party Api
+     */
+    public function getLowestPriceByIsbnOnlineApiAction(Request $request)
+    {
+        $isbn = $request->query->get('isbn');
+        $ean = $request->query->get('ean');
+
+        $lowestOnlinePrice = 99999999;
+
+        if ($isbn != null && $ean != null) {
+            $lowestEbayPrice = $this->_getBooksLowestPriceByEbay($ean);
+            if($lowestEbayPrice){
+                if($lowestEbayPrice<$lowestOnlinePrice){
+                    $lowestOnlinePrice = $lowestEbayPrice;
+                }
+            }
+//            $hivePrice = $this->_getBooksLowestPriceByHive($ean);
+
+//            if($hivePrice){
+//                if($hivePrice <$lowestOnlinePrice){
+//                    $lowestOnlinePrice = $hivePrice ;
+//                }
+//            }
+
+
+
+            if ($lowestOnlinePrice!=99999999) {
+                return $this->_createJsonResponse('success', array('successData' => array('bookPriceOnlineLowest' => "€".str_replace(".",",",$lowestOnlinePrice))), 200);
+            } else {
+                return $this->_createJsonResponse('error', array('errorTitle' => "No Price Found"), 400);
+            }
+
+        } else {
+            return $this->_createJsonResponse('error', array('errorTitle' => "Invalid Isbn"), 400);
+        }
     }
 
 
@@ -153,7 +187,7 @@ class BookManagementApiController extends Controller
     /**
      * Search By ISBN Campus Books APi
      */
-    public function searchByIsbnCampusBooksApiAction(Request $request)
+    /*public function searchByIsbnCampusBooksApiAction(Request $request)
     {
 
         $content = $request->getContent();
@@ -167,7 +201,27 @@ class BookManagementApiController extends Controller
 
         return $this->_getBooksByIsbnCampusBooks($isbn);
 
+    }*/
+
+    /**
+     * Search By ISBN Online Books APi
+     */
+    public function searchByIsbnOnlineBooksApiAction(Request $request)
+    {
+
+        $content = $request->getContent();
+        $data = json_decode($content, true);
+
+        if (array_key_exists('ean', $data)) {
+            $ean = $data['ean'];
+        } else {
+            $ean = "";
+        }
+
+        return $this->_getBooksByIsbnOnlineBooks($ean,$request->server);
+
     }
+
 
     /**
      * Get Amazon Cart Create Url
@@ -594,7 +648,7 @@ class BookManagementApiController extends Controller
                 // Getting Campus Lowest Price
                 foreach ($studentBooks as $studentBook) {
                     if (!strcmp(strval($studentBook['bookIsbn10']), strval($booksArray['books'][$i]['bookIsbn']))) {
-                        $booksArray['books'][$i]['bookPriceStudentLowest'] = "£" . $studentBook['bookPriceSell'];
+                        $booksArray['books'][$i]['bookPriceStudentLowest'] = "€" . str_replace(".",",",$studentBook['bookPriceSell']);
                         $booksArray['books'][$i]['bookPriceStudentLowestFound'] = true;
                         break;
                     }
@@ -831,7 +885,9 @@ class BookManagementApiController extends Controller
             $lowestPriceOnCampus = $bookDealRepo->getLowestDealPriceInCampus($campusId,$newBookArray[0]['bookIsbn']);
 
             if($lowestPriceOnCampus[0][1]!=null){
-                $newBookArray[0]['campusLowestPrice'] = "€".str_replace(",",".",$lowestPriceOnCampus[0][1]);
+                $newBookArray[0]['bookPriceStudentLowest'] ="€".str_replace(".",",",$lowestPriceOnCampus[0][1]) ;
+                $newBookArray[0]['campusLowestPrice'] = "€".str_replace(".",",",$lowestPriceOnCampus[0][1]);
+                $newBookArray[0]['bookPriceStudentLowestFound'] = true;
             }
         }
 
@@ -853,7 +909,7 @@ class BookManagementApiController extends Controller
         return $cartUrl;
     }
 
-    public function _getBooksByIsbnCampusBooks($isbn)
+    /*public function _getBooksByIsbnCampusBooks($isbn)
     {
         $campusBooksApiInfo = $this->getParameter('campus_books_api_info');
         $apiKey = $campusBooksApiInfo['api_key'];
@@ -879,9 +935,90 @@ class BookManagementApiController extends Controller
         }
 
 
+    }*/
+
+    public function _getBooksByIsbnOnlineBooks($ean,$serverInfo)
+    {
+
+        $bookDataArray=array(
+            'New'=>array(),
+            'Used'=>array()
+        );
+        $bookDataArray = $this->_getEbayBookDeals($ean,$serverInfo,$bookDataArray);
+
+        if(count($bookDataArray['New'])>0 || count($bookDataArray['Used'])>0 ){
+            return $this->_createJsonResponse('success', array('successData' => $bookDataArray), 200);
+        }else{
+            return $this->_createJsonResponse('error', array('errorTitle' => "No Online Book Deal was found"), 400);
+        }
+
+
     }
 
-    public function _getBooksLowestPriceByIsbnCampusBooks($isbn)
+    public function _getEbayBookDeals($ean,$serverInfo,$bookDataArray){
+
+        $eBayApiInfo = $this->getParameter('ebay_api_info');
+        $host = $eBayApiInfo['host'];
+        $uri = $eBayApiInfo['uri'];
+        $operationName = $eBayApiInfo['operation_name'];
+        $globalId = $eBayApiInfo['global_id'];
+        $serviceVersion = $eBayApiInfo['service_version'];
+        $securityAppName = $eBayApiInfo['security_app_name'];
+        $affiliateNetworkId = $eBayApiInfo['affiliate_network_id'];
+        $affiliateTrackingId = $eBayApiInfo['affiliate_tracking_id'];
+        $geoTracking = $eBayApiInfo['geo_targeting'];
+
+        $url = $host . $uri . "OPERATION-NAME=" . $operationName . "&SERVICE-VERSION=" . $serviceVersion . "&GLOBAL-ID=" . $globalId .
+            "&SECURITY-APPNAME=" . $securityAppName . "&RESPONSE-DATA-FORMAT=JSON&REST-PAYLOAD=true&keywords=" . $ean.
+            "&affiliate.networkId=".$affiliateNetworkId."&affiliate.trackingId=".$affiliateTrackingId."&geoTargeting=".$geoTracking;
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+        $jsonOutput = curl_exec($ch);
+        curl_close($ch);
+
+        $arrayData = json_decode($jsonOutput,true);
+
+        if(!strcmp($arrayData['findItemsAdvancedResponse'][0]['ack'][0],"Success")){
+
+            foreach( $arrayData['findItemsAdvancedResponse'][0]['searchResult'][0]['item'] as $ebayBook){
+
+                if(array_key_exists("condition",$ebayBook)){
+                    if(!strcmp($ebayBook['condition'][0]['conditionId'][0],"1000")){
+                        array_push($bookDataArray['New'],array(
+                            'storeImage'=>$serverInfo->get('HTTP_ORIGIN').$serverInfo->get('BASE')."/assets/images/ebay.es.png",
+                            'shippingPrice'=>$ebayBook['shippingInfo'][0]['shippingServiceCost'][0]['__value__'],
+                            'shippingInfo'=>$ebayBook['shippingInfo'][0]['shippingType'][0],
+                            'price'=>$ebayBook['sellingStatus'][0]['currentPrice'][0]['__value__'],
+                            'totalPrice'=>floatval($ebayBook['sellingStatus'][0]['currentPrice'][0]['__value__'])+floatval($ebayBook['shippingInfo'][0]['shippingServiceCost'][0]['__value__']),
+                            'buyLink'=>$ebayBook['viewItemURL'][0],
+                            'condition'=>$ebayBook['condition'][0]['conditionDisplayName'][0]
+
+                        ));
+                    }elseif(!strcmp($ebayBook['condition'][0]['conditionId'][0],"3000") || !strcmp($ebayBook['condition'][0]['conditionId'][0],"4000") || !strcmp($ebayBook['condition'][0]['conditionId'][0],"5000") || !strcmp($ebayBook['condition'][0]['conditionId'][0],"6000") || !strcmp($ebayBook['condition'][0]['conditionId'][0],"2750")){
+                        array_push($bookDataArray['Used'],array(
+                            'storeImage'=>$serverInfo->get('HTTP_ORIGIN').$serverInfo->get('BASE')."/assets/images/ebay.es.png",
+                            'shippingPrice'=>$ebayBook['shippingInfo'][0]['shippingServiceCost'][0]['__value__'],
+                            'shippingInfo'=>$ebayBook['shippingInfo'][0]['shippingType'][0],
+                            'price'=>$ebayBook['sellingStatus'][0]['currentPrice'][0]['__value__'],
+                            'totalPrice'=>floatval($ebayBook['sellingStatus'][0]['currentPrice'][0]['__value__'])+floatval($ebayBook['shippingInfo'][0]['shippingServiceCost'][0]['__value__']),
+                            'buyLink'=>$ebayBook['viewItemURL'][0],
+                            'condition'=>$ebayBook['condition'][0]['conditionDisplayName'][0]
+
+                        ));
+                    }
+                }
+
+            }
+
+            return $bookDataArray;
+        }else{
+            return false;
+        }
+    }
+
+    /*public function _getBooksLowestPriceByIsbnCampusBooks($isbn)
     {
         $campusBooksApiInfo = $this->getParameter('campus_books_api_info_lowest_price');
         $apiKey = $campusBooksApiInfo['api_key'];
@@ -931,6 +1068,48 @@ class BookManagementApiController extends Controller
         }
 
 
+    }*/
+
+    public function _getBooksLowestPriceByEbay($ean)
+    {
+
+        $eBayApiInfo = $this->getParameter('ebay_api_info');
+        $host = $eBayApiInfo['host'];
+        $uri = $eBayApiInfo['uri'];
+        $operationName = $eBayApiInfo['operation_name'];
+        $globalId = $eBayApiInfo['global_id'];
+        $serviceVersion = $eBayApiInfo['service_version'];
+        $securityAppName = $eBayApiInfo['security_app_name'];
+        $affiliateNetworkId = $eBayApiInfo['affiliate_network_id'];
+        $affiliateTrackingId = $eBayApiInfo['affiliate_tracking_id'];
+        $geoTracking = $eBayApiInfo['geo_targeting'];
+
+
+        $url = $host . $uri . "OPERATION-NAME=" . $operationName . "&SERVICE-VERSION=" . $serviceVersion . "&GLOBAL-ID=" . $globalId .
+            "&SECURITY-APPNAME=" . $securityAppName . "&RESPONSE-DATA-FORMAT=JSON&REST-PAYLOAD=true&keywords=" . $ean.
+            "&affiliate.networkId=".$affiliateNetworkId."&affiliate.trackingId=".$affiliateTrackingId."&geoTargeting=".$geoTracking;
+
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+        $jsonOutput = curl_exec($ch);
+        curl_close($ch);
+
+        $arrayData = json_decode($jsonOutput,true);
+
+        $lowestPrice = 99999999;
+        if(!strcmp($arrayData['findItemsAdvancedResponse'][0]['ack'][0],"Success")){
+            foreach($arrayData['findItemsAdvancedResponse'][0]['searchResult'][0]['item'] as $ebayItem){
+                if($ebayItem['sellingStatus'][0]['currentPrice'][0]['__value__']<$lowestPrice){
+                    $lowestPrice=$ebayItem['sellingStatus'][0]['currentPrice'][0]['__value__'];
+                }
+            }
+            return $lowestPrice;
+
+        }else{
+            return false;
+        }
     }
 
     public function _getUrlWithSignature($amazonCredentials)

@@ -843,4 +843,29 @@ class DBManagementController extends Controller
         die();
     }
 
+    public function updateUniversitiesSpainAction(){
+
+        $fa = fopen("uni.txt", 'r');
+
+        $em = $this->getDoctrine()->getManager();
+        $connection = $em->getConnection();
+
+        $sql='INSERT INTO `universities`(`referral_id`, `university_name`, `university_url`, `university_status`,`admin_approved`,`creation_datetime`) VALUES ';
+
+
+        while (!feof($fa)) {
+            $line = fgets($fa);
+
+            $data = explode(",h",$line);
+            $universityName = $data[0];
+            $link = "h".$data[1];
+            $sql.=' ( 3, "'.$universityName .'","'.$link.'","Activated","Yes","2017-02-15 05:00:00"),';
+        }
+
+        $statement = $connection->prepare(substr($sql,0,strlen($sql)-1));
+        $statement->execute();
+
+        die();
+    }
+
 }
