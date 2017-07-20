@@ -109,7 +109,7 @@ class ResettingController extends BaseController
 
         }else{
             return $this->_createJsonResponse('error',array(
-                'errorTitle'=>"User Registration Unsuccessful",
+                'errorTitle'=>"Reset Password Unsuccessful",
                 'errorDescription'=>"Reload and try again."
             ),400);
         }

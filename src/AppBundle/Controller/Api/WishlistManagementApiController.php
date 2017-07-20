@@ -63,7 +63,7 @@ class WishListManagementApiController extends Controller
                 $em->flush();
                 return $this->_createJsonResponse('success', array("successTitle" => "Book Successfully Added to WishList"), 200);
             } else {
-                return $this->_createJsonResponse('error', array("errorTitle" => "Couldn't Added to Wishlist","errorData" => $wishListForm), 400);
+                return $this->_createJsonResponse('error', array("errorTitle" => "Couldn't Add to Wishlist","errorData" => $wishListForm), 400);
             }
         }
 

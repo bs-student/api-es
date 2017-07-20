@@ -29,7 +29,7 @@ class Mailer extends BaseClass
     public function sendConfirmationEmailMessage(UserInterface $user)
     {
         $message = \Swift_Message::newInstance();
-        $url = "http://student2student.es/confirmRegistration/".$user->getConfirmationToken();
+        $url = $this->parameters['host_info']['host_url']."/confirmRegistration/".$user->getConfirmationToken();
         $data = array(
             'user' => $user->getUsername(),
             'confirmationUrl' =>  $url,
@@ -44,14 +44,14 @@ class Mailer extends BaseClass
             $this->templating->render('mail_templates/registration_confirmation.html.twig',$data),'text/html'
         );
 
-        $this->_sendMail($message,"Student2Student.es : Confirm Registration Process",$this->parameters['from_email']['confirmation'],$user->getEmail());
+        $this->_sendMail($message,"Student2Student : Confirmar proceso de registro",$this->parameters['host_info']['no_reply_email'],$user->getEmail());
     }
 
     public function sendResettingEmailMessage(UserInterface $user)
     {
 
         $message = \Swift_Message::newInstance();
-        $url = "http://student2student.es/resetPassword/".$user->getConfirmationToken();
+        $url = $this->parameters['host_info']['host_url']."/resetPassword/".$user->getConfirmationToken();
         $data = array(
             'user' => $user->getUsername(),
             'confirmationUrl' =>  $url,
@@ -66,7 +66,7 @@ class Mailer extends BaseClass
             $this->templating->render('mail_templates/reset_mail.html.twig',$data),'text/html'
         );
 
-        $this->_sendMail($message,"Student2Student.es : Reset Password",$this->parameters['from_email']['resetting'],$user->getEmail());
+        $this->_sendMail($message,"Student2Student : Restablecer la contraseña",$this->parameters['host_info']['no_reply_email'],$user->getEmail());
 
     }
 
@@ -95,7 +95,7 @@ class Mailer extends BaseClass
                 ));
 
                 $message1->setBody($toSellerRendered, 'text/html');
-                $this->_sendMail($message1, "Student2Student: Buyer Contacting You", $this->parameters['from_email']['resetting'], $seller->getEmail());
+                $this->_sendMail($message1, "Student2Student: Comprador Contacto", $this->parameters['host_info']['no_reply_email'], $seller->getEmail());
             }
 
             if($buyerInfo['buyerEntity'] instanceof User) {
@@ -114,7 +114,7 @@ class Mailer extends BaseClass
                         'envelop_image'=>$message2->embed(\Swift_Image::fromPath('assets/images/envelop.png'))
                     ));
                     $message2->setBody($toBuyerRendered, 'text/html');
-                    $this->_sendMail($message2, "Student2Student: Seller Contact Information ", $this->parameters['from_email']['resetting'], $buyerInfo['buyerEmail']);
+                    $this->_sendMail($message2, "Student2Student: Información de Contacto del Vendedor ", $this->parameters['host_info']['no_reply_email'], $buyerInfo['buyerEmail']);
                 }
             }else{
                 $message2 = \Swift_Message::newInstance();
@@ -130,7 +130,7 @@ class Mailer extends BaseClass
                     'envelop_image'=>$message2->embed(\Swift_Image::fromPath('assets/images/envelop.png'))
                 ));
                 $message2->setBody($toBuyerRendered, 'text/html');
-                $this->_sendMail($message2, "Student2Student: Seller Contact Information ", $this->parameters['from_email']['resetting'], $buyerInfo['buyerEmail']);
+                $this->_sendMail($message2, "Student2Student: Información de Contacto del Vendedor ", $this->parameters['host_info']['no_reply_email'], $buyerInfo['buyerEmail']);
             }
         }elseif(!strcmp($bookDeal->getBookContactMethod(),"sellerToBuyer")){
 
@@ -154,7 +154,7 @@ class Mailer extends BaseClass
 
                 $message1->setBody($toSellerRendered, 'text/html');
 
-                $this->_sendMail($message1, "Student2Student: Buyer Contact Information", $this->parameters['from_email']['resetting'], $seller->getEmail());
+                $this->_sendMail($message1, "Student2Student: Información de Contacto del Comprador", $this->parameters['host_info']['no_reply_email'], $seller->getEmail());
             }
 
             if($buyerInfo['buyerEntity'] instanceof User) {
@@ -174,7 +174,7 @@ class Mailer extends BaseClass
                         'envelop_image'=>$message1->embed(\Swift_Image::fromPath('assets/images/envelop.png'))
                     ));
                     $message2->setBody($toBuyerRendered, 'text/html');
-                    $this->_sendMail($message2, "Student2Student: Sent Information to Seller", $this->parameters['from_email']['resetting'], $buyerInfo['buyerEmail']);
+                    $this->_sendMail($message2, "Student2Student: Información Enviada al Vendedor", $this->parameters['host_info']['no_reply_email'], $buyerInfo['buyerEmail']);
                 }
             }else{
                 $message2 = \Swift_Message::newInstance();
@@ -191,7 +191,7 @@ class Mailer extends BaseClass
                     'envelop_image'=>$message1->embed(\Swift_Image::fromPath('assets/images/envelop.png'))
                 ));
                 $message2->setBody($toBuyerRendered, 'text/html');
-                $this->_sendMail($message2, "Student2Student: Sent Information to Seller", $this->parameters['from_email']['resetting'], $buyerInfo['buyerEmail']);
+                $this->_sendMail($message2, "Student2Student: Información Enviada al Vendedor", $this->parameters['host_info']['no_reply_email'], $buyerInfo['buyerEmail']);
             }
         }elseif(!strcmp($bookDeal->getBookContactMethod(),"student2studentBoard")){
 
@@ -217,7 +217,7 @@ class Mailer extends BaseClass
                 if (!strcmp("On", $buyerInfo['buyerEntity']->getEmailNotification())) {
                     $message1->setBody($toSellerRendered, 'text/html');
 
-                    $this->_sendMail($message1, "Student2Student: New Contact Received", $this->parameters['from_email']['resetting'], $seller->getEmail());
+                    $this->_sendMail($message1, "Student2Student: Nuevo Contacto Recibido", $this->parameters['host_info']['no_reply_email'], $seller->getEmail());
 
                     //Sending 2nd Mail
                     $message2 = \Swift_Message::newInstance();
@@ -234,7 +234,7 @@ class Mailer extends BaseClass
                         'envelop_image'=>$message1->embed(\Swift_Image::fromPath('assets/images/envelop.png'))
                     ));
                     $message2->setBody($toBuyerRendered, 'text/html');
-                    $this->_sendMail($message2, "Student2Student: Contacted Seller ", $this->parameters['from_email']['resetting'], $buyerInfo['buyerEmail']);
+                    $this->_sendMail($message2, "Student2Student: Vendedor Contactado ", $this->parameters['host_info']['no_reply_email'], $buyerInfo['buyerEmail']);
                 }
             }else{
                 $message2 = \Swift_Message::newInstance();
@@ -251,7 +251,7 @@ class Mailer extends BaseClass
                     'envelop_image'=>$message1->embed(\Swift_Image::fromPath('assets/images/envelop.png'))
                 ));
                 $message2->setBody($toBuyerRendered, 'text/html');
-                $this->_sendMail($message2, "Student2Student: Contacted Seller ", $this->parameters['from_email']['resetting'], $buyerInfo['buyerEmail']);
+                $this->_sendMail($message2, "Student2Student: Vendedor Contactado ", $this->parameters['host_info']['no_reply_email'], $buyerInfo['buyerEmail']);
             }
         }
 
@@ -309,7 +309,7 @@ class Mailer extends BaseClass
             $rendered = $this->templating->render("mail_templates/buyer_to_seller_message_mail_to_seller.html.twig",$data);
 
             $message1->setBody($rendered,'text/html');
-            $this->_sendMail($message1,"Student2Student: Buyer ( ".$data['buyer']." ) Sent you message",$this->parameters['from_email']['resetting'], $sellerMailAddress);
+            $this->_sendMail($message1,"Student2Student: El Comprador ( ".$data['buyer']." ) le envió el mensaje",$this->parameters['host_info']['no_reply_email'], $sellerMailAddress);
         }
 
 
@@ -331,7 +331,7 @@ class Mailer extends BaseClass
                 $rendered = $this->templating->render("mail_templates/buyer_to_seller_message_mail_to_buyer.html.twig",$data);
 
                 $message2->setBody($rendered,'text/html');
-                $this->_sendMail($message2,"Student2Student: Message sent to Seller ( ".$data['seller']->getUsername()." )",$this->parameters['from_email']['resetting'], $data['contact']->getBuyerEmail());
+                $this->_sendMail($message2,"Student2Student: Mensaje Enviado al Vendedor ( ".$data['seller']->getUsername()." )",$this->parameters['host_info']['no_reply_email'], $data['contact']->getBuyerEmail());
             }
         }else{
             $message2 = \Swift_Message::newInstance();
@@ -350,7 +350,7 @@ class Mailer extends BaseClass
             $rendered = $this->templating->render("mail_templates/buyer_to_seller_message_mail_to_buyer.html.twig",$data);
 
             $message2->setBody($rendered,'text/html');
-            $this->_sendMail($message2,"Student2Student: Message sent to Seller ( ".$data['seller']->getUsername()." )",$this->parameters['from_email']['resetting'], $data['contact']->getBuyerEmail());
+            $this->_sendMail($message2,"Student2Student: Mensaje Enviado al Vendedor ( ".$data['seller']->getUsername()." )",$this->parameters['host_info']['no_reply_email'], $data['contact']->getBuyerEmail());
         }
 
         foreach($data['messageArray'] as $messageRow){
@@ -382,7 +382,7 @@ class Mailer extends BaseClass
                 $rendered = $this->templating->render("mail_templates/seller_to_buyer_message_mail_to_buyer.html.twig",$data);
 
                 $message1->setBody($rendered,'text/html');
-                $this->_sendMail($message1,"Student2Student: Seller ( ".$data['seller']->getUsername()." ) Sent you message",$this->parameters['from_email']['resetting'], $data['contact']->getBuyerEmail());
+                $this->_sendMail($message1,"Student2Student: El vendedor ( ".$data['seller']->getUsername()." ) le envió un mensaje ",$this->parameters['host_info']['no_reply_email'], $data['contact']->getBuyerEmail());
             }
         }else{
             $message1 = \Swift_Message::newInstance();
@@ -400,7 +400,7 @@ class Mailer extends BaseClass
             $rendered = $this->templating->render("mail_templates/seller_to_buyer_message_mail_to_buyer.html.twig",$data);
 
             $message1->setBody($rendered,'text/html');
-            $this->_sendMail($message1,"Student2Student: Seller ( ".$data['seller']->getUsername()." ) Sent you message",$this->parameters['from_email']['resetting'], $data['contact']->getBuyerEmail());
+            $this->_sendMail($message1,"Student2Student: El vendedor ( ".$data['seller']->getUsername()." ) le envió un mensaje ",$this->parameters['host_info']['no_reply_email'], $data['contact']->getBuyerEmail());
         }
 
 
@@ -421,7 +421,7 @@ class Mailer extends BaseClass
             $rendered = $this->templating->render("mail_templates/seller_to_buyer_message_mail_to_seller.html.twig",$data);
 
             $message2->setBody($rendered,'text/html');
-            $this->_sendMail($message2,"Student2Student: Message sent to Buyer ( ".$data['buyer']." )",$this->parameters['from_email']['resetting'], $sellerMailAddress);
+            $this->_sendMail($message2,"Student2Student: Mensaje enviado al comprador ( ".$data['buyer']." )",$this->parameters['host_info']['no_reply_email'], $sellerMailAddress);
 
         }
 
@@ -435,7 +435,7 @@ class Mailer extends BaseClass
         $message1 = \Swift_Message::newInstance();
         $rendered = $this->templating->render("mail_templates/contact_us_email.html.twig",$data);
         $message1->setBody($rendered,'text/html');
-        $this->_sendContactUsMail($message1,"Student2Student.es: Contact Message",$this->parameters['from_email']['resetting'], 'support@student2student.com');
+        $this->_sendContactUsMail($message1,$this->parameters['host_info']['host_name']." : Contact Message",$this->parameters['host_info']['no_reply_email'], 'support@student2student.com');
     }
 
     function sendFriendsEmail($data){
@@ -448,7 +448,7 @@ class Mailer extends BaseClass
         $rendered = $this->templating->render("mail_templates/share_mail_with_friends.html.twig",$data);
 
         $message1->setBody($rendered,'text/html');
-        $this->_sendMailToMultiple($message1,"Student2Student",$this->parameters['from_email']['resetting'],$data['friendEmails']);
+        $this->_sendMailToMultiple($message1,"Student2Student",$this->parameters['host_info']['no_reply_email'],$data['friendEmails']);
     }
 
     function sendShareSellPageEmailToFriends($data){
@@ -459,61 +459,59 @@ class Mailer extends BaseClass
         $data['footer_image']=$message1->embed(\Swift_Image::fromPath('assets/images/footer.jpg'));
         $data['buy_my_textbooks_button_image']=$message1->embed(\Swift_Image::fromPath('assets/images/buy_my_textbooks.jpg'));
         $data['books_stack_image']=$message1->embed(\Swift_Image::fromPath('assets/images/books_stack.jpg'));
-        $data['shareUrl'] = "http://168.61.173.224:8080/Student2Student/#/".$data['username'];
+        $data['shareUrl'] = $this->parameters['host_info']['host_url']."/".$data['username'];
 
         $rendered = $this->templating->render("mail_templates/share_sell_page_mail_with_friends.html.twig",$data);
 
         $message1->setBody($rendered,'text/html');
-        $this->_sendMailToMultiple($message1,$data['username']."'s Sell Page | Student2Student",$this->parameters['from_email']['resetting'],$data['friendEmails']);
+        $this->_sendMailToMultiple($message1,"Página de venta de ".$data['username']." | Student2Student",$this->parameters['host_info']['no_reply_email'],$data['friendEmails']);
     }
 
 
 
 
     public function _sendMail($message,$subject,$from,$to){
-        $transport = \Swift_SmtpTransport::newInstance('smtp.student2student.com', 25)
-            ->setUsername('no-reply@student2student.es')
-            ->setPassword('wWoc$868');
-//        $transport = \Swift_SmtpTransport::newInstance('smtp.gmail.com', 465,'ssl')
-//            ->setUsername('sujit.developer.136661@gmail.com')
-//            ->setPassword('maniac.sujit');
+        $transport = \Swift_SmtpTransport::newInstance($this->parameters['host_info']['mail_host'], $this->parameters['host_info']['mail_port'],$this->parameters['host_info']['mail_security'])
+            ->setUsername($this->parameters['host_info']['no_reply_email'])
+            ->setPassword($this->parameters['host_info']['no_reply_password']);
 
         $mailer = \Swift_Mailer::newInstance($transport);
 
         $message
             ->setSubject($subject)
-            ->setFrom('no-reply@student2student.es')
+            ->setFrom($this->parameters['host_info']['no_reply_email'])
             ->setTo($to);
         $mailer->send($message);
     }
     public function _sendContactUsMail($message,$subject,$from,$to){
-        $transport = \Swift_SmtpTransport::newInstance('smtp.student2student.com', 25)
-            ->setUsername('no-reply@student2student.es')
-            ->setPassword('wWoc$868');
+
+        $transport = \Swift_SmtpTransport::newInstance($this->parameters['host_info']['mail_host'], $this->parameters['host_info']['mail_port'],$this->parameters['host_info']['mail_security'])
+            ->setUsername($this->parameters['host_info']['no_reply_email'])
+            ->setPassword($this->parameters['host_info']['no_reply_password']);
 
         $mailer = \Swift_Mailer::newInstance($transport);
 
         $message
             ->setSubject($subject)
-            ->setFrom('no-reply@student2student.es')
+            ->setFrom($this->parameters['host_info']['no_reply_email'])
             ->setTo($to);
         $mailer->send($message);
     }
     public function _sendMailToMultiple($message,$subject,$from,$toes){
-        $transport = \Swift_SmtpTransport::newInstance('smtp.student2student.com', 25)
-            ->setUsername('no-reply@student2student.es')
-            ->setPassword('wWoc$868');
+        $transport = \Swift_SmtpTransport::newInstance($this->parameters['host_info']['mail_host'], $this->parameters['host_info']['mail_port'],$this->parameters['host_info']['mail_security'])
+            ->setUsername($this->parameters['host_info']['no_reply_email'])
+            ->setPassword($this->parameters['host_info']['no_reply_password']);
 
         $mailer = \Swift_Mailer::newInstance($transport);
 
         $message
             ->setSubject($subject)
-            ->setFrom('no-reply@student2student.es');
+            ->setFrom($this->parameters['host_info']['no_reply_email']);
 
         foreach($toes as $to){
             $message->addBcc($to['email']);
         }
-        $message->setTo('no-reply@student2student.es');
+        $message->setTo($this->parameters['host_info']['no_reply_email']);
 
         $mailer->send($message);
     }

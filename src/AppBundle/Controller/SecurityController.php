@@ -63,6 +63,9 @@ class SecurityController extends BaseController {
         if(!strcmp($error,"User account is disabled.")){
             $error.=" Please Check Your Email for the Activation Link.";
         }
+        if(!strcmp($error,"Bad credentials.")){
+            $error =" Username/Email or Password is incorrect.";
+        }
 
         return $this->_createJsonResponse('error',array("errorTitle" => "Login Unsuccessful", "errorDescription" => $error),400);
     }
