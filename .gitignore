@@ -10,6 +10,7 @@
 /build/
 /vendor/
 /bin/
+/data/databaseBackup/*
 /composer.phar
 /web/bookImages/
 /web/assets/testEmail/
