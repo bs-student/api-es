@@ -35,22 +35,23 @@ class NewsletterApiController extends Controller
     /**
      * Add Newsletter Email
      */
-    public function addNewsletterEmailAction(Request $request){
+    public function addNewsletterEmailAction(Request $request)
+    {
 
 
         $content = $request->getContent();
         $data = json_decode($content, true);
         $em = $this->getDoctrine()->getManager();
-        $newsletterRepo=$em->getRepository('AppBundle:Newsletter');
+        $newsletterRepo = $em->getRepository('AppBundle:Newsletter');
 
-        if(array_key_exists('email',$data)){
-            $newsletter = $newsletterRepo->findOneBy(array('email'=>$data['email']));
-            if($newsletter instanceof Newsletter){
-                if(strcmp($newsletter->getActivationStatus(),"Activated")){
+        if (array_key_exists('email', $data)) {
+            $newsletter = $newsletterRepo->findOneBy(array('email' => $data['email']));
+            if ($newsletter instanceof Newsletter) {
+                if (strcmp($newsletter->getActivationStatus(), "Activated")) {
 
                     //If Email exist and not Activated then Update (Activate)
-                    $data['activationStatus']='Activated';
-                    $data['lastUpdateDateTime']=gmdate('Y-m-d H:i:s');
+                    $data['activationStatus'] = 'Activated';
+                    $data['lastUpdateDateTime'] = gmdate('Y-m-d H:i:s');
 
                     $newsletterForm = $this->createForm(new NewsletterType(), $newsletter);
 
@@ -60,24 +61,32 @@ class NewsletterApiController extends Controller
                         $em->persist($newsletter);
                         $em->flush();
                         return $this->_createJsonResponse('success', array(
-                            'successTitle' => "Email has been Subscribed"
+//                            'successTitle' => "Email has been Subscribed"
+                            'successTitle' => "Tu correo ha sido registrado"
                         ), 201);
 
                     } else {
-                        return $this->_createJsonResponse('error', array("errorTitle"=>"Could Not Subscribe Your Email","errorData" => $newsletterForm), 400);
+                        return $this->_createJsonResponse('error', array(
+//                            "errorTitle"=>"Could Not Subscribe Your Email",
+                            "errorTitle" => "Lo sentimos, no es posible registrar tu email",
+                            "errorData" => $newsletterForm), 400);
+
                     }
 
-                }else{
+                } else {
                     // If Email Exist and Activated  then error
-                    return $this->_createJsonResponse('error', array("errorTitle"=>"Your Email is Already Subscribed"), 400);
+                    return $this->_createJsonResponse('error', array(
+//                        "errorTitle"=>"Your Email is Already Subscribed"
+                        "errorTitle" => "Tu correo ya está registrado"
+                    ), 400);
                 }
-            }else{
+            } else {
 
                 // Add new Email to Newsletter
                 $newsletter = new Newsletter();
 
-                $data['activationStatus']='Activated';
-                $data['lastUpdateDateTime']=gmdate('Y-m-d H:i:s');
+                $data['activationStatus'] = 'Activated';
+                $data['lastUpdateDateTime'] = gmdate('Y-m-d H:i:s');
 
 
                 $newsletterForm = $this->createForm(new NewsletterType(), $newsletter);
@@ -88,15 +97,26 @@ class NewsletterApiController extends Controller
                     $em->persist($newsletter);
                     $em->flush();
                     return $this->_createJsonResponse('success', array(
-                        'successTitle' => "Email has been Subscribed"
+//                        'successTitle' => "Email has been Subscribed"
+                        'successTitle' => "Tu correo ha sido registrado"
                     ), 201);
 
                 } else {
-                    return $this->_createJsonResponse('error', array("errorTitle"=>"Sorry, Could Not Subscribe Your Email","errorData" => $newsletterForm), 400);
+                    return $this->_createJsonResponse('error', array(
+//                        "errorTitle"=>"Sorry, Could Not Subscribe Your Email",
+                        "errorTitle" => "Lo sentimos, no es posible registrar tu email",
+                        "errorData" => $newsletterForm), 400);
                 }
             }
-        }else{
-            return $this->_createJsonResponse('error', array("errorTitle"=>"Sorry, Could Not Subscribe Your Email","errorDescription" => "Check your form and submit again"), 400);
+        } else {
+            return $this->_createJsonResponse('error', array(
+//                "errorTitle"=>"Sorry, Could Not Subscribe Your Email",
+//                "errorDescription" => "Check your form and submit again"
+
+                "errorTitle" => "Lo sentimos, no es posible registrar tu email",
+                "errorDescription" => "Revisa el formulario y envíalo de nuevo"
+
+            ), 400);
         }
 
     }
@@ -105,15 +125,16 @@ class NewsletterApiController extends Controller
     /**
      * Get All Newsletter Emails
      */
-    public function getAllNewsletterEmailsAction(Request $request){
+    public function getAllNewsletterEmailsAction(Request $request)
+    {
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
 
-        if(in_array('ROLE_ADMIN_USER',$user->getRoles(),true)){
+        if (in_array('ROLE_ADMIN_USER', $user->getRoles(), true)) {
 
             $content = $request->getContent();
             $data = json_decode($content, true);
             $em = $this->getDoctrine()->getManager();
-            $newsletterRepo=$em->getRepository('AppBundle:Newsletter');
+            $newsletterRepo = $em->getRepository('AppBundle:Newsletter');
 
             $pageSize = $data["pageSize"];
             $searchQuery = filter_var($data["searchQuery"], FILTER_SANITIZE_STRING);
@@ -121,12 +142,12 @@ class NewsletterApiController extends Controller
             $sort = $data["sort"];
 
             $totalNumber = $newsletterRepo->getAllNewsletterEmailSearchNumber($searchQuery);
-            $searchResults= $newsletterRepo->getAllNewsletterEmailSearchResult($searchQuery, $pageNumber, $pageSize,$sort);
+            $searchResults = $newsletterRepo->getAllNewsletterEmailSearchResult($searchQuery, $pageNumber, $pageSize, $sort);
 
-            $totalData=array();
-            foreach($searchResults as $newsletter){
-                $newsletter['lastUpdateDateTime'] =$newsletter['lastUpdateDateTime']->format('H:i d-M-Y');
-                array_push($totalData,$newsletter);
+            $totalData = array();
+            foreach ($searchResults as $newsletter) {
+                $newsletter['lastUpdateDateTime'] = $newsletter['lastUpdateDateTime']->format('H:i d-M-Y');
+                array_push($totalData, $newsletter);
             }
 
 
@@ -135,31 +156,32 @@ class NewsletterApiController extends Controller
                 'totalNumber' => $totalNumber
             );
 
-            return $this->_createJsonResponse('success', array('successData'=>array('newsletterEmails'=>$data)), 200);
-        }else{
-            return $this->_createJsonResponse('error', array('errorTitle'=>"You are not authorized to see this page."), 400);
+            return $this->_createJsonResponse('success', array('successData' => array('newsletterEmails' => $data)), 200);
+        } else {
+            return $this->_createJsonResponse('error', array('errorTitle' => "You are not authorized to see this page."), 400);
         }
     }
 
     /**
      * Export All Newsletter Emails
      */
-    public function exportAllNewsletterEmailsAction(Request $request){
+    public function exportAllNewsletterEmailsAction(Request $request)
+    {
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
 
-        if(in_array('ROLE_ADMIN_USER',$user->getRoles(),true)){
+        if (in_array('ROLE_ADMIN_USER', $user->getRoles(), true)) {
 
             $em = $this->getDoctrine()->getManager();
-            $newsletterRepo=$em->getRepository('AppBundle:Newsletter');
+            $newsletterRepo = $em->getRepository('AppBundle:Newsletter');
 
             $handle = fopen('newsletterEmails/newsletterEmails.csv', 'w+');
 
             // Add the header of the CSV file
-            fputcsv($handle, array('Email', 'DateTime', 'Status'),',');
+            fputcsv($handle, array('Email', 'DateTime', 'Status'), ',');
 
             $emails = $newsletterRepo->getAllEmails();
             // Add the data queried from database
-            foreach($emails as $email) {
+            foreach ($emails as $email) {
                 fputcsv(
                     $handle, // The file pointer
                     array($email['email'], $email['lastUpdateDateTime']->format('H:i d-M-Y'), $email['activationStatus']), // The fields
@@ -170,29 +192,30 @@ class NewsletterApiController extends Controller
             fclose($handle);
 
             $logData = array(
-                'user'=>$user->getId(),
-                'logType'=>"Newsletter Export",
-                'logDateTime'=>gmdate('Y-m-d H:i:s'),
-                'logDescription'=> $user->getUsername()." has exported newsletter into a csv file.",
-                'userIpAddress'=>$this->container->get('request')->getClientIp(),
-                'logUserType'=> in_array("ROLE_ADMIN_USER",$user->getRoles())?"Admin User":"Normal User"
+                'user' => $user->getId(),
+                'logType' => "Newsletter Export",
+                'logDateTime' => gmdate('Y-m-d H:i:s'),
+                'logDescription' => $user->getUsername() . " has exported newsletter into a csv file.",
+                'userIpAddress' => $this->container->get('request')->getClientIp(),
+                'logUserType' => in_array("ROLE_ADMIN_USER", $user->getRoles()) ? "Admin User" : "Normal User"
             );
             $this->_saveLog($logData);
 
-            return $this->_createJsonResponse('success', array('successTitle'=>"CSV is generated",'successData'=>array("link"=>"/newsletterEmails/newsletterEmails.csv")), 200);
+            return $this->_createJsonResponse('success', array('successTitle' => "CSV is generated", 'successData' => array("link" => "/newsletterEmails/newsletterEmails.csv")), 200);
 
-        }else{
-            return $this->_createJsonResponse('error', array('errorTitle'=>"You are not authorized to see this page."), 400);
+        } else {
+            return $this->_createJsonResponse('error', array('errorTitle' => "You are not authorized to see this page."), 400);
         }
     }
 
-    public function _saveLog($logData){
+    public function _saveLog($logData)
+    {
         $em = $this->container->get('doctrine')->getManager();
         $log = new Log();
         $logForm = $this->container->get('form.factory')->create(new LogType(), $log);
 
         $logForm->submit($logData);
-        if($logForm->isValid()){
+        if ($logForm->isValid()) {
             $em->persist($log);
             $em->flush();
         }

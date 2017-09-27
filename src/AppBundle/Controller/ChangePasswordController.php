@@ -34,10 +34,12 @@ class ChangePasswordController extends BaseController
         $user = $this->container->get('security.context')->getToken()->getUser();
         if (!is_object($user) || !$user instanceof UserInterface) {
             $data = array(
-                'errorTitle'=>"Access Denied",
-                "errorDescription"=>"Sorry, This user does not have access to this section."
+//                'errorTitle'=>"Access Denied",
+//                "errorDescription"=>"Sorry, This user does not have access to this section."
+                'errorTitle' => "Acceso denegado",
+                "errorDescription" => "Lo siento, Este usuario no tiene acceso a esta sección."
             );
-            return $this->_createJsonResponse('error',$data,400);
+            return $this->_createJsonResponse('error', $data, 400);
 
         }
 
@@ -48,44 +50,49 @@ class ChangePasswordController extends BaseController
         if ($process) {
 
             $logData = array(
-                'user'=>$user->getId(),
-                'logType'=>"Change Password",
-                'logDateTime'=>gmdate('Y-m-d H:i:s'),
-                'logDescription'=> $user->getUsername()." has changed password",
-                'userIpAddress'=>$this->container->get('request')->getClientIp(),
-                'logUserType'=> in_array("ROLE_ADMIN_USER",$user->getRoles())?"Admin User":"Normal User"
+                'user' => $user->getId(),
+                'logType' => "Change Password",
+                'logDateTime' => gmdate('Y-m-d H:i:s'),
+                'logDescription' => $user->getUsername() . " has changed password",
+                'userIpAddress' => $this->container->get('request')->getClientIp(),
+                'logUserType' => in_array("ROLE_ADMIN_USER", $user->getRoles()) ? "Admin User" : "Normal User"
             );
             $this->_saveLog($logData);
 
             $data = array(
-                'successTitle'=>"Password Changed",
-                "successDescription"=>"Password is successfully changed."
+//                'successTitle'=>"Password Changed",
+//                "successDescription"=>"Password is successfully changed."
+                'successTitle' => "Contraseña cambiada",
+                "successDescription" => "Se ha restablecido la contraseña."
             );
-            return $this->_createJsonResponse('success',$data,200);
+            return $this->_createJsonResponse('success', $data, 200);
 
-        }else{
+        } else {
 
             $data = array(
-                'errorTitle'=>"Sorry, Password could not be changed"
+//                'errorTitle'=>"Sorry, Password could not be changed"
+                'errorTitle' => "Lo siento, no se ha podido cambiar la contraseña"
             );
-            return $this->_createJsonResponse('error',$data,400);
+            return $this->_createJsonResponse('error', $data, 400);
         }
 
     }
 
-    public function _saveLog($logData){
+    public function _saveLog($logData)
+    {
         $em = $this->container->get('doctrine')->getManager();
         $log = new Log();
         $logForm = $this->container->get('form.factory')->create(new LogType(), $log);
 
         $logForm->submit($logData);
-        if($logForm->isValid()){
+        if ($logForm->isValid()) {
             $em->persist($log);
             $em->flush();
         }
     }
 
-    public function _createJsonResponse($key,$data,$code){
+    public function _createJsonResponse($key, $data, $code)
+    {
         $serializer = $this->container->get('jms_serializer');
         $json = $serializer->serialize([$key => $data], 'json');
         $response = new Response($json, $code);

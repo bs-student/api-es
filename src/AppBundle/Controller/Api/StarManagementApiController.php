@@ -30,7 +30,8 @@ class StarManagementApiController extends Controller
     /**
      * Add textbook deal into Star List
      */
-    public function addBookDealToStarListAction(Request $request){
+    public function addBookDealToStarListAction(Request $request)
+    {
 
         $em = $this->getDoctrine()->getManager();
         $starRepo = $em->getRepository("AppBundle:Star");
@@ -40,37 +41,48 @@ class StarManagementApiController extends Controller
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
-        $alreadyInserted = $starRepo->checkIfAlreadyAddedToStarList($user->getId(),$data['bookDealId']);
+        $alreadyInserted = $starRepo->checkIfAlreadyAddedToStarList($user->getId(), $data['bookDealId']);
 
-        if(!$alreadyInserted){
+        if (!$alreadyInserted) {
             $star = new Star();
             $starForm = $this->createForm(new StarType(), $star);
-            $starForm ->submit(array(
-                'user'=>$user->getId(),
-                'bookDeal'=>$data['bookDealId'],
+            $starForm->submit(array(
+                'user' => $user->getId(),
+                'bookDeal' => $data['bookDealId'],
             ));
 
             if ($starForm->isValid()) {
                 $em->persist($star);
                 $em->flush();
-                return $this->_createJsonResponse('success', array("successTitle" => "BookDeal Successfully Starred","successData"=>array("starred"=>true)), 200);
+                return $this->_createJsonResponse('success', array(
+//                    "successTitle" => "BookDeal Successfully Starred",
+                    "successTitle" => "Oferta de libro marcada con éxito",
+                    "successData" => array("starred" => true)), 200);
             } else {
-                return $this->_createJsonResponse('error', array("errorTitle" => "Couldn't Starred","errorData" => $starForm), 400);
+                return $this->_createJsonResponse('error', array(
+//                    "errorTitle" => "Couldn't Starred"
+                    "errorTitle" => "Oferta de libro no fue marcado con éxito"
+                , "errorData" => $starForm), 400);
             }
-        }else{
+        } else {
 
-            $star = $starRepo->findBy(array('user'=>$user->getId(),'bookDeal'=>$data['bookDealId']));
+            $star = $starRepo->findBy(array('user' => $user->getId(), 'bookDeal' => $data['bookDealId']));
 
-            if($star[0] instanceof Star){
+            if ($star[0] instanceof Star) {
                 $em->remove($star[0]);
                 $em->flush();
-                return $this->_createJsonResponse('success', array("successTitle" => "BookDeal Successfully Unstarred","successData"=>array("starred"=>false)), 200);
-            }else{
-                return $this->_createJsonResponse('error', array("errorTitle" => "Couldn't Unstar"), 400);
+                return $this->_createJsonResponse('success', array(
+//                    "successTitle" => "BookDeal Successfully Unstarred",
+                    "successTitle" => "Libro acuerdo sin marcar con éxito",
+                    "successData" => array("starred" => false)), 200);
+            } else {
+                return $this->_createJsonResponse('error', array(
+//                    "errorTitle" => "Couldn't Unstar"
+                    "errorTitle" => "Libro no fue desmarcado con éxito"
+                ), 400);
             }
 
         }
-
 
 
     }

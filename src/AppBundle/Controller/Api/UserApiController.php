@@ -38,28 +38,29 @@ class UserApiController extends Controller
                 'email' => $user->getEmail(),
                 'registrationStatus' => $user->getRegistrationStatus(),
                 'userId' => ($user->getGoogleId() != null) ? $user->getGoogleId() : $user->getFacebookId(),
-                'campusId' => $user->getCampus()?$user->getCampus()->getId():'',
+                'campusId' => $user->getCampus() ? $user->getCampus()->getId() : '',
                 'profilePicture' => $user->getProfilePicture(),
                 'standardHomePhone' => $user->getStandardHomePhone(),
                 'standardCellPhone' => $user->getStandardCellPhone(),
                 'standardEmail' => $user->getStandardEmail(),
-                'role'=>$user->getRoles(),
-                'campusDisplay'=>$user->getCampus()?$user->getCampus()->getUniversity()->getUniversityname().", ".$user->getCampus()->getCampusName().", ".$user->getCampus()->getState()->getStateShortName().", ".$user->getCampus()->getState()->getCountry()->getCountryName():'',
+                'role' => $user->getRoles(),
+                'campusDisplay' => $user->getCampus() ? $user->getCampus()->getUniversity()->getUniversityname() . ", " . $user->getCampus()->getCampusName() . ", " . $user->getCampus()->getState()->getStateShortName() . ", " . $user->getCampus()->getState()->getCountry()->getCountryName() : '',
             );
 
 
-            if(!in_array("ROLE_ADMIN_USER",$user_data['role'])){
+            if (!in_array("ROLE_ADMIN_USER", $user_data['role'])) {
                 $user_data['universityName'] = $user->getCampus()->getUniversity()->getUniversityName();
             }
 
-            return $this->_createJsonResponse('success',array(
-                'successData'=>$user_data,
-            ),200);
+            return $this->_createJsonResponse('success', array(
+                'successData' => $user_data,
+            ), 200);
 
-        }else{
-            return $this->_createJsonResponse('error',array(
-                'errorTitle'=>"User was not identified",
-            ),400);
+        } else {
+            return $this->_createJsonResponse('error', array(
+//                'errorTitle'=>"User was not identified",
+                'errorTitle' => "El usuario no ha sido identificado",
+            ), 400);
 
         }
     }
@@ -87,19 +88,20 @@ class UserApiController extends Controller
                 'standardHomePhone' => $user->getStandardHomePhone(),
                 'standardCellPhone' => $user->getStandardCellPhone(),
                 'standardEmail' => $user->getStandardEmail(),
-                'role'=>$user->getRoles(),
+                'role' => $user->getRoles(),
                 'profilePicture' => $user->getProfilePicture(),
-                'emailNotification'=>$user->getEmailNotification(),
+                'emailNotification' => $user->getEmailNotification(),
             );
 
-            return $this->_createJsonResponse('success',array(
-                'successData'=>$user_data,
-            ),200);
+            return $this->_createJsonResponse('success', array(
+                'successData' => $user_data,
+            ), 200);
 
-        }else{
-            return $this->_createJsonResponse('error',array(
-                'errorTitle'=>"User was not identified",
-            ),400);
+        } else {
+            return $this->_createJsonResponse('error', array(
+//                'errorTitle'=>"User was not identified",
+                'errorTitle' => "El usuario no ha sido identificado",
+            ), 400);
         }
 
     }
@@ -116,9 +118,9 @@ class UserApiController extends Controller
         $userRepo = $em->getRepository('AppBundle:User');
         $users = $userRepo->findAllUsers();
 
-        return $this->_createJsonResponse('success',array(
-            'successData'=>$users,
-        ),200);
+        return $this->_createJsonResponse('success', array(
+            'successData' => $users,
+        ), 200);
 
 
     }
@@ -127,7 +129,8 @@ class UserApiController extends Controller
     /**
      * Update User Profile
      */
-    public function updateUserProfileAction(Request $request){
+    public function updateUserProfileAction(Request $request)
+    {
 
 
         $content = $request->get('profileData');
@@ -146,17 +149,21 @@ class UserApiController extends Controller
                 $fileSaveName = gmdate("Y-d-m_h_i_s_") . rand(0, 99999999) . "." . pathinfo($file->getClientOriginalName())['extension'];
                 $file->move($fileDirHost . $fileDir, $fileSaveName);
 
-                $this->_smart_resize_image($fileDirHost.$fileDir.$fileSaveName , null, 200 , 200 , false , $fileDirHost.$fileDir.$fileSaveName , false , false ,100 );
+                $this->_smart_resize_image($fileDirHost . $fileDir . $fileSaveName, null, 200, 200, false, $fileDirHost . $fileDir . $fileSaveName, false, false, 100);
 
-                $data['profilePicture']= $fileNameDir . $fileSaveName;
+                $data['profilePicture'] = $fileNameDir . $fileSaveName;
             } else {
                 $fileUploadError = true;
             }
         }
 
         //If Error Occurs than Return Error Message
-        if($fileUploadError)return $this->_createJsonResponse('error', array('errorTitle' => "Cannot Update Profile", 'errorDescription' => "Image is more than 200 KB"), 400);
-
+        if ($fileUploadError) return $this->_createJsonResponse('error', array(
+//            'errorTitle' => "Cannot Update Profile",
+//            'errorDescription' => "Image is more than 200 KB"
+            'errorTitle' => "No se puede actualizar el perfil",
+            'errorDescription' => "La imagen es más de 200 KB"
+        ), 400);
 
 
         $user = $this->container->get('security.context')->getToken()->getUser();
@@ -168,8 +175,8 @@ class UserApiController extends Controller
         if ($user != null) {
             $updateForm = $this->createForm(new ProfileType(), $user);
 
-            if(count($files)==0){
-                $data['profilePicture']=$user->getProfilePicture();
+            if (count($files) == 0) {
+                $data['profilePicture'] = $user->getProfilePicture();
             }
             $updateForm->submit($data);
 
@@ -178,39 +185,45 @@ class UserApiController extends Controller
                 $em->persist($user);
                 $em->flush();
 
-                $userData=array(
-                    'campusId'=>$user->getCampus()->getId(),
-                    'campusName'=>$user->getCampus()->getCampusName(),
-                    'countryName'=>$user->getCampus()->getState()->getCountry()->getCountryName(),
-                    'stateName'=>$user->getCampus()->getState()->getStateName(),
-                    'stateShortName'=>$user->getCampus()->getState()->getStateShortName(),
-                    'universityName'=>$user->getCampus()->getUniversity()->getUniversityName(),
-                    'fullName'=>$user->getFullName(),
-                    'standardHomePhone'=>$user->getStandardHomePhone(),
-                    'standardCellPhone'=>$user->getStandardCellPhone(),
-                    'standardEmail'=>$user->getStandardEmail(),
-                    'profilePicture'=>$user->getProfilePicture(),
-                    'emailNotification'=>$user->getEmailNotification(),
+                $userData = array(
+                    'campusId' => $user->getCampus()->getId(),
+                    'campusName' => $user->getCampus()->getCampusName(),
+                    'countryName' => $user->getCampus()->getState()->getCountry()->getCountryName(),
+                    'stateName' => $user->getCampus()->getState()->getStateName(),
+                    'stateShortName' => $user->getCampus()->getState()->getStateShortName(),
+                    'universityName' => $user->getCampus()->getUniversity()->getUniversityName(),
+                    'fullName' => $user->getFullName(),
+                    'standardHomePhone' => $user->getStandardHomePhone(),
+                    'standardCellPhone' => $user->getStandardCellPhone(),
+                    'standardEmail' => $user->getStandardEmail(),
+                    'profilePicture' => $user->getProfilePicture(),
+                    'emailNotification' => $user->getEmailNotification(),
 
                 );
 
                 $logData = array(
-                    'user'=>$user->getId(),
-                    'logType'=>"Profile Update",
-                    'logDateTime'=>gmdate('Y-m-d H:i:s'),
-                    'logDescription'=> $user->getUsername()." has updated own profile information.",
-                    'userIpAddress'=>$this->container->get('request')->getClientIp(),
-                    'logUserType'=> in_array("ROLE_ADMIN_USER",$user->getRoles())?"Admin User":"Normal User"
+                    'user' => $user->getId(),
+                    'logType' => "Profile Update",
+                    'logDateTime' => gmdate('Y-m-d H:i:s'),
+                    'logDescription' => $user->getUsername() . " has updated own profile information.",
+                    'userIpAddress' => $this->container->get('request')->getClientIp(),
+                    'logUserType' => in_array("ROLE_ADMIN_USER", $user->getRoles()) ? "Admin User" : "Normal User"
                 );
                 $this->_saveLog($logData);
 
-                return $this->_createJsonResponse('success', array('successTitle' => 'Profile is Updated','successData'=>$userData),200);
+                return $this->_createJsonResponse('success', array(
+//                    'successTitle' => 'Profile is Updated',
+                    'successTitle' => 'El perfil se ha actualizado',
+                    'successData' => $userData
+                ), 200);
             } else {
                 return $this->_createJsonResponse('error', array(
-                    'errorTitle' => 'Full Name is not Updated',
-                    'errorDescription' => 'Sorry. Please check the form and submit again.',
-                    'errorData'=>$updateForm
-                ),400);
+//                    'errorTitle' => 'Full Name is not Updated',
+//                    'errorDescription' => 'Sorry. Please check the form and submit again.',
+                    'errorTitle' => 'No se ha actualizado el nombre completo',
+                    'errorDescription' => 'Lo siento. Comprueba el formulario y envíalo de nuevo.',
+                    'errorData' => $updateForm
+                ), 400);
             }
         }
     }
@@ -218,12 +231,12 @@ class UserApiController extends Controller
     /**
      * Email Notification Update
      */
-    public function updateUserEmailNotificationAction(Request $request){
+    public function updateUserEmailNotificationAction(Request $request)
+    {
 
 
         $content = $request->getContent();
         $data = json_decode($content, true);
-
 
 
         $user = $this->container->get('security.context')->getToken()->getUser();
@@ -233,7 +246,7 @@ class UserApiController extends Controller
         if ($user != null) {
             $updateForm = $this->createForm(new EmailNotificationType(), $user);
 
-            if(!strcmp('On',$data['emailNotification']) || !strcmp('Off',$data['emailNotification']) ){
+            if (!strcmp('On', $data['emailNotification']) || !strcmp('Off', $data['emailNotification'])) {
                 $updateForm->submit($data);
 
 
@@ -241,46 +254,58 @@ class UserApiController extends Controller
                     $em->persist($user);
                     $em->flush();
 
-                    $userData=array(
-                        'emailNotification'=>$user->getEmailNotification()
+                    $userData = array(
+                        'emailNotification' => $user->getEmailNotification()
                     );
-                    if(!strcmp("On",$user->getEmailNotification())){
+                    if (!strcmp("On", $user->getEmailNotification())) {
                         $logData = array(
-                            'user'=>$user->getId(),
-                            'logType'=>"Email Notification Change",
-                            'logDateTime'=>gmdate('Y-m-d H:i:s'),
-                            'logDescription'=> $user->getUsername()." has turned on Email Notification",
-                            'userIpAddress'=>$this->container->get('request')->getClientIp(),
-                            'logUserType'=> in_array("ROLE_ADMIN_USER",$user->getRoles())?"Admin User":"Normal User"
+                            'user' => $user->getId(),
+                            'logType' => "Email Notification Change",
+                            'logDateTime' => gmdate('Y-m-d H:i:s'),
+                            'logDescription' => $user->getUsername() . " has turned on Email Notification",
+                            'userIpAddress' => $this->container->get('request')->getClientIp(),
+                            'logUserType' => in_array("ROLE_ADMIN_USER", $user->getRoles()) ? "Admin User" : "Normal User"
                         );
                         $this->_saveLog($logData);
-                        return $this->_createJsonResponse('success', array('successTitle' => 'Email Notification is successfully turned on','successData'=>$userData),200);
-                    }elseif(!strcmp("Off",$user->getEmailNotification())){
+                        return $this->_createJsonResponse('success', array(
+//                            'successTitle' => 'Email Notification is successfully turned on',
+                            'successTitle' => 'Notificación de correo electrónico activada correctamente',
+                            'successData' => $userData
+                        ), 200);
+                    } elseif (!strcmp("Off", $user->getEmailNotification())) {
                         $logData = array(
-                            'user'=>$user->getId(),
-                            'logType'=>"Email Notification Change",
-                            'logDateTime'=>gmdate('Y-m-d H:i:s'),
-                            'logDescription'=> $user->getUsername()." has turned off Email Notification",
-                            'userIpAddress'=>$this->container->get('request')->getClientIp(),
-                            'logUserType'=> in_array("ROLE_ADMIN_USER",$user->getRoles())?"Admin User":"Normal User"
+                            'user' => $user->getId(),
+                            'logType' => "Email Notification Change",
+                            'logDateTime' => gmdate('Y-m-d H:i:s'),
+                            'logDescription' => $user->getUsername() . " has turned off Email Notification",
+                            'userIpAddress' => $this->container->get('request')->getClientIp(),
+                            'logUserType' => in_array("ROLE_ADMIN_USER", $user->getRoles()) ? "Admin User" : "Normal User"
                         );
                         $this->_saveLog($logData);
-                        return $this->_createJsonResponse('success', array('successTitle' => 'Email Notification is successfully turned off','successData'=>$userData),200);
+                        return $this->_createJsonResponse('success', array(
+//                            'successTitle' => 'Email Notification is successfully turned off',
+                            'successTitle' => 'La notificación de correo electrónico se ha desactivado correctamente.',
+                            'successData' => $userData
+                        ), 200);
                     }
 
                 } else {
                     return $this->_createJsonResponse('error', array(
-                        'errorTitle' => 'Email Notification Status is not updated',
-                        'errorDescription' => 'Sorry. Please check the form and submit again.',
-                        'errorData'=>$updateForm
-                    ),400);
+//                        'errorTitle' => 'Email Notification Status is not updated',
+//                        'errorDescription' => 'Sorry. Please check the form and submit again.',
+                        'errorTitle' => 'El estado sobre el aviso del email no se ha actualizado',
+                        'errorDescription' => 'Lo siento. Comprueba el formulario y envíalo de nuevo.',
+                        'errorData' => $updateForm
+                    ), 400);
                 }
-            }else {
+            } else {
                 return $this->_createJsonResponse('error', array(
-                    'errorTitle' => 'Email Notification Status is not updated',
-                    'errorDescription' => 'Sorry. Please check the form and submit again.',
-                    'errorData'=>$updateForm
-                ),400);
+//                    'errorTitle' => 'Email Notification Status is not updated',
+//                    'errorDescription' => 'Sorry. Please check the form and submit again.',
+                    'errorTitle' => 'El estado sobre el aviso del email no se ha actualizado',
+                    'errorDescription' => 'Lo siento. Comprueba el formulario y envíalo de nuevo.',
+                    'errorData' => $updateForm
+                ), 400);
             }
 
         }
@@ -289,36 +314,36 @@ class UserApiController extends Controller
 
 //Image Resize Function
     function _smart_resize_image($file,
-                                 $string             = null,
-                                 $width              = 0,
-                                 $height             = 0,
-                                 $proportional       = false,
-                                 $output             = 'file',
-                                 $delete_original    = true,
+                                 $string = null,
+                                 $width = 0,
+                                 $height = 0,
+                                 $proportional = false,
+                                 $output = 'file',
+                                 $delete_original = true,
                                  $use_linux_commands = false,
                                  $quality = 100
-    ) {
+    )
+    {
 
-        if ( $height <= 0 && $width <= 0 ) return false;
-        if ( $file === null && $string === null ) return false;
+        if ($height <= 0 && $width <= 0) return false;
+        if ($file === null && $string === null) return false;
         # Setting defaults and meta
-        $info                         = $file !== null ? getimagesize($file) : getimagesizefromstring($string);
-        $image                        = '';
-        $final_width                  = 0;
-        $final_height                 = 0;
+        $info = $file !== null ? getimagesize($file) : getimagesizefromstring($string);
+        $image = '';
+        $final_width = 0;
+        $final_height = 0;
         list($width_old, $height_old) = $info;
         $cropHeight = $cropWidth = 0;
         # Calculating proportionality
         if ($proportional) {
-            if      ($width  == 0)  $factor = $height/$height_old;
-            elseif  ($height == 0)  $factor = $width/$width_old;
-            else                    $factor = min( $width / $width_old, $height / $height_old );
-            $final_width  = round( $width_old * $factor );
-            $final_height = round( $height_old * $factor );
-        }
-        else {
-            $final_width = ( $width <= 0 ) ? $width_old : $width;
-            $final_height = ( $height <= 0 ) ? $height_old : $height;
+            if ($width == 0) $factor = $height / $height_old;
+            elseif ($height == 0) $factor = $width / $width_old;
+            else                    $factor = min($width / $width_old, $height / $height_old);
+            $final_width = round($width_old * $factor);
+            $final_height = round($height_old * $factor);
+        } else {
+            $final_width = ($width <= 0) ? $width_old : $width;
+            $final_height = ($height <= 0) ? $height_old : $height;
             $widthX = $width_old / $width;
             $heightX = $height_old / $height;
 
@@ -327,26 +352,32 @@ class UserApiController extends Controller
             $cropHeight = ($height_old - $height * $x) / 2;
         }
         # Loading image to memory according to type
-        switch ( $info[2] ) {
-            case IMAGETYPE_JPEG:  $file !== null ? $image = imagecreatefromjpeg($file) : $image = imagecreatefromstring($string);  break;
-            case IMAGETYPE_GIF:   $file !== null ? $image = imagecreatefromgif($file)  : $image = imagecreatefromstring($string);  break;
-            case IMAGETYPE_PNG:   $file !== null ? $image = imagecreatefrompng($file)  : $image = imagecreatefromstring($string);  break;
-            default: return false;
+        switch ($info[2]) {
+            case IMAGETYPE_JPEG:
+                $file !== null ? $image = imagecreatefromjpeg($file) : $image = imagecreatefromstring($string);
+                break;
+            case IMAGETYPE_GIF:
+                $file !== null ? $image = imagecreatefromgif($file) : $image = imagecreatefromstring($string);
+                break;
+            case IMAGETYPE_PNG:
+                $file !== null ? $image = imagecreatefrompng($file) : $image = imagecreatefromstring($string);
+                break;
+            default:
+                return false;
         }
 
 
         # This is the resizing/resampling/transparency-preserving magic
-        $image_resized = imagecreatetruecolor( $final_width, $final_height );
-        if ( ($info[2] == IMAGETYPE_GIF) || ($info[2] == IMAGETYPE_PNG) ) {
+        $image_resized = imagecreatetruecolor($final_width, $final_height);
+        if (($info[2] == IMAGETYPE_GIF) || ($info[2] == IMAGETYPE_PNG)) {
             $transparency = imagecolortransparent($image);
             $palletsize = imagecolorstotal($image);
             if ($transparency >= 0 && $transparency < $palletsize) {
-                $transparent_color  = imagecolorsforindex($image, $transparency);
-                $transparency       = imagecolorallocate($image_resized, $transparent_color['red'], $transparent_color['green'], $transparent_color['blue']);
+                $transparent_color = imagecolorsforindex($image, $transparency);
+                $transparency = imagecolorallocate($image_resized, $transparent_color['red'], $transparent_color['green'], $transparent_color['blue']);
                 imagefill($image_resized, 0, 0, $transparency);
                 imagecolortransparent($image_resized, $transparency);
-            }
-            elseif ($info[2] == IMAGETYPE_PNG) {
+            } elseif ($info[2] == IMAGETYPE_PNG) {
                 imagealphablending($image_resized, false);
                 $color = imagecolorallocatealpha($image_resized, 0, 0, 0, 127);
                 imagefill($image_resized, 0, 0, $color);
@@ -357,12 +388,12 @@ class UserApiController extends Controller
 
 
         # Taking care of original, if needed
-        if ( $delete_original ) {
-            if ( $use_linux_commands ) exec('rm '.$file);
+        if ($delete_original) {
+            if ($use_linux_commands) exec('rm ' . $file);
             else @unlink($file);
         }
         # Preparing a method of providing result
-        switch ( strtolower($output) ) {
+        switch (strtolower($output)) {
             case 'browser':
                 $mime = image_type_to_mime_type($info[2]);
                 header("Content-type: $mime");
@@ -379,31 +410,37 @@ class UserApiController extends Controller
         }
 
         # Writing image according to type to the output destination and image quality
-        switch ( $info[2] ) {
-            case IMAGETYPE_GIF:   imagegif($image_resized, $output);    break;
-            case IMAGETYPE_JPEG:  imagejpeg($image_resized, $output, $quality);   break;
+        switch ($info[2]) {
+            case IMAGETYPE_GIF:
+                imagegif($image_resized, $output);
+                break;
+            case IMAGETYPE_JPEG:
+                imagejpeg($image_resized, $output, $quality);
+                break;
             case IMAGETYPE_PNG:
-                $quality = 9 - (int)((0.9*$quality)/10.0);
+                $quality = 9 - (int)((0.9 * $quality) / 10.0);
                 imagepng($image_resized, $output, $quality);
                 break;
-            default: return false;
+            default:
+                return false;
         }
         return true;
     }
 
-    public function _saveLog($logData){
+    public function _saveLog($logData)
+    {
         $em = $this->container->get('doctrine')->getManager();
         $log = new Log();
         $logForm = $this->container->get('form.factory')->create(new LogType(), $log);
 
         $logForm->submit($logData);
-        if($logForm->isValid()){
+        if ($logForm->isValid()) {
             $em->persist($log);
             $em->flush();
         }
     }
 
-    public function _createJsonResponse($key, $data,$code)
+    public function _createJsonResponse($key, $data, $code)
     {
         $serializer = $this->container->get('jms_serializer');
         $json = $serializer->serialize([$key => $data], 'json');

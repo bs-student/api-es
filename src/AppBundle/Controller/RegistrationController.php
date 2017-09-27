@@ -41,7 +41,7 @@ class RegistrationController extends BaseController
         $em = $this->container->get('doctrine')->getManager();
         $usernameExist = $em->getRepository('AppBundle:User')->checkIfNewUsernameExist($searchQuery);
 
-        return $this->_createJsonResponse('success',array('usernameExist' => $usernameExist),200);
+        return $this->_createJsonResponse('success', array('usernameExist' => $usernameExist), 200);
 
 
     }
@@ -59,7 +59,7 @@ class RegistrationController extends BaseController
         $em = $this->container->get('doctrine')->getManager();
         $emailExist = $em->getRepository('AppBundle:User')->checkIfNewEmailExist($searchQuery);
 
-        return $this->_createJsonResponse('success',array('emailExist' => $emailExist),200);
+        return $this->_createJsonResponse('success', array('emailExist' => $emailExist), 200);
 
 
     }
@@ -73,14 +73,14 @@ class RegistrationController extends BaseController
         $submittedData = $formHandler->getSubmittedData();
 
 
-        if(array_key_exists('key',$submittedData)){
+        if (array_key_exists('key', $submittedData)) {
 
             $captchaApiInfo = $this->container->getParameter('google_re_captcha_info');
 
             $host = $captchaApiInfo['host'];
             $secret = $captchaApiInfo['secret'];
 
-            $url= $host."?secret=".$secret."&response=".$submittedData['key'];
+            $url = $host . "?secret=" . $secret . "&response=" . $submittedData['key'];
 
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
@@ -88,11 +88,10 @@ class RegistrationController extends BaseController
             $jsonOutput = curl_exec($ch);
             curl_close($ch);
 
-            $captchaResponse = json_decode($jsonOutput,true);
+            $captchaResponse = json_decode($jsonOutput, true);
 
 
-
-            if($captchaResponse['success']){
+            if ($captchaResponse['success']) {
                 $form = $this->container->get('fos_user.registration.form');
 
                 $form->remove('googleId');
@@ -105,7 +104,6 @@ class RegistrationController extends BaseController
                 $form->remove('facebookToken');
 
 
-
                 $confirmationEnabled = $this->container->getParameter('fos_user.registration.confirmation.enabled');
 
 
@@ -116,12 +114,12 @@ class RegistrationController extends BaseController
                     $user = $form->getData();
 
                     $logData = array(
-                        'user'=>$user->getId(),
-                        'logType'=>"Registration",
-                        'logDateTime'=>gmdate('Y-m-d H:i:s'),
-                        'logDescription'=> $user->getUsername()." has Registered",
-                        'userIpAddress'=>$this->container->get('request')->getClientIp(),
-                        'logUserType'=> in_array("ROLE_ADMIN_USER",$user->getRoles())?"Admin User":"Normal User"
+                        'user' => $user->getId(),
+                        'logType' => "Registration",
+                        'logDateTime' => gmdate('Y-m-d H:i:s'),
+                        'logDescription' => $user->getUsername() . " has Registered",
+                        'userIpAddress' => $this->container->get('request')->getClientIp(),
+                        'logUserType' => in_array("ROLE_ADMIN_USER", $user->getRoles()) ? "Admin User" : "Normal User"
                     );
                     $this->_saveLog($logData);
 
@@ -136,8 +134,12 @@ class RegistrationController extends BaseController
                     }
 
                     $message = array(
-                        'successTitle' => "Registration Successful",
-                        'successDescription' => "A verification Email has been sent to your mail. Please check verify your email to confirm registration."
+//                        'successTitle' => "Registration Successful",
+//                        'successDescription' => "A verification Email has been sent to your mail. Please check verify your email to confirm registration."
+
+
+                        'successTitle' => "Registro correcto",
+                        'successDescription' => "Se ha enviado un correo de confirmación. Por favor comprueba tu email y confirma el registro registración."
                     );
 
                     $this->setFlash('fos_user_success', 'registration.flash.user_created');
@@ -148,28 +150,36 @@ class RegistrationController extends BaseController
                         $this->authenticateUser($user, $response);
                     }
 
-                    return $this->_createJsonResponse('success',$message,201);
+                    return $this->_createJsonResponse('success', $message, 201);
 
 
                 }
 
-                return $this->_createJsonResponse('error',array(
-                    'errorTitle'=>"User Registration Unsuccessful",
-                    'errorDescription'=>"Sorry we were unable to register you. Reload the page and try again.",
-                    'errorData'=>$form
-                ),400);
-            }else{
-                return $this->_createJsonResponse('error',array(
-                    'errorTitle'=>"User Registration Unsuccessful",
-                    'errorDescription'=>"Captcha was Wrong. Reload and try again."
-                ),400);
+                return $this->_createJsonResponse('error', array(
+//                    'errorTitle'=>"User Registration Unsuccessful",
+//                    'errorDescription'=>"Sorry we were unable to register you. Reload the page and try again.",
+                    'errorTitle' => "Registro de usuario incorrecto",
+                    'errorDescription' => "Lo siento, ha sido imposible regístrate. Por favor vuelve a cargar la página e inténtalo de nuevo",
+                    'errorData' => $form
+                ), 400);
+            } else {
+                return $this->_createJsonResponse('error', array(
+//                    'errorTitle'=>"User Registration Unsuccessful",
+//                    'errorDescription'=>"Captcha was Wrong. Reload and try again."
+
+                    'errorTitle' => "Registro de usuario incorrecto",
+                    'errorDescription' => "Captcha erróneo. Cargar e intentar de nuevo."
+                ), 400);
             }
 
-        }else{
-            return $this->_createJsonResponse('error',array(
-                'errorTitle'=>"User Registration Unsuccessful",
-                'errorDescription'=>"Sorry we were unable to register you. FillUp the form and try again."
-            ),400);
+        } else {
+            return $this->_createJsonResponse('error', array(
+//                'errorTitle'=>"User Registration Unsuccessful",
+//                'errorDescription'=>"Sorry we were unable to register you. FillUp the form and try again."
+
+                'errorTitle' => "Registro de usuario incorrecto",
+                'errorDescription' => "Lo siento, ha sido imposible regístrate. Rellenar el formulario de registro e inténtalo de nuevo."
+            ), 400);
         }
 
 
@@ -215,10 +225,13 @@ class RegistrationController extends BaseController
         $this->authenticateUser($user, $response);
 
         $data = array(
-            'successTitle' => "Registration Confirmed",
-            "successDescription" => "The Account has been Confirmed"
+//            'successTitle' => "Registration Confirmed",
+//            "successDescription" => "The Account has been Confirmed"
+
+            'successTitle' => "Registro Confirmado",
+            "successDescription" => "La cuenta ha sido confirmada"
         );
-        return $this->_createJsonResponse('success', $data,200);
+        return $this->_createJsonResponse('success', $data, 200);
 
     }
 
@@ -232,15 +245,21 @@ class RegistrationController extends BaseController
         if (!is_object($user) || !$user instanceof UserInterface) {
 
             $data = array(
-                'errorTitle' => "Access Denied",
-                "errorDescription" => "This user does not have access to this section"
+//                'errorTitle' => "Access Denied",
+//                "errorDescription" => "This user does not have access to this section"
+
+                'errorTitle' => "Acceso denegado",
+                "errorDescription" => "Este usuario no tiene acceso a esta sección"
             );
-            return $this->_createJsonResponse('error', $data,400);
+            return $this->_createJsonResponse('error', $data, 400);
 
         } else {
             $data = array(
-                'successTitle' => "Registration Confirmed",
-                "successDescription" => "The Account has been Confirmed"
+//                'successTitle' => "Registration Confirmed",
+//                "successDescription" => "The Account has been Confirmed"
+
+                'successTitle' => "Registro Confirmado",
+                "successDescription" => "La cuenta ha sido confirmada"
             );
             return $this->_createJsonResponse('success', $data, 200);
 
@@ -255,21 +274,25 @@ class RegistrationController extends BaseController
     public function confirmationTokenExpiredAction()
     {
         $data = array(
-            'errorTitle' => "Confirmation Failed",
-            "errorDescription" => "Sorry, The Confirmation token has been expired"
+//            'errorTitle' => "Confirmation Failed",
+//            "errorDescription" => "Sorry, The Confirmation token has been expired"
+
+            'errorTitle' => "Confirmación fallida",
+            "errorDescription" => "Lo siento, el código de confirmación ha expirado."
         );
         return $this->_createJsonResponse('error', $data, 400);
 
     }
 
 
-    public function _saveLog($logData){
+    public function _saveLog($logData)
+    {
         $em = $this->container->get('doctrine')->getManager();
         $log = new Log();
         $logForm = $this->container->get('form.factory')->create(new LogType(), $log);
 
         $logForm->submit($logData);
-        if($logForm->isValid()){
+        if ($logForm->isValid()) {
             $em->persist($log);
             $em->flush();
         }

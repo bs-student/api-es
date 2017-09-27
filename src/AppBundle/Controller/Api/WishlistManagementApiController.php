@@ -28,7 +28,8 @@ class WishListManagementApiController extends Controller
     /**
      * Add book into WishList
      */
-    public function addBookToWishListAction(Request $request){
+    public function addBookToWishListAction(Request $request)
+    {
 
         $em = $this->getDoctrine()->getManager();
         $wishListRepo = $em->getRepository("AppBundle:WishList");
@@ -39,35 +40,45 @@ class WishListManagementApiController extends Controller
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
 
-        $alreadyInserted = $wishListRepo->checkIfAlreadyAddedToWishList($user->getId(),$data['bookId']);
+        $alreadyInserted = $wishListRepo->checkIfAlreadyAddedToWishList($user->getId(), $data['bookId']);
 
 
-        if($alreadyInserted instanceof WishList){
+        if ($alreadyInserted instanceof WishList) {
             $em->remove($alreadyInserted);
             try {
                 $em->flush();
-                return $this->_createJsonResponse('success',array('successTitle'=>"Wish List Item has been removed"),200);
-            }catch (Exception $e){
-                return $this->_createJsonResponse('error',array('errorTitle'=>"Wish List Item could not be removed"),400);
+                return $this->_createJsonResponse('success', array(
+//                    'successTitle'=>"Wish List Item has been removed"
+                    'successTitle' => "Eliminado de favoritos"
+                ), 200);
+            } catch (Exception $e) {
+                return $this->_createJsonResponse('error', array(
+//                    'errorTitle'=>"Wish List Item could not be removed"
+                    'errorTitle' => "No se ha podido eliminar de favoritos"
+                ), 400);
             }
-        }else{
+        } else {
             $wishList = new WishList();
             $wishListForm = $this->createForm(new WishListType(), $wishList);
             $wishListForm->submit(array(
-                'user'=>$user->getId(),
-                'book'=>$data['bookId'],
+                'user' => $user->getId(),
+                'book' => $data['bookId'],
             ));
 
             if ($wishListForm->isValid()) {
                 $em->persist($wishList);
                 $em->flush();
-                return $this->_createJsonResponse('success', array("successTitle" => "Book Successfully Added to WishList"), 200);
+                return $this->_createJsonResponse('success', array(
+//                    "successTitle" => "Book Successfully Added to WishList"
+                    "successTitle" => "Libro añadido a favoritos"
+                ), 200);
             } else {
-                return $this->_createJsonResponse('error', array("errorTitle" => "Couldn't Add to Wishlist","errorData" => $wishListForm), 400);
+                return $this->_createJsonResponse('error', array(
+//                    "errorTitle" => "Couldn't Add to Wishlist"
+                    "errorTitle" => "No se ha podido añadir a favoritos"
+                , "errorData" => $wishListForm), 400);
             }
         }
-
-
 
 
     }
@@ -75,35 +86,36 @@ class WishListManagementApiController extends Controller
     /**
      * GET My Wishlist
      */
-    public function getMyWishListAction(Request $request){
+    public function getMyWishListAction(Request $request)
+    {
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $wishListBooks = $user->getWishLists();
 
-        $books=array();
-        foreach($wishListBooks as $row){
-            $bookEntity=$row->getBook();
-            $book=array();
+        $books = array();
+        foreach ($wishListBooks as $row) {
+            $bookEntity = $row->getBook();
+            $book = array();
 
-            $book['bookId']=$bookEntity->getId();
-            $book['bookTitle']=$bookEntity->getBookTitle();
-            $book['bookDirectorAuthorArtist']=$bookEntity->getBookDirectorAuthorArtist();
-            $book['bookEdition']=$bookEntity->getBookEdition();
-            $book['bookPublisher']=$bookEntity->getBookPublisher();
-            $book['bookPublishDate']=$bookEntity->getBookPublishDate();
-            $book['bookBinding']=$bookEntity->getBookBinding();
-            $book['bookPage']=$bookEntity->getBookPage();
-            $book['bookLanguage']=$bookEntity->getBooklanguage();
-            $book['bookDescription']=$bookEntity->getBookDescription();
-            $book['bookIsbn10']=$bookEntity->getBookIsbn10();
-            $book['bookIsbn13']=$bookEntity->getBookIsbn13();
-            $book['bookImage']=$bookEntity->getBookImage();
-            $book['bookAmazonPrice']="€".str_replace(".",",",$bookEntity->getBookAmazonPrice());
+            $book['bookId'] = $bookEntity->getId();
+            $book['bookTitle'] = $bookEntity->getBookTitle();
+            $book['bookDirectorAuthorArtist'] = $bookEntity->getBookDirectorAuthorArtist();
+            $book['bookEdition'] = $bookEntity->getBookEdition();
+            $book['bookPublisher'] = $bookEntity->getBookPublisher();
+            $book['bookPublishDate'] = $bookEntity->getBookPublishDate();
+            $book['bookBinding'] = $bookEntity->getBookBinding();
+            $book['bookPage'] = $bookEntity->getBookPage();
+            $book['bookLanguage'] = $bookEntity->getBooklanguage();
+            $book['bookDescription'] = $bookEntity->getBookDescription();
+            $book['bookIsbn10'] = $bookEntity->getBookIsbn10();
+            $book['bookIsbn13'] = $bookEntity->getBookIsbn13();
+            $book['bookImage'] = $bookEntity->getBookImage();
+            $book['bookAmazonPrice'] = "€" . str_replace(".", ",", $bookEntity->getBookAmazonPrice());
 
 
             //Formatting Date
-            if ($book['bookPublishDate']!=null) {
+            if ($book['bookPublishDate'] != null) {
                 $book['bookPublishDate'] = $book['bookPublishDate']->format('d M Y');
             }
 
@@ -113,10 +125,10 @@ class WishListManagementApiController extends Controller
             $book['bookImages'] = array();
 
             $image = array(
-                'image'=>$book['bookImage'],
-                'imageId'=>0
+                'image' => $book['bookImage'],
+                'imageId' => 0
             );
-            array_push($book['bookImages'],$image);
+            array_push($book['bookImages'], $image);
 
             //Formatting Title & SubTitle
             if (strpos($book['bookTitle'], ":")) {
@@ -124,12 +136,11 @@ class WishListManagementApiController extends Controller
                 $book['bookTitle'] = substr($book['bookTitle'], 0, strpos($book['bookTitle'], ":"));
             }
 
-            array_push($books,$book);
+            array_push($books, $book);
 
         }
 
-        return $this->_createJsonResponse('success',array('successData'=>$books),200);
-
+        return $this->_createJsonResponse('success', array('successData' => $books), 200);
 
 
     }
@@ -137,7 +148,8 @@ class WishListManagementApiController extends Controller
     /**
      * Remove My Wishlist Item
      */
-    public function removeWishListItemAction(Request $request){
+    public function removeWishListItemAction(Request $request)
+    {
         $em = $this->getDoctrine()->getManager();
         $wishListRepo = $em->getRepository("AppBundle:WishList");
 
@@ -146,16 +158,22 @@ class WishListManagementApiController extends Controller
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
-        $data = $wishListRepo->findBy(array('book'=>$data['bookId'],'user'=>$user->getId()));
+        $data = $wishListRepo->findBy(array('book' => $data['bookId'], 'user' => $user->getId()));
 
 
         $em->remove($data[0]);
 
         try {
             $em->flush();
-            return $this->_createJsonResponse('success',array('successTitle'=>"Wish List Item has been removed"),200);
-        }catch (Exception $e){
-            return $this->_createJsonResponse('error',array('errorTitle'=>"Wish List Item could not be removed"),400);
+            return $this->_createJsonResponse('success', array(
+//                'successTitle'=>"Wish List Item has been removed"
+                'successTitle' => "Eliminado de favoritos"
+            ), 200);
+        } catch (Exception $e) {
+            return $this->_createJsonResponse('error', array(
+//                'errorTitle'=>"Wish List Item could not be removed"
+                'errorTitle' => "No se ha podido eliminar de favoritos"
+            ), 400);
         }
 
 
@@ -164,15 +182,16 @@ class WishListManagementApiController extends Controller
     /**
      * Check If Added into wishlist
      */
-    public function checkIfAddedIntoWishlistAction(Request $request){
+    public function checkIfAddedIntoWishlistAction(Request $request)
+    {
         $em = $this->getDoctrine()->getManager();
         $wishListRepo = $em->getRepository("AppBundle:WishList");
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $content = $request->getContent();
         $data = json_decode($content, true);
 
-        $wishListData= $wishListRepo->checkIfBookAlreadyAddedByIsbn($user->getId(),$data['isbn']);
-        return $this->_createJsonResponse('success',array('successData'=>$wishListData),200);
+        $wishListData = $wishListRepo->checkIfBookAlreadyAddedByIsbn($user->getId(), $data['isbn']);
+        return $this->_createJsonResponse('success', array('successData' => $wishListData), 200);
 
     }
 

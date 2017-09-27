@@ -30,12 +30,12 @@ class UniversityManagementApiController extends Controller
         $query = $request->request->get('query');
         $em = $this->getDoctrine()->getManager();
 
-        if ($query == null||$query == "") {
+        if ($query == null || $query == "") {
 
-            $responseData= array(
+            $responseData = array(
                 'university' => ""
             );
-            return $this->_createJsonResponse('success',array('successData'=>$responseData),200);
+            return $this->_createJsonResponse('success', array('successData' => $responseData), 200);
         }
 
         $universities = $em->getRepository('AppBundle:University')->getActivatedUniversitySearchResults($query);
@@ -48,7 +48,7 @@ class UniversityManagementApiController extends Controller
 
         }
 
-        return $this->_createJsonResponse('success',array('successData'=>$data),200);
+        return $this->_createJsonResponse('success', array('successData' => $data), 200);
 
     }
 
@@ -63,12 +63,12 @@ class UniversityManagementApiController extends Controller
 
         if ($query == null) {
 
-            return $this->_createJsonResponse('success',array('successData'=>array('university' => "")),200);
+            return $this->_createJsonResponse('success', array('successData' => array('university' => "")), 200);
 
         } else {
             $universities = $em->getRepository('AppBundle:University')->getUniversitySearchResults($query);
 
-            return $this->_createJsonResponse('success',array('successData'=>$universities),200);
+            return $this->_createJsonResponse('success', array('successData' => $universities), 200);
 
         }
 
@@ -93,10 +93,10 @@ class UniversityManagementApiController extends Controller
         $universities = $em->getRepository('AppBundle:University')->getUniversitySearchResultAdmin($searchQuery, $pageNumber, $pageSize);
 
 
-        return $this->_createJsonResponse('success',array('successData'=>array(
+        return $this->_createJsonResponse('success', array('successData' => array(
             'universities' => $universities,
             'totalNumber' => $totalNumber
-        )),200);
+        )), 200);
 
 
     }
@@ -110,8 +110,6 @@ class UniversityManagementApiController extends Controller
         $em = $this->getDoctrine()->getManager();
         $universityRepo = $em->getRepository('AppBundle:University');
         $serializer = $this->container->get('jms_serializer');
-
-
 
 
         //Getting Request Data
@@ -159,7 +157,6 @@ class UniversityManagementApiController extends Controller
                         $university_submitted_data['universityStatus'] = $request_data['universityStatus'];
 
 
-
                     $university_update_form->submit($university_submitted_data);
 
 
@@ -190,17 +187,17 @@ class UniversityManagementApiController extends Controller
 
             }
 
-            return $this->_createJsonResponse('success',array(
-                'successTitle'=>'University Updated Successfully',
-                'successData'=>$message_array
-            ),200);
+            return $this->_createJsonResponse('success', array(
+                'successTitle' => 'University Updated Successfully',
+                'successData' => $message_array
+            ), 200);
 
         } else {
 
-            return $this->_createJsonResponse('error',array(
-                'errorTitle'=>'University was not Updated',
-                'errorDescription'=>'Please Check the form and submit again'
-            ),400);
+            return $this->_createJsonResponse('error', array(
+                'errorTitle' => 'University was not Updated',
+                'errorDescription' => 'Please Check the form and submit again'
+            ), 400);
         }
 
 
@@ -217,43 +214,42 @@ class UniversityManagementApiController extends Controller
 
         $request_data = json_decode($request->getContent(), true);
 
-        if(array_key_exists('key',$request_data)){
+        if (array_key_exists('key', $request_data)) {
 
             $captchaApiInfo = $this->getParameter('google_re_captcha_info');
 
             $host = $captchaApiInfo['host'];
             $secret = $captchaApiInfo['secret'];
 
-            $url= $host."?secret=".$secret."&response=".$request_data['key'];
+            $url = $host . "?secret=" . $secret . "&response=" . $request_data['key'];
 
 
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-            $jsonOutput  = curl_exec($ch);
+            $jsonOutput = curl_exec($ch);
             curl_close($ch);
 
-            $captchaResponse = json_decode($jsonOutput,true);
+            $captchaResponse = json_decode($jsonOutput, true);
 
-            if($captchaResponse['success']){
-                $universityData=array();
+            if ($captchaResponse['success']) {
+                $universityData = array();
 
 
+                $universityData['universityName'] = $request_data['universityName'];
+                $universityData['universityStatus'] = 'Activated';
+                $universityData['universityUrl'] = $request_data['universityUrl'];
+                $universityData['referral'] = $request_data['referral'];
+                $universityData['campuses'] = array();
+                $universityData['adminApproved'] = "No";
+                $universityData['creationDateTime'] = gmdate('Y-m-d H:i:s');
 
-                $universityData['universityName']=$request_data['universityName'];
-                $universityData['universityStatus']='Activated';
-                $universityData['universityUrl']=$request_data['universityUrl'];
-                $universityData['referral']=$request_data['referral'];
-                $universityData['campuses']=array();
-                $universityData['adminApproved']="No";
-                $universityData['creationDateTime']=gmdate('Y-m-d H:i:s');
+                for ($i = 0; $i < count($request_data['campuses']); $i++) {
 
-                for($i=0; $i<count($request_data['campuses']);$i++){
-
-                    array_push($universityData['campuses'],array(
-                        'campusName'=>$request_data['campuses'][$i]['campusName'],
-                        'state'=>$request_data['campuses'][$i]['state'],
-                        'campusStatus'=>'Activated'
+                    array_push($universityData['campuses'], array(
+                        'campusName' => $request_data['campuses'][$i]['campusName'],
+                        'state' => $request_data['campuses'][$i]['state'],
+                        'campusStatus' => 'Activated'
                     ));
 
                 }
@@ -270,34 +266,42 @@ class UniversityManagementApiController extends Controller
                     $em->persist($universityEntity);
                     $em->flush();
 
-                    return $this->_createJsonResponse('success',array(
-                        'successTitle'=>"University Successfully Created"
-                    ),201);
+                    return $this->_createJsonResponse('success', array(
+//                        'successTitle'=>"University Successfully Created"
+                        'successTitle' => "Se ha creado la universidad con éxito"
+
+                    ), 201);
 
                 } else {
 
-                    $formErrorData = json_decode($serializer->serialize($universityForm, 'json'),true);
+                    $formErrorData = json_decode($serializer->serialize($universityForm, 'json'), true);
 
-                    return $this->_createJsonResponse('error',array(
-                        'errorTitle'=>"University Creation Unsuccessful",
-                        'errorDescription'=>"Please fill up the form again & submit.",
-                        'errorData'=>$formErrorData
-                    ),400);
+                    return $this->_createJsonResponse('error', array(
+//                        'errorTitle'=>"University Creation Unsuccessful",
+//                        'errorDescription'=>"Please fill up the form again & submit.",
+                        'errorTitle' => "No se ha podido crear la  universidad",
+                        'errorDescription' => "Por favor completa el formulario de nuevo y envíalo.",
+                        'errorData' => $formErrorData
+                    ), 400);
 
                 }
 
 
-            }else{
-                return $this->_createJsonResponse('error',array(
-                    'errorTitle'=>"University Creation Unsuccessful",
-                    'errorDescription'=>"Captcha was Wrong. Reload and try again."
-                ),400);
+            } else {
+                return $this->_createJsonResponse('error', array(
+//                    'errorTitle'=>"University Creation Unsuccessful",
+//                    'errorDescription'=>"Captcha was Wrong. Reload and try again."
+                    'errorTitle' => "No se ha podido crear la  universidad",
+                    'errorDescription' => "Captcha erróneo, Cargar e intentar de nuevo."
+                ), 400);
             }
-        }else{
-            return $this->_createJsonResponse('error',array(
-                'errorTitle'=>"University Creation Unsuccessful",
-                'errorDescription'=>"Sorry we were unable to create university. FillUp the form and try again."
-            ),400);
+        } else {
+            return $this->_createJsonResponse('error', array(
+//                'errorTitle'=>"University Creation Unsuccessful",
+//                'errorDescription'=>"Sorry we were unable to create university. FillUp the form and try again."
+                'errorTitle' => "No se ha podido crear la  universidad",
+                'errorDescription' => "Lo siento, no hemos podido crear la universidad. Completa el formulario e inténtalo de nuevo."
+            ), 400);
         }
 
 
@@ -313,50 +317,49 @@ class UniversityManagementApiController extends Controller
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
 
 
-
         $request_data = json_decode($request->getContent(), true);
 
-        if(array_key_exists('key',$request_data)){
+        if (array_key_exists('key', $request_data)) {
 
             $captchaApiInfo = $this->getParameter('google_re_captcha_info');
 
             $host = $captchaApiInfo['host'];
             $secret = $captchaApiInfo['secret'];
 
-            $url= $host."?secret=".$secret."&response=".$request_data['key'];
+            $url = $host . "?secret=" . $secret . "&response=" . $request_data['key'];
 
 
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-            $jsonOutput  = curl_exec($ch);
+            $jsonOutput = curl_exec($ch);
             curl_close($ch);
 
-            $captchaResponse = json_decode($jsonOutput,true);
+            $captchaResponse = json_decode($jsonOutput, true);
 
-            if($captchaResponse['success']){
-                $universityData=array();
+            if ($captchaResponse['success']) {
+                $universityData = array();
 
-                if(in_array('ROLE_ADMIN_USER',$user->getRoles(),true)){
-                    $universityData['adminApproved']="Yes";
-                }else{
-                    $universityData['adminApproved']="No";
+                if (in_array('ROLE_ADMIN_USER', $user->getRoles(), true)) {
+                    $universityData['adminApproved'] = "Yes";
+                } else {
+                    $universityData['adminApproved'] = "No";
                 }
 
-                $universityData['universityName']=$request_data['universityName'];
-                $universityData['universityStatus']='Activated';
-                $universityData['universityUrl']=$request_data['universityUrl'];
-                $universityData['referral']=$request_data['referral'];
-                $universityData['campuses']=array();
+                $universityData['universityName'] = $request_data['universityName'];
+                $universityData['universityStatus'] = 'Activated';
+                $universityData['universityUrl'] = $request_data['universityUrl'];
+                $universityData['referral'] = $request_data['referral'];
+                $universityData['campuses'] = array();
 
-                $universityData['creationDateTime']=gmdate('Y-m-d H:i:s');
+                $universityData['creationDateTime'] = gmdate('Y-m-d H:i:s');
 
-                for($i=0; $i<count($request_data['campuses']);$i++){
+                for ($i = 0; $i < count($request_data['campuses']); $i++) {
 
-                    array_push($universityData['campuses'],array(
-                        'campusName'=>$request_data['campuses'][$i]['campusName'],
-                        'state'=>$request_data['campuses'][$i]['state'],
-                        'campusStatus'=>'Activated'
+                    array_push($universityData['campuses'], array(
+                        'campusName' => $request_data['campuses'][$i]['campusName'],
+                        'state' => $request_data['campuses'][$i]['state'],
+                        'campusStatus' => 'Activated'
                     ));
 
                 }
@@ -374,45 +377,51 @@ class UniversityManagementApiController extends Controller
                     $em->flush();
 
                     $logData = array(
-                        'user'=>$user->getId(),
-                        'logType'=>"Add University",
-                        'logDateTime'=>gmdate('Y-m-d H:i:s'),
-                        'logDescription'=> $user->getUsername()." has created university named '".$universityEntity->getUniversityName()."'",
-                        'userIpAddress'=>$this->container->get('request')->getClientIp(),
-                        'logUserType'=> in_array("ROLE_ADMIN_USER",$user->getRoles())?"Admin User":"Normal User"
+                        'user' => $user->getId(),
+                        'logType' => "Add University",
+                        'logDateTime' => gmdate('Y-m-d H:i:s'),
+                        'logDescription' => $user->getUsername() . " has created university named '" . $universityEntity->getUniversityName() . "'",
+                        'userIpAddress' => $this->container->get('request')->getClientIp(),
+                        'logUserType' => in_array("ROLE_ADMIN_USER", $user->getRoles()) ? "Admin User" : "Normal User"
                     );
                     $this->_saveLog($logData);
 
-                    return $this->_createJsonResponse('success',array(
-                        'successTitle'=>"University Successfully Created"
-                    ),201);
+                    return $this->_createJsonResponse('success', array(
+//                        'successTitle'=>"University Successfully Created"
+                        'successTitle' => "Se ha creado la universidad con éxito"
+                    ), 201);
 
                 } else {
 
-                    $formErrorData = json_decode($serializer->serialize($universityForm, 'json'),true);
+                    $formErrorData = json_decode($serializer->serialize($universityForm, 'json'), true);
 
-                    return $this->_createJsonResponse('error',array(
-                        'errorTitle'=>"University Creation Unsuccessful",
-                        'errorDescription'=>"Please fill up the form again & submit.",
-                        'errorData'=>$formErrorData
-                    ),400);
+                    return $this->_createJsonResponse('error', array(
+//                        'errorTitle'=>"University Creation Unsuccessful",
+//                        'errorDescription'=>"Please fill up the form again & submit.",
+                        'errorTitle' => "No se ha podido crear la  universidad",
+                        'errorDescription' => "Por favor completa el formulario de nuevo y envíalo.",
+                        'errorData' => $formErrorData
+                    ), 400);
 
                 }
 
 
-            }else{
-                return $this->_createJsonResponse('error',array(
-                    'errorTitle'=>"University Creation Unsuccessful",
-                    'errorDescription'=>"Captcha was Wrong. Reload and try again."
-                ),400);
+            } else {
+                return $this->_createJsonResponse('error', array(
+//                    'errorTitle'=>"University Creation Unsuccessful",
+//                    'errorDescription'=>"Captcha was Wrong. Reload and try again."
+                    'errorTitle' => "No se ha podido crear la  universidad",
+                    'errorDescription' => "Captcha erróneo, Cargar e intentar de nuevo."
+                ), 400);
             }
-        }else{
-            return $this->_createJsonResponse('error',array(
-                'errorTitle'=>"University Creation Unsuccessful",
-                'errorDescription'=>"Sorry we were unable to create university. FillUp the form and try again."
-            ),400);
+        } else {
+            return $this->_createJsonResponse('error', array(
+//                'errorTitle'=>"University Creation Unsuccessful",
+//                'errorDescription'=>"Sorry we were unable to create university. FillUp the form and try again."
+                'errorTitle' => "No se ha podido crear la  universidad",
+                'errorDescription' => "Lo siento, no hemos podido crear la universidad. Completa el formulario e inténtalo de nuevo."
+            ), 400);
         }
-
 
 
     }
@@ -434,38 +443,39 @@ class UniversityManagementApiController extends Controller
 
         $message_array = null;
         if (!$university) {
-            $message_array  = array(
-                'errorTitle'=> 'University cannot be deleted',
-                'errorDescription'=>'No University was found.'
+            $message_array = array(
+                'errorTitle' => 'University cannot be deleted',
+                'errorDescription' => 'No University was found.'
             );
 
-            return $this->_createJsonResponse('error',$message_array,400);
+            return $this->_createJsonResponse('error', $message_array, 400);
 
-        }else{
+        } else {
             $em->remove($university);
             $em->flush();
-            $message_array  = array(
-                'successTitle'=>'University has been removed.'
+            $message_array = array(
+                'successTitle' => 'University has been removed.'
             );
-            return $this->_createJsonResponse('success',$message_array,200);
+            return $this->_createJsonResponse('success', $message_array, 200);
         }
 
 
     }
 
-    public function _saveLog($logData){
+    public function _saveLog($logData)
+    {
         $em = $this->container->get('doctrine')->getManager();
         $log = new Log();
         $logForm = $this->container->get('form.factory')->create(new LogType(), $log);
 
         $logForm->submit($logData);
-        if($logForm->isValid()){
+        if ($logForm->isValid()) {
             $em->persist($log);
             $em->flush();
         }
     }
 
-    public function _createJsonResponse($key, $data,$code)
+    public function _createJsonResponse($key, $data, $code)
     {
         $serializer = $this->container->get('jms_serializer');
         $json = $serializer->serialize([$key => $data], 'json');

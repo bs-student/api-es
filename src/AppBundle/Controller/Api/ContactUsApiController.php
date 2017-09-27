@@ -29,14 +29,14 @@ class ContactUsApiController extends Controller
     {
         $data = json_decode($request->getContent(), true);
 
-        if(array_key_exists('key',$data)){
+        if (array_key_exists('key', $data)) {
 
             $captchaApiInfo = $this->container->getParameter('google_re_captcha_info');
 
             $host = $captchaApiInfo['host'];
             $secret = $captchaApiInfo['secret'];
 
-            $url= $host."?secret=".$secret."&response=".$data['key'];
+            $url = $host . "?secret=" . $secret . "&response=" . $data['key'];
 
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
@@ -44,27 +44,36 @@ class ContactUsApiController extends Controller
             $jsonOutput = curl_exec($ch);
             curl_close($ch);
 
-            $captchaResponse = json_decode($jsonOutput,true);
+            $captchaResponse = json_decode($jsonOutput, true);
 
-            if($captchaResponse['success']){
+            if ($captchaResponse['success']) {
 
                 $this->get('fos_user.mailer')->sendContactUsEmail($data);
 
-                return $this->_createJsonResponse('success',array(
-                    'successTitle'=>"Your message has been sent",
-                    'successDescription'=>"We will contact you as soon as possible"
-                ),201);
-            }else{
-                return $this->_createJsonResponse('error',array(
-                    'errorTitle'=>"Emails not Sent",
-                    'errorDescription'=>"Captcha was Wrong. Reload and try again."
-                ),400);
+                return $this->_createJsonResponse('success', array(
+//                    'successTitle'=>"Your message has been sent",
+//                    'successDescription'=>"We will contact you as soon as possible"
+
+                    'successTitle' => "Tu mensaje se ha enviado",
+                    'successDescription' => "Te contactaremos lo antes posible"
+                ), 201);
+            } else {
+                return $this->_createJsonResponse('error', array(
+//                    'errorTitle'=>"Emails not Sent",
+//                    'errorDescription'=>"Captcha was Wrong. Reload and try again."
+
+                    'errorTitle' => "No se puedo enviar el email",
+                    'errorDescription' => "Captcha erróneo, Cargar e intentar de nuevo."
+                ), 400);
             }
-        }else{
-            return $this->_createJsonResponse('error',array(
-                'errorTitle'=>"Message not Sent",
-                'errorDescription'=>"Sorry we were unable to Send the message. FillUp the form and try again."
-            ),400);
+        } else {
+            return $this->_createJsonResponse('error', array(
+//                'errorTitle'=>"Message not Sent",
+//                'errorDescription'=>"Sorry we were unable to Send the message. FillUp the form and try again."
+
+                'errorTitle' => "No se puedo enviar el mensaje.",
+                'errorDescription' => "Revisa el formulario y envíalo de nuevo."
+            ), 400);
         }
     }
 
@@ -75,14 +84,14 @@ class ContactUsApiController extends Controller
     {
         $data = json_decode($request->getContent(), true);
 
-        if(array_key_exists('key',$data)){
+        if (array_key_exists('key', $data)) {
 
             $captchaApiInfo = $this->container->getParameter('google_re_captcha_info');
 
             $host = $captchaApiInfo['host'];
             $secret = $captchaApiInfo['secret'];
 
-            $url= $host."?secret=".$secret."&response=".$data['key'];
+            $url = $host . "?secret=" . $secret . "&response=" . $data['key'];
 
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
@@ -90,29 +99,37 @@ class ContactUsApiController extends Controller
             $jsonOutput = curl_exec($ch);
             curl_close($ch);
 
-            $captchaResponse = json_decode($jsonOutput,true);
-            if($captchaResponse['success']){
+            $captchaResponse = json_decode($jsonOutput, true);
+            if ($captchaResponse['success']) {
 
                 $this->get('fos_user.mailer')->sendFriendsEmail($data);
 
-                return $this->_createJsonResponse('success',array(
-                    'successTitle'=>"Emails have successfully sent to your Friends",
-                    'successDescription'=>"Thank you for sharing our website."
-                ),201);
-            }else{
-                return $this->_createJsonResponse('error',array(
-                    'errorTitle'=>"Emails not Sent",
-                    'errorDescription'=>"Captcha was Wrong. Reload and try again."
-                ),400);
+                return $this->_createJsonResponse('success', array(
+//                    'successTitle'=>"Emails have successfully sent to your Friends",
+//                    'successDescription'=>"Thank you for sharing our website."
+
+                    'successTitle' => "Los emails han sido enviado a tus contactos",
+                    'successDescription' => "Gracias por compartir nuestra Web."
+                ), 201);
+            } else {
+                return $this->_createJsonResponse('error', array(
+//                    'errorTitle'=>"Emails not Sent",
+//                    'errorDescription'=>"Captcha was Wrong. Reload and try again."
+
+                    'errorTitle' => "No se puedo enviar el email",
+                    'errorDescription' => "Captcha erróneo, Cargar e intentar de nuevo."
+                ), 400);
             }
 
-        }else{
-            return $this->_createJsonResponse('error',array(
-                'errorTitle'=>"Emails not Sent",
-                'errorDescription'=>"Sorry we were unable to Send the Emails. FillUp the form and try again."
-            ),400);
-        }
+        } else {
+            return $this->_createJsonResponse('error', array(
+//                'errorTitle'=>"Emails not Sent",
+//                'errorDescription'=>"Sorry we were unable to Send the Emails. FillUp the form and try again."
 
+                'errorTitle' => "No se puedo enviar el email",
+                'errorDescription' => "Revisa el formulario y envíalo de nuevo."
+            ), 400);
+        }
 
 
     }
@@ -121,55 +138,63 @@ class ContactUsApiController extends Controller
      * Send Mails To Friends of a User
      */
 
-    public function sendMailsToUserFriendsAction(Request $request){
+    public function sendMailsToUserFriendsAction(Request $request)
+    {
         $data = json_decode($request->getContent(), true);
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
-        if($user instanceof User){
-            $data['fullName']=$user->getFullName();
-            $data['email']=$user->getEmail();
-            $data['username']=$user->getUsername();
+        if ($user instanceof User) {
+            $data['fullName'] = $user->getFullName();
+            $data['email'] = $user->getEmail();
+            $data['username'] = $user->getUsername();
 
             $this->get('fos_user.mailer')->sendShareSellPageEmailToFriends($data);
 
             $logData = array(
-                'user'=>$user->getId(),
-                'logType'=>"Promote Sell Page",
-                'logDateTime'=>gmdate('Y-m-d H:i:s'),
-                'logDescription'=> $user->getUsername()." has promoted own Sell Page",
-                'userIpAddress'=>$this->container->get('request')->getClientIp(),
-                'logUserType'=> in_array("ROLE_ADMIN_USER",$user->getRoles())?"Admin User":"Normal User"
+                'user' => $user->getId(),
+                'logType' => "Promote Sell Page",
+                'logDateTime' => gmdate('Y-m-d H:i:s'),
+                'logDescription' => $user->getUsername() . " has promoted own Sell Page",
+                'userIpAddress' => $this->container->get('request')->getClientIp(),
+                'logUserType' => in_array("ROLE_ADMIN_USER", $user->getRoles()) ? "Admin User" : "Normal User"
             );
             $this->_saveLog($logData);
 
-            return $this->_createJsonResponse('success',array(
-                'successTitle'=>"Emails have successfully sent to your Friends",
-                'successDescription'=>"Thank you for sharing your sell page."
-            ),200);
-        }else{
-            return $this->_createJsonResponse('error',array(
-                'errorTitle'=>"Emails couldn't be sent",
-                'errorDescription'=>"Reload the page and try again."
-            ),201);
+            return $this->_createJsonResponse('success', array(
+//                'successTitle'=>"Emails have successfully sent to your Friends",
+//                'successDescription'=>"Thank you for sharing your sell page."
+
+                'successTitle' => "Los emails han sido enviado a tus contactos",
+                'successDescription' => "Gracias por compartir nuestra Web."
+            ), 200);
+        } else {
+            return $this->_createJsonResponse('error', array(
+//                'errorTitle'=>"Emails couldn't be sent",
+//                'errorDescription'=>"Reload the page and try again."
+
+                'errorTitle' => "No se puedo enviar el email",
+                'errorDescription' => "Revisa el formulario y envíalo de nuevo."
+            ), 201);
         }
 
 
     }
 
-    public function _saveLog($logData){
+    public function _saveLog($logData)
+    {
         $em = $this->container->get('doctrine')->getManager();
         $log = new Log();
         $logForm = $this->container->get('form.factory')->create(new LogType(), $log);
 
         $logForm->submit($logData);
-        if($logForm->isValid()){
+        if ($logForm->isValid()) {
             $em->persist($log);
             $em->flush();
         }
     }
 
-    public function _createJsonResponse($key, $data,$code)
+    public function _createJsonResponse($key, $data, $code)
     {
         $serializer = $this->container->get('jms_serializer');
         $json = $serializer->serialize([$key => $data], 'json');

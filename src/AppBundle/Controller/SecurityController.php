@@ -20,7 +20,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\SecurityContext;
 
 
-class SecurityController extends BaseController {
+class SecurityController extends BaseController
+{
 
     /**
      *  Show Homepage
@@ -28,10 +29,10 @@ class SecurityController extends BaseController {
     public function indexAction()
     {
 
-        return $this->_createJsonResponse('success',array(
+        return $this->_createJsonResponse('success', array(
             "successTitle" => "Homepage",
-            "successDescription"=> "You have successfully accessed the Web Api"
-        ),200);
+            "successDescription" => "You have successfully accessed the Web Api"
+        ), 200);
     }
 
     /**
@@ -60,14 +61,19 @@ class SecurityController extends BaseController {
             // TODO: this is a potential security risk (see http://trac.symfony-project.org/ticket/9523)
             $error = $error->getMessage();
         }
-        if(!strcmp($error,"User account is disabled.")){
-            $error.=" Please Check Your Email for the Activation Link.";
+        if (!strcmp($error, "User account is disabled.")) {
+//            $error.=" Please Check Your Email for the Activation Link.";
+            $error .= " Revisar el link de activación en tu correo.";
         }
-        if(!strcmp($error,"Bad credentials.")){
-            $error =" Username/Email or Password is incorrect.";
+        if (!strcmp($error, "Bad credentials.")) {
+//            $error =" Username/Email or Password is incorrect.";
+            $error = " Usuario / email o contraseña incorrecta.";
         }
 
-        return $this->_createJsonResponse('error',array("errorTitle" => "Login Unsuccessful", "errorDescription" => $error),400);
+        return $this->_createJsonResponse('error', array(
+//            "errorTitle" => "Login Unsuccessful",
+            "errorTitle" => "Acceso Incorrecto",
+            "errorDescription" => $error), 400);
     }
 
     /**
@@ -78,73 +84,81 @@ class SecurityController extends BaseController {
     {
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
 
-        if($user->getRegistrationStatus()=="incomplete"){
-            if(filter_var($user->getEmail(), FILTER_VALIDATE_EMAIL)) {
+        if ($user->getRegistrationStatus() == "incomplete") {
+            if (filter_var($user->getEmail(), FILTER_VALIDATE_EMAIL)) {
                 //Mail Exists
-                $email="false";
-            }else{
+                $email = "false";
+            } else {
                 //Mail NOT Exists
-                $email="true";
+                $email = "true";
             }
-            $userId=null;
-            if($user->getGoogleId()!=null){
-                $userId =$user->getGoogleId();
+            $userId = null;
+            if ($user->getGoogleId() != null) {
+                $userId = $user->getGoogleId();
             }
-            if($user->getFacebookId()!=null){
-                $userId =$user->getFacebookId();
+            if ($user->getFacebookId() != null) {
+                $userId = $user->getFacebookId();
             }
 
             $user_data = array(
-                'username'=>$user->getUsername(),
-                'email_needed'=>$email,
-                'userId'=>$userId
+                'username' => $user->getUsername(),
+                'email_needed' => $email,
+                'userId' => $userId
 
             );
 
-            return $this->_createJsonResponse('success',array(
+            return $this->_createJsonResponse('success', array(
                 'successTitle' => "Login Successful",
-                'successDescription'=>"Please Complete your registration process.",
-                'successData'=>$user_data
-            ),200);
+//                'successDescription'=>"Please Complete your registration process.",
+//                'successTitle' => "Acceso correcto",
+                'successDescription' => "Por favor completa el formulario.",
 
+                'successData' => $user_data
+            ), 200);
 
 
             /*return $this->redirect('http://localhost:8080/SymfonyClient/app/#/registration/complete?email='
                 .$email."&username=".$user->getUsername()."&user=".$user->getGoogleId());*/
 
-        }elseif($user->getRegistrationStatus()=="complete"){
+        } elseif ($user->getRegistrationStatus() == "complete") {
 
             $logData = array(
-                'user'=>$user->getId(),
-                'logType'=>"Login",
-                'logDateTime'=>gmdate('Y-m-d H:i:s'),
-                'logDescription'=> $user->getUsername()." has Logged In",
-                'userIpAddress'=>$this->container->get('request')->getClientIp(),
-                'logUserType'=> in_array("ROLE_ADMIN_USER",$user->getRoles())?"Admin User":"Normal User"
+                'user' => $user->getId(),
+                'logType' => "Login",
+                'logDateTime' => gmdate('Y-m-d H:i:s'),
+                'logDescription' => $user->getUsername() . " has Logged In",
+                'userIpAddress' => $this->container->get('request')->getClientIp(),
+                'logUserType' => in_array("ROLE_ADMIN_USER", $user->getRoles()) ? "Admin User" : "Normal User"
             );
             $this->_saveLog($logData);
 
-            return $this->_createJsonResponse('success',array(
+            return $this->_createJsonResponse('success', array(
                 'successTitle' => "Login Successful"
-            ),200);
+//                'successTitle' => "Acceso correcto"
+            ), 200);
 
-        }else{
-            return $this->_createJsonResponse('error',array(
-                'errorTitle' => "Login Unsuccessful",
-                'errorDescription' => "Please try to Login again."
-            ),400);
+        } else {
+            return $this->_createJsonResponse('error', array(
+//                'errorTitle' => "Login Unsuccessful",
+//                'errorDescription' => "Please try to Login again."
+
+                'errorTitle' => "Acceso Incorrecto",
+                'errorDescription' => "Por favor inténtalo de nuevo."
+
+            ), 400);
         }
 
     }
 
 
-    public function _saveLog($logData){
+    public function _saveLog($logData)
+    {
         $em = $this->container->get('doctrine')->getManager();
         $log = new Log();
         $logForm = $this->container->get('form.factory')->create(new LogType(), $log);
 
         $logForm->submit($logData);
-        if($logForm->isValid()){
+        if ($logForm->isValid()) {
             $em->persist($log);
             $em->flush();
         }

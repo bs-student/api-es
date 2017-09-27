@@ -41,14 +41,14 @@ class ResettingController extends BaseController
         $submittedData = $formHandler->getSubmittedData();
 
 
-        if(array_key_exists('key',$submittedData)){
+        if (array_key_exists('key', $submittedData)) {
 
             $captchaApiInfo = $this->container->getParameter('google_re_captcha_info');
 
             $host = $captchaApiInfo['host'];
             $secret = $captchaApiInfo['secret'];
 
-            $url= $host."?secret=".$secret."&response=".$submittedData['key'];
+            $url = $host . "?secret=" . $secret . "&response=" . $submittedData['key'];
 
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
@@ -56,10 +56,10 @@ class ResettingController extends BaseController
             $jsonOutput = curl_exec($ch);
             curl_close($ch);
 
-            $captchaResponse = json_decode($jsonOutput,true);
+            $captchaResponse = json_decode($jsonOutput, true);
 
 
-            if($captchaResponse['success']){
+            if ($captchaResponse['success']) {
                 $username = $this->container->get('request')->request->get('username');
 
                 /** @var $user UserInterface */
@@ -67,18 +67,24 @@ class ResettingController extends BaseController
 
                 if (null === $user) {
                     $data = array(
-                        'errorTitle'=>"Cannot Reset Password",
-                        "errorDescription"=>"Sorry No User found on that email Address"
+//                        'errorTitle'=>"Cannot Reset Password",
+//                        "errorDescription"=>"Sorry No User found on that email Address"
+
+                        'errorTitle' => "No se puede resetear la contraseña",
+                        "errorDescription" => "Lo siento, no hay ningún usuario registrado con ese correo"
                     );
-                    return $this->_createJsonResponse('error',$data,400);
+                    return $this->_createJsonResponse('error', $data, 400);
                 }
 
                 if ($user->isPasswordRequestNonExpired($this->container->getParameter('fos_user.resetting.token_ttl'))) {
                     $data = array(
-                        'errorTitle'=>"Cannot Reset Password",
-                        "errorDescription"=>"Sorry the Reset Password was already requested"
+//                        'errorTitle'=>"Cannot Reset Password",
+//                        "errorDescription"=>"Sorry the Reset Password was already requested"
+
+                        'errorTitle' => "No se puede resetear la contraseña",
+                        "errorDescription" => "Lo siento, ya se ha solicitado el reseteo de la contraseña"
                     );
-                    return $this->_createJsonResponse('error',$data,400);
+                    return $this->_createJsonResponse('error', $data, 400);
 
                 }
 
@@ -94,24 +100,32 @@ class ResettingController extends BaseController
                 $this->container->get('fos_user.user_manager')->updateUser($user);
 
                 $data = array(
-                    'successTitle'=>"Reset Password Successful",
-                    "successDescription"=>"A mail has been sent to your email address for resetting password"
+//                    'successTitle'=>"Reset Password Successful",
+//                    "successDescription"=>"A mail has been sent to your email address for resetting password"
+
+                    'successTitle' => "Contraseña reseteada",
+                    "successDescription" => "Se te ha enviado un correo para resetear la contraseña"
                 );
-                return $this->_createJsonResponse('success',$data,200);
-            }else{
-                return $this->_createJsonResponse('error',array(
-                    'errorTitle'=>"Reset Password Unsuccessful",
-                    'errorDescription'=>"Captcha was Wrong. Reload and try again."
-                ),400);
+                return $this->_createJsonResponse('success', $data, 200);
+            } else {
+                return $this->_createJsonResponse('error', array(
+//                    'errorTitle'=>"Reset Password Unsuccessful",
+//                    'errorDescription'=>"Captcha was Wrong. Reload and try again."
+
+                    'errorTitle' => "No se puede resetear la contraseña",
+                    'errorDescription' => "Captcha erróneo. Cargar e intentar de nuevo."
+                ), 400);
             }
 
 
+        } else {
+            return $this->_createJsonResponse('error', array(
+//                'errorTitle'=>"Reset Password Unsuccessful",
+//                'errorDescription'=>"Reload and try again."
 
-        }else{
-            return $this->_createJsonResponse('error',array(
-                'errorTitle'=>"Reset Password Unsuccessful",
-                'errorDescription'=>"Reload and try again."
-            ),400);
+                'errorTitle' => "No se puede resetear la contraseña",
+                'errorDescription' => "Cargar e intentar de nuevo."
+            ), 400);
         }
 
     }
@@ -130,7 +144,7 @@ class ResettingController extends BaseController
             return new RedirectResponse($this->container->get('router')->generate('fos_user_resetting_request'));
         }
 
-        return $this->container->get('templating')->renderResponse('FOSUserBundle:Resetting:checkEmail.html.'.$this->getEngine(), array(
+        return $this->container->get('templating')->renderResponse('FOSUserBundle:Resetting:checkEmail.html.' . $this->getEngine(), array(
             'email' => $email,
         ));
     }
@@ -138,17 +152,20 @@ class ResettingController extends BaseController
     /**
      * Reset Password with a token
      */
-    public function resetAction($token=null)
+    public function resetAction($token = null)
     {
 
         $user = $this->container->get('fos_user.user_manager')->findUserByConfirmationToken($token);
 
         if (null === $user) {
             $data = array(
-                'errorTitle'=>"Cannot Reset Password",
-                "errorDescription"=>"The user with 'confirmation token' does not exist for value '$token'"
+//                'errorTitle'=>"Cannot Reset Password",
+//                "errorDescription"=>"The user with 'confirmation token' does not exist for value '$token'"
+
+                'errorTitle' => "No se puede resetear la contraseña",
+                "errorDescription" => "No existe el usuario con numero confirmación '$token'"
             );
-            return $this->_createJsonResponse('error',$data,400);
+            return $this->_createJsonResponse('error', $data, 400);
 //            throw new NotFoundHttpException(sprintf('The user with "confirmation token" does not exist for value "%s"', $token));
         }
 
@@ -164,12 +181,12 @@ class ResettingController extends BaseController
         if ($process) {
 
             $logData = array(
-                'user'=>$user->getId(),
-                'logType'=>"Reset Password",
-                'logDateTime'=>gmdate('Y-m-d H:i:s'),
-                'logDescription'=> $user->getUsername()." has Reset the Password",
-                'userIpAddress'=>$this->container->get('request')->getClientIp(),
-                'logUserType'=> in_array("ROLE_ADMIN_USER",$user->getRoles())?"Admin User":"Normal User"
+                'user' => $user->getId(),
+                'logType' => "Reset Password",
+                'logDateTime' => gmdate('Y-m-d H:i:s'),
+                'logDescription' => $user->getUsername() . " has Reset the Password",
+                'userIpAddress' => $this->container->get('request')->getClientIp(),
+                'logUserType' => in_array("ROLE_ADMIN_USER", $user->getRoles()) ? "Admin User" : "Normal User"
             );
             $this->_saveLog($logData);
 
@@ -178,62 +195,75 @@ class ResettingController extends BaseController
             $this->authenticateUser($user, $response);
 
             $data = array(
-                'successTitle'=>"Reset Password Successful",
-                "successDescription"=>"Password has been successfully changed"
-            );
-            return $this->_createJsonResponse('success',$data,200);
+//                'successTitle'=>"Reset Password Successful",
+//                "successDescription"=>"Password has been successfully changed"
 
-        }else{
-            $data = array(
-                'errorTitle'=>"Cannot Reset Password",
-                "errorDescription"=>"Sorry, the password could not be changed"
+                'successTitle' => "Contraseña reseteada",
+                "successDescription" => "La contraseña ha sido modificada"
             );
-            return $this->_createJsonResponse('error',$data,400);
+            return $this->_createJsonResponse('success', $data, 200);
+
+        } else {
+            $data = array(
+//                'errorTitle'=>"Cannot Reset Password",
+//                "errorDescription"=>"Sorry, the password could not be changed"
+
+                'errorTitle' => "No se puede resetear la contraseña",
+                "errorDescription" => "Lo, no se puede modificar la contraseña"
+            );
+            return $this->_createJsonResponse('error', $data, 400);
         }
 
 
     }
 
 
-    public function checkTokenAction($token=null){
+    public function checkTokenAction($token = null)
+    {
         $user = $this->container->get('fos_user.user_manager')->findUserByConfirmationToken($token);
 
 
         if (null === $user) {
             $data = array(
-                'errorTitle'=>"The Reset my Password link has already been used or has expired",
+//                'errorTitle'=>"The Reset my Password link has already been used or has expired",
+
+                'errorTitle' => "El email para resetear la contraseña ya sido usado o caducado",
             );
-            return $this->_createJsonResponse('error',$data,400);
+            return $this->_createJsonResponse('error', $data, 400);
         }
 
         if (!$user->isPasswordRequestNonExpired($this->container->getParameter('fos_user.resetting.token_ttl'))) {
 
             $data = array(
-                'errorTitle'=>"The Reset my Password link has already been used or has expired",
+//                'errorTitle'=>"The Reset my Password link has already been used or has expired",
+
+                'errorTitle' => "El email para resetear la contraseña ya sido usado o caducado",
             );
-            return $this->_createJsonResponse('error',$data,400);
-        }else{
+            return $this->_createJsonResponse('error', $data, 400);
+        } else {
             $data = array(
-                'successData'=>true,
+                'successData' => true,
             );
-            return $this->_createJsonResponse('success',$data,200);
+            return $this->_createJsonResponse('success', $data, 200);
         }
 
     }
 
-    public function _saveLog($logData){
+    public function _saveLog($logData)
+    {
         $em = $this->container->get('doctrine')->getManager();
         $log = new Log();
         $logForm = $this->container->get('form.factory')->create(new LogType(), $log);
 
         $logForm->submit($logData);
-        if($logForm->isValid()){
+        if ($logForm->isValid()) {
             $em->persist($log);
             $em->flush();
         }
     }
 
-    public function _createJsonResponse($key,$data,$code){
+    public function _createJsonResponse($key, $data, $code)
+    {
         $serializer = $this->container->get('jms_serializer');
         $json = $serializer->serialize([$key => $data], 'json');
         $response = new Response($json, $code);

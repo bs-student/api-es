@@ -42,7 +42,7 @@ class BookDealManagementApiController extends Controller
         $em = $this->getDoctrine()->getManager();
         $bookDealRepo = $em->getRepository('AppBundle:BookDeal');
         $userRepo = $em->getRepository('AppBundle:User');
-        $bookDeals = $bookDealRepo->getBooksIHaveContactedFor($userId,$data['pageNumber'],$data['pageSize']);
+        $bookDeals = $bookDealRepo->getBooksIHaveContactedFor($userId, $data['pageNumber'], $data['pageSize']);
         $bookDealsNumber = $bookDealRepo->getBooksIHaveContactedForTotalNumber($userId);
 
         //Set Subtitle in Book
@@ -71,40 +71,39 @@ class BookDealManagementApiController extends Controller
             }
 
             //Formatting Contact
-            array_push($deal['contacts'],array(
-                'contactDateTime'=>$deal['contactDateTime'],
-                'contactId' =>$deal['contactId']
+            array_push($deal['contacts'], array(
+                'contactDateTime' => $deal['contactDateTime'],
+                'contactId' => $deal['contactId']
             ));
-
 
 
             //Getting Images
             $images = array();
             $bookDeal = $bookDealRepo->findOneById($deal['bookDealId']);
             //GET FIRST IMAGE OF THAT BOOK
-            array_push($images,array(
-                'image'=>$deal['bookImage'],
-                'imageId'=>0
+            array_push($images, array(
+                'image' => $deal['bookImage'],
+                'imageId' => 0
             ));
 
             $bookDealImages = $bookDeal->getBookDealImages();
-            for($i=0;$i<count($bookDealImages);$i++){
-                array_push($images,array(
-                    'image'=>$bookDealImages[$i]->getImageUrl(),
-                    'imageId'=>($i+1)
+            for ($i = 0; $i < count($bookDealImages); $i++) {
+                array_push($images, array(
+                    'image' => $bookDealImages[$i]->getImageUrl(),
+                    'imageId' => ($i + 1)
                 ));
             }
-            $deal['bookImages']=$images;
-            $deal['bookPriceSell'] = str_replace(".",",",$deal['bookPriceSell']);
-            array_push($deals,$deal);
+            $deal['bookImages'] = $images;
+            $deal['bookPriceSell'] = str_replace(".", ",", $deal['bookPriceSell']);
+            array_push($deals, $deal);
 
         }
 
 
         return $this->_createJsonResponse('success', array(
             'successData' => array(
-                'result'=>$deals,
-                'totalNumber'=>$bookDealsNumber
+                'result' => $deals,
+                'totalNumber' => $bookDealsNumber
             )
         ), 200);
     }
@@ -117,13 +116,13 @@ class BookDealManagementApiController extends Controller
         $content = $request->getContent();
         $data = json_decode($content, true);
 
-        $deals=array();
+        $deals = array();
 
         $userId = $this->get('security.token_storage')->getToken()->getUser()->getId();
         $em = $this->getDoctrine()->getManager();
         $bookDealRepo = $em->getRepository('AppBundle:BookDeal');
         $userRepo = $em->getRepository('AppBundle:User');
-        $bookDeals = $bookDealRepo->getBooksIHaveCreated($userId,$data['pageNumber'],$data['pageSize']);
+        $bookDeals = $bookDealRepo->getBooksIHaveCreated($userId, $data['pageNumber'], $data['pageSize']);
         $bookDealsNumber = $bookDealRepo->getBooksIHaveCreatedTotalNumber($userId);
 
         //Getting Contacts of Deals
@@ -141,8 +140,8 @@ class BookDealManagementApiController extends Controller
         }
 
         //Adding Contacts according to deals
-        if($contacts==null){
-            $contacts=array();
+        if ($contacts == null) {
+            $contacts = array();
         }
         foreach ($contacts as $contact) {
 
@@ -175,31 +174,31 @@ class BookDealManagementApiController extends Controller
             $images = array();
             $bookDeal = $bookDealRepo->findOneById($deal['bookDealId']);
             //GET FIRST IMAGE OF THAT BOOK
-            array_push($images,array(
-                'image'=>$deal['bookImage'],
-                'imageId'=>0
+            array_push($images, array(
+                'image' => $deal['bookImage'],
+                'imageId' => 0
             ));
 
             $bookDealImages = $bookDeal->getBookDealImages();
-            for($i=0;$i<count($bookDealImages);$i++){
-                array_push($images,array(
-                    'image'=>$bookDealImages[$i]->getImageUrl(),
-                    'imageId'=>($i+1)
+            for ($i = 0; $i < count($bookDealImages); $i++) {
+                array_push($images, array(
+                    'image' => $bookDealImages[$i]->getImageUrl(),
+                    'imageId' => ($i + 1)
                 ));
             }
-            $deal['bookImages']=$images;
+            $deal['bookImages'] = $images;
             $deal['bookPriceSellOriginal'] = $deal['bookPriceSell'];
-            $deal['bookPriceSell'] = str_replace(".",",",$deal['bookPriceSell']);
+            $deal['bookPriceSell'] = str_replace(".", ",", $deal['bookPriceSell']);
 
-            array_push($deals,$deal);
+            array_push($deals, $deal);
 
 
         }
 
         return $this->_createJsonResponse('success', array(
             'successData' => array(
-                'result'=>$deals,
-                'totalNumber'=>$bookDealsNumber
+                'result' => $deals,
+                'totalNumber' => $bookDealsNumber
             )
         ), 200);
     }
@@ -220,22 +219,22 @@ class BookDealManagementApiController extends Controller
 
             $contact = $contactRepo->findOneById($data['contactId']);
 
-            if($contact instanceof Contact){
+            if ($contact instanceof Contact) {
 
                 $bookDeal = $contact->getBookDeal();
 
                 //IF User is the owner of that deal and deal is activated
-                if ($bookDeal->getSeller()->getId() == $userId && (!strcmp($bookDeal->getBookStatus(),'Activated'))) {
+                if ($bookDeal->getSeller()->getId() == $userId && (!strcmp($bookDeal->getBookStatus(), 'Activated'))) {
 
-                    $bookDealData=array(
-                        'bookSellingStatus'=>"Sold"
+                    $bookDealData = array(
+                        'bookSellingStatus' => "Sold"
                     );
 
                     if (($contact->getBuyer() instanceof User)) {
                         //Sell the book by buyer Id
-                        $bookDealData['buyer']=$contact->getBuyer()->getId();
+                        $bookDealData['buyer'] = $contact->getBuyer()->getId();
                         $buyerName = $contact->getBuyer()->getusername();
-                    }elseif($contact->getBuyer()==null){
+                    } elseif ($contact->getBuyer() == null) {
                         $buyerName = $contact->getBuyerNickName();
                     }
 
@@ -265,17 +264,17 @@ class BookDealManagementApiController extends Controller
 
 
                     $contactForm = $this->createForm(new ContactType(), $contact);
-                    $contactForm ->remove('buyerNickName');
-                    $contactForm ->remove('buyerEmail');
-                    $contactForm ->remove('buyerHomePhone');
-                    $contactForm ->remove('buyerCellPhone');
-                    $contactForm ->remove('bookDeal');
-                    $contactForm ->remove('buyer');
-                    $contactForm ->remove('messages');
-                    $contactForm ->remove('contactDateTime');
+                    $contactForm->remove('buyerNickName');
+                    $contactForm->remove('buyerEmail');
+                    $contactForm->remove('buyerHomePhone');
+                    $contactForm->remove('buyerCellPhone');
+                    $contactForm->remove('bookDeal');
+                    $contactForm->remove('buyer');
+                    $contactForm->remove('messages');
+                    $contactForm->remove('contactDateTime');
 
-                    $contactData=array(
-                        'soldToThatBuyer'=>"Yes"
+                    $contactData = array(
+                        'soldToThatBuyer' => "Yes"
                     );
 
                     $contactForm->submit($contactData);
@@ -286,42 +285,51 @@ class BookDealManagementApiController extends Controller
                         $em->flush();
 
                         $logData = array(
-                            'user'=>$this->get('security.token_storage')->getToken()->getUser()->getId(),
-                            'logType'=>"Sold Book",
-                            'logDateTime'=>gmdate('Y-m-d H:i:s'),
-                            'logDescription'=> $this->get('security.token_storage')->getToken()->getUser()->getUsername()." has sold '".$bookDeal->getBook()->getBookTitle()."' book to buyer named ".$buyerName,
-                            'userIpAddress'=>$this->container->get('request')->getClientIp(),
-                            'logUserType'=> in_array("ROLE_ADMIN_USER",$this->get('security.token_storage')->getToken()->getUser()->getRoles())?"Admin User":"Normal User"
+                            'user' => $this->get('security.token_storage')->getToken()->getUser()->getId(),
+                            'logType' => "Sold Book",
+                            'logDateTime' => gmdate('Y-m-d H:i:s'),
+                            'logDescription' => $this->get('security.token_storage')->getToken()->getUser()->getUsername() . " has sold '" . $bookDeal->getBook()->getBookTitle() . "' book to buyer named " . $buyerName,
+                            'userIpAddress' => $this->container->get('request')->getClientIp(),
+                            'logUserType' => in_array("ROLE_ADMIN_USER", $this->get('security.token_storage')->getToken()->getUser()->getRoles()) ? "Admin User" : "Normal User"
                         );
                         $this->_saveLog($logData);
 
                         return $this->_createJsonResponse('success', array(
-                            'successTitle' => "Book Sold to ".$buyerName
+//                            'successTitle' => "Book Sold to ".$buyerName
+                            'successTitle' => "El libro se vende a " . $buyerName
                         ), 200);
                     } else {
-                        return $this->_createJsonResponse('error', array("errorTitle"=>"Could Not Sell The Book","errorData" => array($bookDealForm,$contactForm)), 400);
+                        return $this->_createJsonResponse('error', array(
+//                            "errorTitle"=>"Could Not Sell The Book",
+                            "errorTitle" => "No se ha podido vender el libro",
+                            "errorData" => array($bookDealForm, $contactForm)), 400);
                     }
 
 
-
-                }else{
-                    return $this->_createJsonResponse('error',array(
-                        'errorTitle'=>'Cannot Sell Book',
-                        'errorDescription'=>"You Didn't post that deal or Book is deactivated right now"
-                    ),400);
+                } else {
+                    return $this->_createJsonResponse('error', array(
+//                        'errorTitle'=>'Cannot Sell Book',
+//                        'errorDescription'=>"You Didn't post that deal or Book is deactivated right now"
+                        'errorTitle' => 'No se ha podido vender el libro',
+                        'errorDescription' => "No has publicado, que en este momento el acuerdo o el libro esta desactivado"
+                    ), 400);
                 }
-            }else{
-                return $this->_createJsonResponse('error',array(
-                    'errorTitle'=>'Cannot Sell Book',
-                    'errorDescription'=>'Check The Form and Submit Again'
-                ),400);
+            } else {
+                return $this->_createJsonResponse('error', array(
+//                    'errorTitle'=>'Cannot Sell Book',
+//                    'errorDescription'=>'Check The Form and Submit Again'
+                    'errorTitle' => 'No se ha podido vender el libro',
+                    'errorDescription' => 'Comprueba el formulario y envíalo de nuevo'
+                ), 400);
             }
 
-        }else{
-            return $this->_createJsonResponse('error',array(
-                'errorTitle'=>'Cannot Sell Book',
-                'errorDescription'=>'Check The Form and Submit Again'
-            ),400);
+        } else {
+            return $this->_createJsonResponse('error', array(
+//                'errorTitle'=>'Cannot Sell Book',
+//                'errorDescription'=>'Check The Form and Submit Again'
+                'errorTitle' => 'No se ha podido vender el libro',
+                'errorDescription' => 'Comprueba el formulario y envíalo de nuevo'
+            ), 400);
         }
 
 
@@ -330,7 +338,8 @@ class BookDealManagementApiController extends Controller
     /**
      * Get Books I Have Created For and Sold (Sell Archive)
      */
-    public function getBooksIHaveCreatedAndSoldAction(Request $request){
+    public function getBooksIHaveCreatedAndSoldAction(Request $request)
+    {
 
         $content = $request->getContent();
         $data = json_decode($content, true);
@@ -341,7 +350,7 @@ class BookDealManagementApiController extends Controller
         $em = $this->getDoctrine()->getManager();
         $bookDealRepo = $em->getRepository('AppBundle:BookDeal');
         $userRepo = $em->getRepository('AppBundle:User');
-        $bookDeals = $bookDealRepo->getBooksIHaveCreatedAndSold($userId,$data['pageNumber'],$data['pageSize']);
+        $bookDeals = $bookDealRepo->getBooksIHaveCreatedAndSold($userId, $data['pageNumber'], $data['pageSize']);
         $bookDealsNumber = $bookDealRepo->getBooksIHaveCreatedAndSoldTotalNumber($userId);
 
         //Getting Contacts of Deals
@@ -358,8 +367,8 @@ class BookDealManagementApiController extends Controller
         }
 
         //Adding Contacts according to deals
-        if($contacts==null){
-            $contacts=array();
+        if ($contacts == null) {
+            $contacts = array();
         }
         foreach ($contacts as $contact) {
 
@@ -382,12 +391,12 @@ class BookDealManagementApiController extends Controller
 
 
             //Getting Buyer
-            if($deal['buyerId']!=null){
+            if ($deal['buyerId'] != null) {
                 $buyer = $userRepo->findOneById($deal['buyerId']);
-                $deal['buyerNickName']=$buyer->getUsername();
-            }else{
+                $deal['buyerNickName'] = $buyer->getUsername();
+            } else {
                 $buyer = $bookDealRepo->getPublicUserWhoBoughtBookDeal($deal['bookDealId']);
-                $deal['buyerNickName']=$buyer[0]['buyerNickName'];
+                $deal['buyerNickName'] = $buyer[0]['buyerNickName'];
 
             }
 
@@ -404,29 +413,29 @@ class BookDealManagementApiController extends Controller
             $images = array();
             $bookDeal = $bookDealRepo->findOneById($deal['bookDealId']);
             //GET FIRST IMAGE OF THAT BOOK
-            array_push($images,array(
-                'image'=>$deal['bookImage'],
-                'imageId'=>0
+            array_push($images, array(
+                'image' => $deal['bookImage'],
+                'imageId' => 0
             ));
 
             $bookDealImages = $bookDeal->getBookDealImages();
-            for($i=0;$i<count($bookDealImages);$i++){
-                array_push($images,array(
-                    'image'=>$bookDealImages[$i]->getImageUrl(),
-                    'imageId'=>($i+1)
+            for ($i = 0; $i < count($bookDealImages); $i++) {
+                array_push($images, array(
+                    'image' => $bookDealImages[$i]->getImageUrl(),
+                    'imageId' => ($i + 1)
                 ));
             }
-            $deal['bookImages']=$images;
-            $deal['bookPriceSell'] = str_replace(".",",",$deal['bookPriceSell']);
-            array_push($deals,$deal);
+            $deal['bookImages'] = $images;
+            $deal['bookPriceSell'] = str_replace(".", ",", $deal['bookPriceSell']);
+            array_push($deals, $deal);
 
 
         }
 
         return $this->_createJsonResponse('success', array(
             'successData' => array(
-                'result'=>$deals,
-                'totalNumber'=>$bookDealsNumber
+                'result' => $deals,
+                'totalNumber' => $bookDealsNumber
             )
         ), 200);
     }
@@ -434,18 +443,19 @@ class BookDealManagementApiController extends Controller
     /**
      * Get Books I Have Have Bought (Buy Archive)
      */
-    public function getBooksIHaveBoughtAction(Request $request){
+    public function getBooksIHaveBoughtAction(Request $request)
+    {
 
         $content = $request->getContent();
         $data = json_decode($content, true);
 
-        $deals=array();
+        $deals = array();
 
         $userId = $this->get('security.token_storage')->getToken()->getUser()->getId();
         $em = $this->getDoctrine()->getManager();
         $bookDealRepo = $em->getRepository('AppBundle:BookDeal');
         $userRepo = $em->getRepository('AppBundle:User');
-        $bookDeals = $bookDealRepo->getBooksIHaveBought($userId,$data['pageNumber'],$data['pageSize']);
+        $bookDeals = $bookDealRepo->getBooksIHaveBought($userId, $data['pageNumber'], $data['pageSize']);
         $bookDealsNumber = $bookDealRepo->getBooksIHaveBoughtTotalNumber($userId);
 
 
@@ -464,12 +474,12 @@ class BookDealManagementApiController extends Controller
 
 
             //Getting Buyer
-            if($deal['buyerId']!=null){
+            if ($deal['buyerId'] != null) {
                 $buyer = $userRepo->findOneById($deal['buyerId']);
-                $deal['buyerNickName']=$buyer->getUsername();
-            }else{
+                $deal['buyerNickName'] = $buyer->getUsername();
+            } else {
                 $buyer = $bookDealRepo->getPublicUserWhoBoughtBookDeal($deal['bookDealId']);
-                $deal['buyerNickName']=$buyer[0]['buyerNickName'];
+                $deal['buyerNickName'] = $buyer[0]['buyerNickName'];
 
             }
 
@@ -486,27 +496,27 @@ class BookDealManagementApiController extends Controller
             $images = array();
             $bookDeal = $bookDealRepo->findOneById($deal['bookDealId']);
             //GET FIRST IMAGE OF THAT BOOK
-            array_push($images,array(
-                'image'=>$deal['bookImage'],
-                'imageId'=>0
+            array_push($images, array(
+                'image' => $deal['bookImage'],
+                'imageId' => 0
             ));
 
             $bookDealImages = $bookDeal->getBookDealImages();
-            for($i=0;$i<count($bookDealImages);$i++){
-                array_push($images,array(
-                    'image'=>$bookDealImages[$i]->getImageUrl(),
-                    'imageId'=>($i+1)
+            for ($i = 0; $i < count($bookDealImages); $i++) {
+                array_push($images, array(
+                    'image' => $bookDealImages[$i]->getImageUrl(),
+                    'imageId' => ($i + 1)
                 ));
             }
-            $deal['bookImages']=$images;
+            $deal['bookImages'] = $images;
 
             //Formatting Contact
-            array_push($deal['contacts'],array(
-                'contactDateTime'=>$deal['contactDateTime'],
-                'contactId' =>$deal['contactId']
+            array_push($deal['contacts'], array(
+                'contactDateTime' => $deal['contactDateTime'],
+                'contactId' => $deal['contactId']
             ));
-            $deal['bookPriceSell'] = str_replace(".",",",$deal['bookPriceSell']);
-            array_push($deals,$deal);
+            $deal['bookPriceSell'] = str_replace(".", ",", $deal['bookPriceSell']);
+            array_push($deals, $deal);
 
 
         }
@@ -514,8 +524,8 @@ class BookDealManagementApiController extends Controller
 
         return $this->_createJsonResponse('success', array(
             'successData' => array(
-                'result'=>$deals,
-                'totalNumber'=>$bookDealsNumber
+                'result' => $deals,
+                'totalNumber' => $bookDealsNumber
             )
         ), 200);
     }
@@ -523,7 +533,8 @@ class BookDealManagementApiController extends Controller
     /**
      * Change Book Deal Status
      */
-    public function changeBookDealStatusAction(Request $request){
+    public function changeBookDealStatusAction(Request $request)
+    {
 
         $content = $request->getContent();
         $data = json_decode($content, true);
@@ -533,7 +544,7 @@ class BookDealManagementApiController extends Controller
         $bookDealRepo = $em->getRepository('AppBundle:BookDeal');
         $bookDeal = $bookDealRepo->findOneById($data['bookDealId']);
 
-        if($bookDeal->getSeller()->getId()==$userId){
+        if ($bookDeal->getSeller()->getId() == $userId) {
 
 
             $bookDealForm = $this->createForm(new BookDealType(), $bookDeal);
@@ -560,32 +571,39 @@ class BookDealManagementApiController extends Controller
 
             $bookDealForm->submit($data);
 
-            if ($bookDealForm->isValid() ) {
+            if ($bookDealForm->isValid()) {
                 $em->persist($bookDeal);
 
                 $em->flush();
 
                 $logData = array(
-                    'user'=>$this->get('security.token_storage')->getToken()->getUser()->getId(),
-                    'logType'=>"Update Book Deal",
-                    'logDateTime'=>gmdate('Y-m-d H:i:s'),
-                    'logDescription'=> $data['bookStatus']=="Activated"?$this->get('security.token_storage')->getToken()->getUser()->getUsername()." has activated a book deal":$this->get('security.token_storage')->getToken()->getUser()->getUsername()." has deactivated a book deal",
-                    'userIpAddress'=>$this->container->get('request')->getClientIp(),
-                    'logUserType'=> in_array("ROLE_ADMIN_USER",$this->get('security.token_storage')->getToken()->getUser()->getRoles())?"Admin User":"Normal User"
+                    'user' => $this->get('security.token_storage')->getToken()->getUser()->getId(),
+                    'logType' => "Update Book Deal",
+                    'logDateTime' => gmdate('Y-m-d H:i:s'),
+                    'logDescription' => $data['bookStatus'] == "Activated" ? $this->get('security.token_storage')->getToken()->getUser()->getUsername() . " has activated a book deal" : $this->get('security.token_storage')->getToken()->getUser()->getUsername() . " has deactivated a book deal",
+                    'userIpAddress' => $this->container->get('request')->getClientIp(),
+                    'logUserType' => in_array("ROLE_ADMIN_USER", $this->get('security.token_storage')->getToken()->getUser()->getRoles()) ? "Admin User" : "Normal User"
                 );
                 $this->_saveLog($logData);
 
                 return $this->_createJsonResponse('success', array(
-                    'successTitle' => "Textbook Deal Successfully Updated"
+//                    'successTitle' => "Textbook Deal Successfully Updated"
+                    'successTitle' => "Acuerdo de libros de texto actualizado con éxito"
                 ), 200);
 
             } else {
-                return $this->_createJsonResponse('error', array("errorTitle"=>"Could Not Update Book Deal","errorData" => array($bookDealForm)), 400);
+                return $this->_createJsonResponse('error', array(
+//                    "errorTitle"=>"Could Not Update Book Deal",
+                    "errorTitle" => "No se ha podido actualizar el acuerdo del libro",
+                    "errorData" => array($bookDealForm)), 400);
             }
 
 
-        }else{
-            $this->_createJsonResponse('error',array('errorTitle'=>"Sorry, You did not post this book."),400);
+        } else {
+            $this->_createJsonResponse('error', array(
+//                'errorTitle'=>"Sorry, You did not post this book."
+                'errorTitle' => "Lo siento, no has publicado este libro."
+            ), 400);
         }
 
     }
@@ -593,21 +611,22 @@ class BookDealManagementApiController extends Controller
     /**
      * GTE Lowest Campus Book DEal Price
      */
-    function getLowestCampusDealPriceAction(Request $request){
+    function getLowestCampusDealPriceAction(Request $request)
+    {
         $content = $request->getContent();
         $data = json_decode($content, true);
 
         $userCampusId = $this->container->get('security.token_storage')->getToken()->getUser()->getCampus()->getId();
         $em = $this->getDoctrine()->getManager();
-        $bookDealRepo=$em->getRepository('AppBundle:BookDeal');
-        $lowestPriceOnCampus = $bookDealRepo->getLowestDealPriceInCampus($userCampusId,$data['bookIsbn']);
+        $bookDealRepo = $em->getRepository('AppBundle:BookDeal');
+        $lowestPriceOnCampus = $bookDealRepo->getLowestDealPriceInCampus($userCampusId, $data['bookIsbn']);
 
-        if($lowestPriceOnCampus[0][1]!=null){
-            return $this->_createJsonResponse('success',array('successData'=>array(
-                'lowestCampusPrice'=>"€".str_replace(".",",",$lowestPriceOnCampus[0][1])
-            )),200);
-        }else{
-            return $this->_createJsonResponse('success',array('successData'=>array()),200);
+        if ($lowestPriceOnCampus[0][1] != null) {
+            return $this->_createJsonResponse('success', array('successData' => array(
+                'lowestCampusPrice' => "€" . str_replace(".", ",", $lowestPriceOnCampus[0][1])
+            )), 200);
+        } else {
+            return $this->_createJsonResponse('success', array('successData' => array()), 200);
         }
 
     }
@@ -615,7 +634,8 @@ class BookDealManagementApiController extends Controller
     /**
      * Update book Deal
      */
-    function updateBookDealAction(Request $request){
+    function updateBookDealAction(Request $request)
+    {
         $em = $this->getDoctrine()->getManager();
 
         //Get Image Save Dir
@@ -638,10 +658,10 @@ class BookDealManagementApiController extends Controller
         //Upload All Deal Images
         $fileUploadError = false;
 
-        $imageArray=array();
-        for($i=1;$i<count($bookDealData['bookImages']);$i++){
-            array_push($imageArray,array(
-               'imageUrl'=> $bookDealData['bookImages'][$i]['image']
+        $imageArray = array();
+        for ($i = 1; $i < count($bookDealData['bookImages']); $i++) {
+            array_push($imageArray, array(
+                'imageUrl' => $bookDealData['bookImages'][$i]['image']
             ));
         }
 
@@ -650,10 +670,10 @@ class BookDealManagementApiController extends Controller
 
                 $fileSaveName = gmdate("Y-d-m_h_i_s_") . rand(0, 99999999) . "." . 'jpg';
                 $file->move($fileDirHost . $fileDir, $fileSaveName);
-                $this->_resize(330,500,$fileDirHost.$fileDir.$fileSaveName,$fileDirHost.$fileDir.$fileSaveName);
+                $this->_resize(330, 500, $fileDirHost . $fileDir . $fileSaveName, $fileDirHost . $fileDir . $fileSaveName);
 
-                array_push($imageArray,array(
-                   'imageUrl'=> $fileNameDir.$fileSaveName
+                array_push($imageArray, array(
+                    'imageUrl' => $fileNameDir . $fileSaveName
                 ));
 
             } else {
@@ -663,15 +683,19 @@ class BookDealManagementApiController extends Controller
 
 
         //If Error Occurs than Return Error Message
-        if($fileUploadError)return $this->_createJsonResponse('error', array('errorTitle' => "Cannot Update Book Deal", 'errorDescription' => "Some Files are more than 300 KB"), 400);
+        if ($fileUploadError) return $this->_createJsonResponse('error', array(
+//            'errorTitle' => "Cannot Update Book Deal",
+//            'errorDescription' => "Some Files are more than 300 KB"
+            'errorTitle' => "No se puede actualizar el acuerdo del libro",
+            'errorDescription' => "Algunos archivos superan los 300KB"
+        ), 400);
 
 
-
-        $bookDealRepo=$em->getRepository('AppBundle:BookDeal');
+        $bookDealRepo = $em->getRepository('AppBundle:BookDeal');
         $bookDeal = $bookDealRepo->findOneById($data['bookDealData']['bookDealId']);
 
         //Check If User owns that deal
-        if($bookDeal->getSeller()->getId()==$this->container->get('security.token_storage')->getToken()->getUser()->getId() && $bookDeal->getBookSellingStatus()== "Selling"){
+        if ($bookDeal->getSeller()->getId() == $this->container->get('security.token_storage')->getToken()->getUser()->getId() && $bookDeal->getBookSellingStatus() == "Selling") {
 
             $bookDealForm = $this->createForm(new BookDealType(), $bookDeal);
 
@@ -684,18 +708,18 @@ class BookDealManagementApiController extends Controller
             $bookDealForm->remove('buyer');
 
             //Images
-            $bookDealData['bookDealImages']=$imageArray;
+            $bookDealData['bookDealImages'] = $imageArray;
 
             $date = new \DateTime($bookDealData['bookAvailableDate']);
             $bookDealData['bookAvailableDate'] = $date->format("Y-m-d");
-            $bookDealData['bookPriceSell'] = str_replace(",",".",$bookDealData['bookPriceSell']);
+            $bookDealData['bookPriceSell'] = str_replace(",", ".", $bookDealData['bookPriceSell']);
             //Set Email on Book Deal
-            if(!array_key_exists('bookContactEmail',$bookDealData)){
+            if (!array_key_exists('bookContactEmail', $bookDealData)) {
                 $bookDealData['bookContactEmail'] = $this->container->get('security.token_storage')->getToken()->getUser()->getEmail();
             }
 
             //Remove Older Images
-            foreach($bookDeal->getBookDealImages() as $image){
+            foreach ($bookDeal->getBookDealImages() as $image) {
                 $em->remove($image);
 
             }
@@ -708,22 +732,30 @@ class BookDealManagementApiController extends Controller
                 $em->flush();
 
                 $logData = array(
-                    'user'=>$this->get('security.token_storage')->getToken()->getUser()->getId(),
-                    'logType'=>"Update Book Deal",
-                    'logDateTime'=>gmdate('Y-m-d H:i:s'),
-                    'logDescription'=> $this->get('security.token_storage')->getToken()->getUser()->getUsername()." has updated a book deal",
-                    'userIpAddress'=>$this->container->get('request')->getClientIp(),
-                    'logUserType'=> in_array("ROLE_ADMIN_USER",$this->get('security.token_storage')->getToken()->getUser()->getRoles())?"Admin User":"Normal User"
+                    'user' => $this->get('security.token_storage')->getToken()->getUser()->getId(),
+                    'logType' => "Update Book Deal",
+                    'logDateTime' => gmdate('Y-m-d H:i:s'),
+                    'logDescription' => $this->get('security.token_storage')->getToken()->getUser()->getUsername() . " has updated a book deal",
+                    'userIpAddress' => $this->container->get('request')->getClientIp(),
+                    'logUserType' => in_array("ROLE_ADMIN_USER", $this->get('security.token_storage')->getToken()->getUser()->getRoles()) ? "Admin User" : "Normal User"
                 );
                 $this->_saveLog($logData);
 
-                return $this->_createJsonResponse('success', array("successTitle" => "Book Deal has been updated into you selling List"), 200);
+                return $this->_createJsonResponse('success', array(
+//                    "successTitle" => "Book Deal has been updated into you selling List"
+                    "successTitle" => "El acuerdo del libro se actualizo en tu lista de ventas"
+                ), 200);
             } else {
                 return $this->_createJsonResponse('error', array("errorData" => $bookDealForm), 400);
 
             }
-        }else{
-            return $this->_createJsonResponse('error', array('errorTitle' => "Cannot Update Book Deal", 'errorDescription' => "You are not owner of that book deal or the book is already sold"), 400);
+        } else {
+            return $this->_createJsonResponse('error', array(
+//                'errorTitle' => "Cannot Update Book Deal",
+//                'errorDescription' => "You are not owner of that book deal or the book is already sold"
+                'errorTitle' => "No se puede actualizar el acuerdo del libro",
+                'errorDescription' => "No eres el propietario de este acuerdo del libro o el libro ya se ha vendido"
+            ), 400);
         }
 
 
@@ -732,36 +764,46 @@ class BookDealManagementApiController extends Controller
     /**
      * Delete Book Deal
      */
-    function deleteBookDealAction(Request $request){
+    function deleteBookDealAction(Request $request)
+    {
         $content = $request->getContent();
         $data = json_decode($content, true);
 
         $userId = $this->container->get('security.token_storage')->getToken()->getUser()->getId();
         $em = $this->getDoctrine()->getManager();
-        $bookDealRepo=$em->getRepository('AppBundle:BookDeal');
+        $bookDealRepo = $em->getRepository('AppBundle:BookDeal');
 
         $bookDeal = $bookDealRepo->findOneById($data['bookDealId']);
-        if($bookDeal->getSeller()->getId()==$userId){
+        if ($bookDeal->getSeller()->getId() == $userId) {
             $em->remove($bookDeal);
             $em->flush();
 
             $logData = array(
-                'user'=>$this->get('security.token_storage')->getToken()->getUser()->getId(),
-                'logType'=>"Delete Book Deal",
-                'logDateTime'=>gmdate('Y-m-d H:i:s'),
-                'logDescription'=> $this->get('security.token_storage')->getToken()->getUser()->getUsername()." has deleted a book deal named ".$bookDeal->getBook()->getBookTitle(),
-                'userIpAddress'=>$this->container->get('request')->getClientIp(),
-                'logUserType'=> in_array("ROLE_ADMIN_USER",$this->get('security.token_storage')->getToken()->getUser()->getRoles())?"Admin User":"Normal User"
+                'user' => $this->get('security.token_storage')->getToken()->getUser()->getId(),
+                'logType' => "Delete Book Deal",
+                'logDateTime' => gmdate('Y-m-d H:i:s'),
+                'logDescription' => $this->get('security.token_storage')->getToken()->getUser()->getUsername() . " has deleted a book deal named " . $bookDeal->getBook()->getBookTitle(),
+                'userIpAddress' => $this->container->get('request')->getClientIp(),
+                'logUserType' => in_array("ROLE_ADMIN_USER", $this->get('security.token_storage')->getToken()->getUser()->getRoles()) ? "Admin User" : "Normal User"
             );
             $this->_saveLog($logData);
 
-            return $this->_createJsonResponse('success', array('successTitle' => "Book Deal is Deleted"), 200);
-        }else{
-            return $this->_createJsonResponse('error', array('errorTitle' => "Cannot Delete Book Deal", 'errorDescription' => "You are not owner of that book deal."), 400);
+            return $this->_createJsonResponse('success', array(
+//                'successTitle' => "Book Deal is Deleted"
+                'successTitle' => "El acuerdo del libro se elimino"
+            ), 200);
+        } else {
+            return $this->_createJsonResponse('error', array(
+//                'errorTitle' => "Cannot Delete Book Deal",
+//                'errorDescription' => "You are not owner of that book deal."
+                'errorTitle' => "No se puede eliminar el acuerdo del libro",
+                'errorDescription' => "No eres el propietario de este acuerdo del libro."
+            ), 400);
         }
     }
 
-    function getActivatedBookDealOfUserAction(Request $request){
+    function getActivatedBookDealOfUserAction(Request $request)
+    {
 
         $content = $request->getContent();
         $data = json_decode($content, true);
@@ -771,17 +813,17 @@ class BookDealManagementApiController extends Controller
         $bookDealRepo = $em->getRepository('AppBundle:BookDeal');
         $userRepo = $em->getRepository('AppBundle:User');
 
-        $user = $userRepo->findOneBy(array('username'=>$data['username']));
+        $user = $userRepo->findOneBy(array('username' => $data['username']));
 
-        if($user instanceof User){
+        if ($user instanceof User) {
 
-            $deals=array();
+            $deals = array();
 
-            $bookDeals = $bookDealRepo->getActivatedBooksUserHasCreated($user->getId(),$data['pageNumber'],$data['pageSize'],$data['keyword']);
-            $bookDealsNumber = $bookDealRepo->getActivatedBooksUserHasCreatedTotalNumber($user->getId(),$data['keyword']);
-            $userData=array(
-                'username'=>$user->getUsername(),
-                'university'=>$user->getCampus()->getUniversity()->getUniversityName()
+            $bookDeals = $bookDealRepo->getActivatedBooksUserHasCreated($user->getId(), $data['pageNumber'], $data['pageSize'], $data['keyword']);
+            $bookDealsNumber = $bookDealRepo->getActivatedBooksUserHasCreatedTotalNumber($user->getId(), $data['keyword']);
+            $userData = array(
+                'username' => $user->getUsername(),
+                'university' => $user->getCampus()->getUniversity()->getUniversityName()
             );
             //Set Subtitle in Book
             for ($i = 0; $i < count($bookDeals); $i++) {
@@ -808,36 +850,37 @@ class BookDealManagementApiController extends Controller
                 $images = array();
                 $bookDeal = $bookDealRepo->findOneById($deal['bookDealId']);
                 //GET FIRST IMAGE OF THAT BOOK
-                array_push($images,array(
-                    'image'=>$deal['bookImage'],
-                    'imageId'=>0
+                array_push($images, array(
+                    'image' => $deal['bookImage'],
+                    'imageId' => 0
                 ));
 
                 $bookDealImages = $bookDeal->getBookDealImages();
-                for($i=0;$i<count($bookDealImages);$i++){
-                    array_push($images,array(
-                        'image'=>$bookDealImages[$i]->getImageUrl(),
-                        'imageId'=>($i+1)
+                for ($i = 0; $i < count($bookDealImages); $i++) {
+                    array_push($images, array(
+                        'image' => $bookDealImages[$i]->getImageUrl(),
+                        'imageId' => ($i + 1)
                     ));
                 }
-                $deal['bookImages']=$images;
-                $deal['bookPriceSell'] = str_replace(".",",",$deal['bookPriceSell']);
-                array_push($deals,$deal);
+                $deal['bookImages'] = $images;
+                $deal['bookPriceSell'] = str_replace(".", ",", $deal['bookPriceSell']);
+                array_push($deals, $deal);
 
             }
 
             return $this->_createJsonResponse('success', array(
                 'successData' => array(
-                    'userData'=>$userData,
-                    'result'=>$deals,
-                    'totalNumber'=>$bookDealsNumber
+                    'userData' => $userData,
+                    'result' => $deals,
+                    'totalNumber' => $bookDealsNumber
                 )
             ), 200);
 
 
-        }else{
+        } else {
             return $this->_createJsonResponse('error', array(
-                'errorTitle' => "Sorry, No User Found in that Username"
+//                'errorTitle' => "Sorry, No User Found in that Username"
+                'errorTitle' => "Lo siento, no se ha encontrado ningún usuario en este nombre de usuario"
             ), 400);
         }
 
@@ -846,11 +889,12 @@ class BookDealManagementApiController extends Controller
     /**
      * Get All Activated Selling and Contacted and Sold and Bought Book Deals of User
      */
-    public function getAllActivatedDealsForMessageBoardAction(Request $request){
+    public function getAllActivatedDealsForMessageBoardAction(Request $request)
+    {
 
         $userEntity = $this->container->get('security.token_storage')->getToken()->getUser();
 
-        if($userEntity instanceof User){
+        if ($userEntity instanceof User) {
             $em = $this->getDoctrine()->getManager();
             $userRepo = $em->getRepository('AppBundle:User');
             $bookDealRepo = $em->getRepository('AppBundle:BookDeal');
@@ -862,7 +906,7 @@ class BookDealManagementApiController extends Controller
             //Set Subtitle For Selling Book Deals
             for ($i = 0; $i < count($sellingBookDeals); $i++) {
                 //Setting deal type selling or contacted
-                $sellingBookDeals[$i]['dealType']="sellingDeal";
+                $sellingBookDeals[$i]['dealType'] = "sellingDeal";
 
                 //Setting Subtitle
                 $sellingBookDeals[$i]['contacts'] = array();
@@ -875,8 +919,8 @@ class BookDealManagementApiController extends Controller
             $contacts = $bookDealRepo->getContactsOfBookDeals($sellingBookDeals);
 
             //Adding Contacts according to deals
-            if($contacts==null){
-                $contacts=array();
+            if ($contacts == null) {
+                $contacts = array();
             }
             foreach ($contacts as $contact) {
                 for ($i = 0; $i < count($sellingBookDeals); $i++) {
@@ -890,16 +934,12 @@ class BookDealManagementApiController extends Controller
                         $contact['contactEmail'] = $contact['buyerEmail'];
                         $date = $contact['contactDateTime']->format('H:i d M Y');
 
-                        $contact['contactDateTimeFormatted']=$date;
+                        $contact['contactDateTimeFormatted'] = $date;
 
                         array_push($sellingBookDeals[$i]['contacts'], $contact);
                     }
                 }
             }
-
-
-
-
 
 
             //Getting Contacted Book Deals
@@ -908,7 +948,7 @@ class BookDealManagementApiController extends Controller
             //Set Subtitle in Book
             for ($i = 0; $i < count($contactedBookDeals); $i++) {
                 //Setting deal type selling or contacted
-                $contactedBookDeals[$i]['dealType']="contactedDeal";
+                $contactedBookDeals[$i]['dealType'] = "contactedDeal";
 
                 //Setting Subtitle
                 $contactedBookDeals[$i]['contacts'] = array();
@@ -922,21 +962,21 @@ class BookDealManagementApiController extends Controller
             //Getting Contacts
             $contacts = $bookDealRepo->getContactsOfBookDeals($contactedBookDeals);
             //Adding Contacts according to deals
-            if($contacts==null){
-                $contacts=array();
+            if ($contacts == null) {
+                $contacts = array();
             }
             foreach ($contacts as $contact) {
 
                 for ($i = 0; $i < count($contactedBookDeals); $i++) {
 
-                    if ((int)$contact['bookDealId'] == (int)$contactedBookDeals[$i]['bookDealId'] && $contact['buyerId']==$userEntity->getId()) {
+                    if ((int)$contact['bookDealId'] == (int)$contactedBookDeals[$i]['bookDealId'] && $contact['buyerId'] == $userEntity->getId()) {
 
                         $contact['profilePicture'] = $contactedBookDeals[$i]['sellerProfilePicture'];
                         $contact['contactName'] = $contactedBookDeals[$i]['sellerUsername'];
                         $contact['contactEmail'] = $contactedBookDeals[$i]['sellerEmail'];
                         $date = $contact['contactDateTime']->format('H:i d M Y');
 
-                        $contact['contactDateTimeFormatted']=$date;
+                        $contact['contactDateTimeFormatted'] = $date;
 
                         array_push($contactedBookDeals[$i]['contacts'], $contact);
                     }
@@ -945,15 +985,13 @@ class BookDealManagementApiController extends Controller
             }
 
 
-
-
             //Getting Sold Book Deals
             $soldBookDeals = $bookDealRepo->getAllActivatedSoldBookOfUser($userEntity->getId());
 
             //Set Subtitle For Selling Book Deals
             for ($i = 0; $i < count($soldBookDeals); $i++) {
                 //Setting deal type selling or contacted
-                $soldBookDeals[$i]['dealType']="soldDeal";
+                $soldBookDeals[$i]['dealType'] = "soldDeal";
 
                 //Setting Subtitle
                 $soldBookDeals[$i]['contacts'] = array();
@@ -966,8 +1004,8 @@ class BookDealManagementApiController extends Controller
             $contacts = $bookDealRepo->getBuyerContactsOfBookDeals($soldBookDeals);
 
             //Adding Contacts according to deals
-            if($contacts==null){
-                $contacts=array();
+            if ($contacts == null) {
+                $contacts = array();
             }
             foreach ($contacts as $contact) {
                 for ($i = 0; $i < count($soldBookDeals); $i++) {
@@ -981,16 +1019,12 @@ class BookDealManagementApiController extends Controller
                         $contact['contactEmail'] = $contact['buyerEmail'];
                         $date = $contact['contactDateTime']->format('H:i d M Y');
 
-                        $contact['contactDateTimeFormatted']=$date;
+                        $contact['contactDateTimeFormatted'] = $date;
 
                         array_push($soldBookDeals[$i]['contacts'], $contact);
                     }
                 }
             }
-
-
-
-
 
 
             //Getting Bought Book Deals
@@ -999,7 +1033,7 @@ class BookDealManagementApiController extends Controller
             //Set Subtitle in Book
             for ($i = 0; $i < count($boughtBookDeals); $i++) {
                 //Setting deal type selling or contacted
-                $boughtBookDeals[$i]['dealType']="boughtDeal";
+                $boughtBookDeals[$i]['dealType'] = "boughtDeal";
 
                 //Setting Subtitle
                 $boughtBookDeals[$i]['contacts'] = array();
@@ -1013,21 +1047,21 @@ class BookDealManagementApiController extends Controller
             //Getting Contacts
             $contacts = $bookDealRepo->getContactsOfBookDeals($boughtBookDeals);
             //Adding Contacts according to deals
-            if($contacts==null){
-                $contacts=array();
+            if ($contacts == null) {
+                $contacts = array();
             }
             foreach ($contacts as $contact) {
 
                 for ($i = 0; $i < count($boughtBookDeals); $i++) {
 
-                    if ((int)$contact['bookDealId'] == (int)$boughtBookDeals[$i]['bookDealId'] && $contact['buyerId']==$userEntity->getId()) {
+                    if ((int)$contact['bookDealId'] == (int)$boughtBookDeals[$i]['bookDealId'] && $contact['buyerId'] == $userEntity->getId()) {
 
                         $contact['profilePicture'] = $boughtBookDeals[$i]['sellerProfilePicture'];
                         $contact['contactName'] = $boughtBookDeals[$i]['sellerUsername'];
                         $contact['contactEmail'] = $boughtBookDeals[$i]['sellerEmail'];
                         $date = $contact['contactDateTime']->format('H:i d M Y');
 
-                        $contact['contactDateTimeFormatted']=$date;
+                        $contact['contactDateTimeFormatted'] = $date;
 
                         array_push($boughtBookDeals[$i]['contacts'], $contact);
                     }
@@ -1036,48 +1070,49 @@ class BookDealManagementApiController extends Controller
             }
 
 
-
-
             //Merging and sorting array
-            $bookDeals =array_merge($sellingBookDeals,$contactedBookDeals,$soldBookDeals,$boughtBookDeals);
-            $deals=array();
+            $bookDeals = array_merge($sellingBookDeals, $contactedBookDeals, $soldBookDeals, $boughtBookDeals);
+            $deals = array();
 
-            for($i=0;$i<count($bookDeals);$i++){
+            for ($i = 0; $i < count($bookDeals); $i++) {
                 $val = str_pad($bookDeals[$i]['bookDealId'], 10, "0", STR_PAD_LEFT);
-                $deals[$val]=$bookDeals[$i];
+                $deals[$val] = $bookDeals[$i];
             }
 
             krsort($deals);
-            $newArray=array();
-            foreach($deals as $deal){
-                array_push($newArray,$deal);
+            $newArray = array();
+            foreach ($deals as $deal) {
+                array_push($newArray, $deal);
             }
 
 
             //Add Star into BookDeals
 
             $starRepo = $em->getRepository("AppBundle:Star");
-            $starredBookDeals = $starRepo->findBy(array('user'=>$userEntity->getId()));
-            for($i=0;$i<count($newArray);$i++){
-                $newArray[$i]['starred']=false;
-                foreach($starredBookDeals as $deal){
-                    if($deal->getBookDeal()->getId()==$newArray[$i]['bookDealId']){
-                        $newArray[$i]['starred']=true;
+            $starredBookDeals = $starRepo->findBy(array('user' => $userEntity->getId()));
+            for ($i = 0; $i < count($newArray); $i++) {
+                $newArray[$i]['starred'] = false;
+                foreach ($starredBookDeals as $deal) {
+                    if ($deal->getBookDeal()->getId() == $newArray[$i]['bookDealId']) {
+                        $newArray[$i]['starred'] = true;
                     }
                 }
             }
 
-            $finalArray=array();
-            foreach($newArray as $deal){
-                if(count($deal['contacts'])>0){
-                    $deal['bookPriceSell'] = str_replace(".",",",$deal['bookPriceSell']);
-                    array_push($finalArray,$deal);
+            $finalArray = array();
+            foreach ($newArray as $deal) {
+                if (count($deal['contacts']) > 0) {
+                    $deal['bookPriceSell'] = str_replace(".", ",", $deal['bookPriceSell']);
+                    array_push($finalArray, $deal);
                 }
             }
 
-            return $this->_createJsonResponse('success',array('successData'=>$finalArray),200);
-        }else{
-            return $this->_createJsonResponse('error',array('errorTitle'=>"Sorry No Data was found"),400);
+            return $this->_createJsonResponse('success', array('successData' => $finalArray), 200);
+        } else {
+            return $this->_createJsonResponse('error', array(
+//                'errorTitle'=>"Sorry No Data was found"
+                'errorTitle' => "Lo siento, no se ha encontrado ningún dato"
+            ), 400);
         }
 
     }
@@ -1085,7 +1120,8 @@ class BookDealManagementApiController extends Controller
     /**
      * Get All Activated Selling and Contacted Book Deals of User
      */
-    public function getAllDataForNewContactInMessageBoardAction(Request $request){
+    public function getAllDataForNewContactInMessageBoardAction(Request $request)
+    {
 
         $userEntity = $this->container->get('security.token_storage')->getToken()->getUser();
 
@@ -1096,11 +1132,11 @@ class BookDealManagementApiController extends Controller
         $em = $this->getDoctrine()->getManager();
         $userRepo = $em->getRepository('AppBundle:User');
         $bookDealRepo = $em->getRepository('AppBundle:BookDeal');
-        $contactData = $bookDealRepo->getAllDataForNewContactInMessageBoard($data['contactId'],$userEntity->getId());
+        $contactData = $bookDealRepo->getAllDataForNewContactInMessageBoard($data['contactId'], $userEntity->getId());
 
         for ($i = 0; $i < count($contactData); $i++) {
             //Setting deal type selling or contacted
-            $contactData[$i]['dealType']="sellingDeal";
+            $contactData[$i]['dealType'] = "sellingDeal";
 
             //Setting Subtitle
             $contactData[$i]['contacts'] = array();
@@ -1114,8 +1150,8 @@ class BookDealManagementApiController extends Controller
         $contacts = $bookDealRepo->getContactsOfBookDeals($contactData);
 
         //Adding Contacts according to deals
-        if($contacts==null){
-            $contacts=array();
+        if ($contacts == null) {
+            $contacts = array();
         }
         foreach ($contacts as $contact) {
             for ($i = 0; $i < count($contactData); $i++) {
@@ -1129,20 +1165,21 @@ class BookDealManagementApiController extends Controller
                     $contact['contactEmail'] = $contact['buyerEmail'];
                     $date = $contact['contactDateTime']->format('H:i d M Y');
 
-                    $contact['contactDateTimeFormatted']=$date;
+                    $contact['contactDateTimeFormatted'] = $date;
 
                     array_push($contactData[$i]['contacts'], $contact);
                 }
             }
         }
 
-        return $this->_createJsonResponse('success',array('successData'=>$contactData),200);
+        return $this->_createJsonResponse('success', array('successData' => $contactData), 200);
 
     }
 
 
     // New Image  Resize function
-    public function _resize($newWidth , $newHeight, $targetFile, $originalFile) {
+    public function _resize($newWidth, $newHeight, $targetFile, $originalFile)
+    {
 
         $info = getimagesize($originalFile);
         $mime = $info['mime'];
@@ -1183,13 +1220,14 @@ class BookDealManagementApiController extends Controller
         $image_save_func($tmp, "$targetFile");
     }
 
-    public function _saveLog($logData){
+    public function _saveLog($logData)
+    {
         $em = $this->container->get('doctrine')->getManager();
         $log = new Log();
         $logForm = $this->container->get('form.factory')->create(new LogType(), $log);
 
         $logForm->submit($logData);
-        if($logForm->isValid()){
+        if ($logForm->isValid()) {
             $em->persist($log);
             $em->flush();
         }
