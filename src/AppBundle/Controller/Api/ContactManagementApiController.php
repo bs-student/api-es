@@ -343,7 +343,7 @@ class ContactManagementApiController extends Controller
                         'senderProfilePicture' => $this->_makeCircleProfilePicture($messageRow->getUser()->getProfilePicture()),
                         'messageDateTime' => $messageRow->getMessageDateTime()->format('h:i A, d-M-Y'),
                         'messageBody' => $messageRow->getMessageBody(),
-                        'messageType' => $messageRow->getMessageType() == "BuyerToSellerMessage" ? "Message From Buyer" : "Message From Seller",
+                        'messageType' => $messageRow->getMessageType() == "BuyerToSellerMessage" ? "Mensaje Del Comprador" : "Mensaje del Vendedor",
                     ));
                 }
 

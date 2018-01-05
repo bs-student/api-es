@@ -3,7 +3,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>textbook exchange made easy: student2student.com newsletter</title>
+    <title>textbook exchange made easy: student2student.es newsletter</title>
     <style type="text/css">
 
         body, td, th {
@@ -37,11 +37,11 @@
                 <td>
                     <div style="background:#0A87C9;width:600px;text-align: center;">
                         <h1 style="text-transform: uppercase;font-size:2em;color: #ffffff;margin-bottom: 10px;margin-top: 0px;">
-                            New Buyer Contacted</h1>
+                            Nuevo Comprador Contactado</h1>
                         <img style="margin: auto;display:block;" src="{{ envelop_image }}"/>
 
                         <h2 style="color:#000000;font-size:1.5em;margin-top: 0px;margin-bottom: 0px;">{{ buyerMessage.messageBody }}</h2>
-                        <h5 style="color: #ffffff;font-size: 1em;margin-top: 10px;margin-bottom: 10px;">Message from buyer ({{ buyerInfo.buyerNickName }})</h5>
+                        <h5 style="color: #ffffff;font-size: 1em;margin-top: 10px;margin-bottom: 10px;">Mensaje del comprador ({{ buyerInfo.buyerNickName }})</h5>
                     </div>
                 </td>
             </tr>
@@ -56,7 +56,7 @@
                 <td width="220"></td>
                 <td width="160" style="padding-top:20px;text-align: center;">
                     <div style="text-align: center;background-color: #FF530D;">
-                        <p style="color:#ffffff;padding: 5px 10px 5px 10px;"><a style="color:#ffffff;text-decoration: none;" href="http://student2student.com/sellingBookList">View & Reply</a></p>
+                        <p style="color:#ffffff;padding: 5px 10px 5px 10px;"><a style="color:#ffffff;text-decoration: none;" href="http://student2student.es/sellingBookList">Ver y Responder</a></p>
                     </div>
                 </td>
                 <td width="220"></td>
@@ -70,7 +70,7 @@
         <table bgcolor="#ffffff" cellpadding="0" cellspacing="0" border="0" align="center" width="600">
             <tr>
                 <td style="text-align: center;padding-top:20px;">
-                    <p style="color:#000000;margin-bottom: 20px;">Your Contact Information as seller ({{ seller.username }}) is given to buyer ({{ buyerInfo.buyerNickName }}) as below -</p>
+                    <p style="color:#000000;margin-bottom: 20px;">Tu Información del Contacto como Vendedor ({{ seller.username }}) se entregara al Comprador ({{ buyerInfo.buyerNickName }}) tal como se indica a continuación -</p>
                 </td>
             </tr>
         </table>
@@ -84,10 +84,10 @@
                 <td width="50"></td>
                 <td width="50" style="background: #0A87C9;padding-top: 10px;"></td>
                 <td width="200" style="padding-top:10px;padding-bottom:10px;text-align: left;background: #0A87C9;">
-                    <span style="color:#ffffff;font-size: 1em;">Nick Name :</span><br/>
+                    <span style="color:#ffffff;font-size: 1em;">Nombre de usuario :</span><br/>
                     <span style="color:#ffffff;font-size: 1em;">Email :</span><br/>
-                    <span style="color:#ffffff;font-size: 1em;">Cell Phone :</span><br/>
-                    <span style="color:#ffffff;font-size: 1em;">Home Phone :</span>
+                    <span style="color:#ffffff;font-size: 1em;">Teléfono Móvil :</span><br/>
+                    <span style="color:#ffffff;font-size: 1em;">Teléfono de Casa :</span>
                 </td>
 
 
@@ -113,11 +113,11 @@
                 </td>
                 <td width="180"
                     style="padding-right:10px;padding-left: 10px;padding-top:10px;padding-bottom:10px;padding-right:10px;text-align: left;">
-                    <p style="color:#0A87C9;font-size: 1em;font-style: italic;">BOOK INFORMATION</p>
+                    <p style="color:#0A87C9;font-size: 1em;font-style: italic;">Información del Libro</p>
                 </td>
                 <td width="180"
                     style="border-left:1px solid #ffffff;padding-top:10px;padding-left: 30px;padding-bottom:10px;text-align: left;">
-                    <p style="color:#0A87C9;font-size: 1em;font-style: italic;">DEAL INFORMATION</p>
+                    <p style="color:#0A87C9;font-size: 1em;font-style: italic;">Información del Acuerdo</p>
                 </td>
                 <td width="50"></td>
             </tr>
@@ -135,29 +135,29 @@
                 </td>
                 <td width="180"
                     style="padding-right:10px;padding-top:10px;padding-bottom:10px;text-align: left;vertical-align: top;padding-left: 10px;margin-bottom:20px;">
-                    <span style="color:#FF530D;font-size: 1em;">Book Title : </span><span
+                    <span style="color:#FF530D;font-size: 1em;">Titulo del Libro : </span><span
                             style="color:#000000;font-size: 1em;">{{ book.bookTitle }}</span><br/>
                     <span style="color:#FF530D;font-size: 1em;">ISBN : </span><span
                             style="color:#000000;font-size: 1em;">{{ book.bookIsbn10 }}</span><br/>
                     <span style="color:#FF530D;font-size: 1em;">Author : </span><span
                             style="color:#000000;font-size: 1em;">{{ book.bookDirectorAuthorArtist }}</span><br/>
-                    <span style="color:#FF530D;font-size: 1em;">Publisher : </span><span
+                    <span style="color:#FF530D;font-size: 1em;">Editorial : </span><span
                             style="color:#000000;font-size: 1em;">{{ book.bookPublisher }}</span><br/>
-                    <span style="color:#FF530D;font-size: 1em;">Publish Date : </span><span
+                    <span style="color:#FF530D;font-size: 1em;">Fecha de Publicación : </span><span
                             style="color:#000000;font-size: 1em;">{{ book.bookPublishDate|date("d M Y") }}</span>
                 </td>
 
                 <td width="180"
                     style="border-left:1px solid #ECECEC;padding-top:10px;padding-bottom:10px;text-align: left;vertical-align: top;padding-left: 30px;margin-bottom:20px;">
-                    <span style="color:#FF530D;font-size: 1em;">Price : </span><span
+                    <span style="color:#FF530D;font-size: 1em;">Precio : </span><span
                             style="color:#000000;font-size: 1em;">$ {{ bookDeal.bookPriceSell }}</span><br/>
-                    <span style="color:#FF530D;font-size: 1em;">Book Has Notes : </span><span
+                    <span style="color:#FF530D;font-size: 1em;">Anotaciones de el Libro de Texto  : </span><span
                             style="color:#000000;font-size: 1em;">{{ bookDeal.bookHasNotes }}</span><br/>
-                    <span style="color:#FF530D;font-size: 1em;">Book Is Highlighted : </span><span
+                    <span style="color:#FF530D;font-size: 1em;">Texto Subrayado : </span><span
                             style="color:#000000;font-size: 1em;">{{ bookDeal.bookIsHighlighted }}</span><br/>
-                    <span style="color:#FF530D;font-size: 1em;">Available Date : </span><span
+                    <span style="color:#FF530D;font-size: 1em;">Fecha de Disponibilidad del Libro de Texto : </span><span
                             style="color:#000000;font-size: 1em;">{{ bookDeal.bookAvailableDate|date("d M Y") }}</span><br/>
-                    <span style="color:#FF530D;font-size: 1em;">Payment : </span><span
+                    <span style="color:#FF530D;font-size: 1em;">Pago : </span><span
                             style="color:#000000;font-size: 1em;">{%if bookDeal.bookPaymentMethodCaShOnExchange and bookDeal.bookPaymentMethodCheque %}
                                             Cheque, Cash
                                         {% elseif bookDeal.bookPaymentMethodCaShOnExchange and bookDeal.bookPaymentMethodCheque!=true %}
@@ -177,8 +177,8 @@
             <tr>
                 <td style="text-align: center;background-color: #0A87C9;padding-top: 20px;padding-bottom: 20px;">
                     <p style="text-transform: uppercase;font-size: 1em;color: #ffffff;">
-                        Don't Forget about our online price comparison feature<br/>
-                        Yes, We will tell you the cheapest price online!
+                        No olvides nuestra función de comparativa de precios online<br/>
+                        Sí, te comunicaremos el precio online más económico.
                     </p>
 
                 </td>
@@ -203,7 +203,7 @@
         <table bgcolor="#ffffff" cellpadding="0" cellspacing="0" border="0" align="center" width="600" style="">
             <tr>
                 <td style="text-align: center;">
-                    <p style="color: #000000;">2007-2017 Student 2 Student, All Rights Reserved</p>
+                    <p style="color: #000000;">2007-2018 Student 2 Student, Todos los derechos reservados</p>
 
                 </td>
             </tr>
