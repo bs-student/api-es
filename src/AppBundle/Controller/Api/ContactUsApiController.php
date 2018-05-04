@@ -38,13 +38,20 @@ class ContactUsApiController extends Controller
 
             $url = $host . "?secret=" . $secret . "&response=" . $data['key'];
 
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-            $jsonOutput = curl_exec($ch);
-            curl_close($ch);
+            $mobileDeviceInfo = $this->container->getParameter('mobile_device_config');
+            $mobileApiKey = $mobileDeviceInfo['api_key'];
 
-            $captchaResponse = json_decode($jsonOutput, true);
+            if(!strcmp($mobileApiKey,$data['key'])){
+                $captchaResponse['success']=true;
+            }else {
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, $url);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+                $jsonOutput = curl_exec($ch);
+                curl_close($ch);
+
+                $captchaResponse = json_decode($jsonOutput, true);
+            }
 
             if ($captchaResponse['success']) {
 
@@ -93,13 +100,21 @@ class ContactUsApiController extends Controller
 
             $url = $host . "?secret=" . $secret . "&response=" . $data['key'];
 
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-            $jsonOutput = curl_exec($ch);
-            curl_close($ch);
+            $mobileDeviceInfo = $this->container->getParameter('mobile_device_config');
+            $mobileApiKey = $mobileDeviceInfo['api_key'];
 
-            $captchaResponse = json_decode($jsonOutput, true);
+            if(!strcmp($mobileApiKey,$data['key'])){
+                $captchaResponse['success']=true;
+            }else {
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, $url);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+                $jsonOutput = curl_exec($ch);
+                curl_close($ch);
+
+                $captchaResponse = json_decode($jsonOutput, true);
+            }
+
             if ($captchaResponse['success']) {
 
                 $this->get('fos_user.mailer')->sendFriendsEmail($data);

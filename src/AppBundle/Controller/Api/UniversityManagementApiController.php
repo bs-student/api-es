@@ -26,8 +26,9 @@ class UniversityManagementApiController extends Controller
     public function universityAutocompleteActivatedSearchListAction(Request $request)
     {
 
-
-        $query = $request->request->get('query');
+        $content = $request->getContent();
+        $data = json_decode($content, true);
+        $query = $data['query'];
         $em = $this->getDoctrine()->getManager();
 
         if ($query == null || $query == "") {

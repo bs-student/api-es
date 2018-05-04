@@ -160,6 +160,9 @@ class WishListManagementApiController extends Controller
 
         $data = $wishListRepo->findBy(array('book' => $data['bookId'], 'user' => $user->getId()));
 
+        if($data==null){
+            return $this->_createJsonResponse('error',array('errorTitle'=>"Lo siento, no puede borrar","errorDescription"=>"Este libro no está en su lista de deseos"),400);
+        }
 
         $em->remove($data[0]);
 

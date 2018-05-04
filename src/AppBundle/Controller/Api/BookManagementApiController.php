@@ -31,29 +31,33 @@ class BookManagementApiController extends Controller
     public function searchByKeywordAmazonApiAction(Request $request)
     {
 
-        $content = $request->getContent();
-        $data = json_decode($content, true);
+        if ($this->_headerTokenDecode($request->headers->all())) {
+            $content = $request->getContent();
+            $data = json_decode($content, true);
 
-        if (array_key_exists('keyword', $data)) {
-            $keyword = $data['keyword'];
-        } else {
-            $keyword = null;
-        }
-        if (array_key_exists('campus', $data)) {
-            $campusId = $data['campus'];
-        } else {
-            $campusId = null;
-        }
-        if (array_key_exists('page', $data)) {
-            $page = $data['page'];
-        } else {
-            $page = null;
-        }
+            if (array_key_exists('keyword', $data)) {
+                $keyword = $data['keyword'];
+            } else {
+                $keyword = null;
+            }
+            if (array_key_exists('campus', $data)) {
+                $campusId = $data['campus'];
+            } else {
+                $campusId = null;
+            }
+            if (array_key_exists('page', $data)) {
+                $page = $data['page'];
+            } else {
+                $page = null;
+            }
 
-        if (is_numeric($keyword) && (strlen($keyword) == 10 || strlen($keyword) == 13)) {
-            return $this->_getBooksByIsbnAmazon($keyword, $campusId);
-        } else {
-            return $this->_getBooksByKeywordAmazon($keyword, $page);
+            if (is_numeric($keyword) && (strlen($keyword) == 10 || strlen($keyword) == 13)) {
+                return $this->_getBooksByIsbnAmazon($keyword, $campusId);
+            } else {
+                return $this->_getBooksByKeywordAmazon($keyword, $page);
+            }
+        }else{
+            return $this->_createJsonResponse('error', array('errorTitle' => "Unauthorized Access Denied"), 400);
         }
     }
 
@@ -111,18 +115,19 @@ class BookManagementApiController extends Controller
      */
     public function getLowestPriceByIsbnOnlineApiAction(Request $request)
     {
-        $isbn = $request->query->get('isbn');
-        $ean = $request->query->get('ean');
+        if ($this->_headerTokenDecode($request->headers->all())) {
+            $isbn = $request->query->get('isbn');
+            $ean = $request->query->get('ean');
 
-        $lowestOnlinePrice = 99999999;
+            $lowestOnlinePrice = 99999999;
 
-        if ($isbn != null && $ean != null) {
-            $lowestEbayPrice = $this->_getBooksLowestPriceByEbay($ean);
-            if ($lowestEbayPrice) {
-                if ($lowestEbayPrice < $lowestOnlinePrice) {
-                    $lowestOnlinePrice = $lowestEbayPrice;
+            if ($isbn != null && $ean != null) {
+                $lowestEbayPrice = $this->_getBooksLowestPriceByEbay($ean);
+                if ($lowestEbayPrice) {
+                    if ($lowestEbayPrice < $lowestOnlinePrice) {
+                        $lowestOnlinePrice = $lowestEbayPrice;
+                    }
                 }
-            }
 //            $hivePrice = $this->_getBooksLowestPriceByHive($ean);
 
 //            if($hivePrice){
@@ -132,20 +137,25 @@ class BookManagementApiController extends Controller
 //            }
 
 
-            if ($lowestOnlinePrice != 99999999) {
-                return $this->_createJsonResponse('success', array('successData' => array('bookPriceOnlineLowest' => "€" . str_replace(".", ",", $lowestOnlinePrice))), 200);
+                if ($lowestOnlinePrice != 99999999) {
+                    return $this->_createJsonResponse('success', array('successData' => array('bookPriceOnlineLowest' => "€" . str_replace(".", ",", $lowestOnlinePrice))), 200);
+                } else {
+                    return $this->_createJsonResponse('error', array(
+//                    'errorTitle' => "No Price Found"
+                        'errorTitle' => "No se encuentra el precio"
+                    ), 400);
+                }
+
             } else {
                 return $this->_createJsonResponse('error', array(
-//                    'errorTitle' => "No Price Found"
-                    'errorTitle' => "No se encuentra el precio"
+//                'errorTitle' => "Invalid Isbn"
+                    'errorTitle' => "ISBN erróneo"
+
                 ), 400);
             }
-
-        } else {
+        }else{
             return $this->_createJsonResponse('error', array(
-//                'errorTitle' => "Invalid Isbn"
-                'errorTitle' => "ISBN erróneo"
-
+                'errorTitle' => "No se encuentra el precio"
             ), 400);
         }
     }
@@ -156,18 +166,20 @@ class BookManagementApiController extends Controller
      */
     public function searchByAsinAmazonApiAction(Request $request)
     {
+        if ($this->_headerTokenDecode($request->headers->all())) {
+            $content = $request->getContent();
+            $data = json_decode($content, true);
 
-        $content = $request->getContent();
-        $data = json_decode($content, true);
+            if (array_key_exists('asin', $data)) {
+                $asin = $data['asin'];
+            } else {
+                $asin = "";
+            }
 
-        if (array_key_exists('asin', $data)) {
-            $asin = $data['asin'];
-        } else {
-            $asin = "";
+            return $this->_getBooksByAsinAmazon($asin);
+        }else{
+            return $this->_createJsonResponse('error', array('errorTitle' => "Unauthorized Access Denied"), 400);
         }
-
-        return $this->_getBooksByAsinAmazon($asin);
-
     }
 
     /**
@@ -214,18 +226,20 @@ class BookManagementApiController extends Controller
      */
     public function searchByIsbnOnlineBooksApiAction(Request $request)
     {
+        if ($this->_headerTokenDecode($request->headers->all())) {
+            $content = $request->getContent();
+            $data = json_decode($content, true);
 
-        $content = $request->getContent();
-        $data = json_decode($content, true);
+            if (array_key_exists('ean', $data)) {
+                $ean = $data['ean'];
+            } else {
+                $ean = "";
+            }
 
-        if (array_key_exists('ean', $data)) {
-            $ean = $data['ean'];
-        } else {
-            $ean = "";
+            return $this->_getBooksByIsbnOnlineBooks($ean, $request->server);
+        }else{
+            return $this->_createJsonResponse('error', array('errorTitle' => "Unauthorized Access Denied"), 400);
         }
-
-        return $this->_getBooksByIsbnOnlineBooks($ean, $request->server);
-
     }
 
 
@@ -340,66 +354,68 @@ class BookManagementApiController extends Controller
      */
     public function getCampusDealsByIsbnAction(Request $request)
     {
+        if ($this->_headerTokenDecode($request->headers->all())) {
+            $content = $request->getContent();
+            $data = json_decode($content, true);
 
-        $content = $request->getContent();
-        $data = json_decode($content, true);
+            $em = $this->getDoctrine()->getManager();
+            $bookDealRepo = $em->getRepository('AppBundle:BookDeal');
 
-        $em = $this->getDoctrine()->getManager();
-        $bookDealRepo = $em->getRepository('AppBundle:BookDeal');
+            if ($data != null) {
+                if (array_key_exists('isbn', $data) && array_key_exists('campusId', $data)) {
+                    $deals = array(
+                        'buyerToSeller' => array(),
+                        'sellerToBuyer' => array(),
+                        'student2studentBoard' => array(),
+                    );
+                    $onCampusDeals = $bookDealRepo->getPublicCampusDealsByIsbn($data['isbn'], $data['campusId']);
 
-        if ($data != null) {
-            if (array_key_exists('isbn', $data) && array_key_exists('campusId', $data)) {
-                $deals = array(
-                    'buyerToSeller' => array(),
-                    'sellerToBuyer' => array(),
-                    'student2studentBoard' => array(),
-                );
-                $onCampusDeals = $bookDealRepo->getPublicCampusDealsByIsbn($data['isbn'], $data['campusId']);
+                    //Increase View Counter
+                    if (count($onCampusDeals) > 0) {
+                        $bookDealRepo->increaseBookViewCounter($onCampusDeals);
 
-                //Increase View Counter
-                if (count($onCampusDeals) > 0) {
-                    $bookDealRepo->increaseBookViewCounter($onCampusDeals);
+                        foreach ($onCampusDeals as $deal) {
 
-                    foreach ($onCampusDeals as $deal) {
+                            //Formatting Date
+                            if ($deal['bookAvailableDate'] != null) {
+                                $deal['bookAvailableDate'] = $deal['bookAvailableDate']->format('d M Y');
+                            }
 
-                        //Formatting Date
-                        if ($deal['bookAvailableDate'] != null) {
-                            $deal['bookAvailableDate'] = $deal['bookAvailableDate']->format('d M Y');
+                            //dividing via Contact Method
+                            if (strpos('buyerToSeller', $deal['bookContactMethod']) !== false) {
+                                array_push($deals['buyerToSeller'], $deal);
+                            } else if (strpos('sellerToBuyer', $deal['bookContactMethod']) !== false) {
+                                array_push($deals['sellerToBuyer'], $deal);
+                            } else if (strpos('student2studentBoard', $deal['bookContactMethod']) !== false) {
+                                array_push($deals['student2studentBoard'], $deal);
+                            }
+
                         }
-
-                        //dividing via Contact Method
-                        if (strpos('buyerToSeller', $deal['bookContactMethod']) !== false) {
-                            array_push($deals['buyerToSeller'], $deal);
-                        } else if (strpos('sellerToBuyer', $deal['bookContactMethod']) !== false) {
-                            array_push($deals['sellerToBuyer'], $deal);
-                        } else if (strpos('student2studentBoard', $deal['bookContactMethod']) !== false) {
-                            array_push($deals['student2studentBoard'], $deal);
-                        }
-
                     }
-                }
 
 
-                return $this->_createJsonResponse('success', array('successData' => $deals), 200);
+                    return $this->_createJsonResponse('success', array('successData' => $deals), 200);
 
-            } else {
-                return $this->_createJsonResponse('error', array(
+                } else {
+                    return $this->_createJsonResponse('error', array(
 //                    'errorTitle' => "Wrong Data Provided",
 //                    'errorDescription' => "Please Provide Isbn"
 
+                        'errorTitle' => "Dato incorrecto",
+                        'errorDescription' => "Por favor facilita el ISBN"
+                    ), 400);
+                }
+            } else {
+                return $this->_createJsonResponse('error', array(
+//                'errorTitle' => "Wrong Data Provided",
+//                'errorDescription' => "Please Provide Isbn"
                     'errorTitle' => "Dato incorrecto",
                     'errorDescription' => "Por favor facilita el ISBN"
                 ), 400);
             }
-        } else {
-            return $this->_createJsonResponse('error', array(
-//                'errorTitle' => "Wrong Data Provided",
-//                'errorDescription' => "Please Provide Isbn"
-                'errorTitle' => "Dato incorrecto",
-                'errorDescription' => "Por favor facilita el ISBN"
-            ), 400);
+        }else{
+            return $this->_createJsonResponse('error', array('errorTitle' => "Unauthorized Access Denied"), 400);
         }
-
 
     }
 
@@ -655,7 +671,7 @@ class BookManagementApiController extends Controller
                         'bookPages' => array_key_exists('bookPages', $book) ? $book['bookPages'] : "",
                         'bookImages' => array(
                             array(
-                                'image' => $_SERVER['HTTP_ORIGIN'] . $_SERVER['BASE'] . $book['bookImage'],
+                                'image'=>$_SERVER['REQUEST_SCHEME']."://".$_SERVER['HTTP_HOST'].$_SERVER['BASE'].$book['bookImage'],
                                 'imageId' => 0
                             )
                         )
@@ -759,7 +775,7 @@ class BookManagementApiController extends Controller
                         'bookPages' => array_key_exists('bookPages', $book) ? $book['bookPages'] : "",
                         'bookImages' => array(
                             array(
-                                'image' => $_SERVER['HTTP_ORIGIN'] . $_SERVER['BASE'] . $book['bookImage'],
+                                'image'=>$_SERVER['REQUEST_SCHEME']."://".$_SERVER['HTTP_HOST'].$_SERVER['BASE'].$book['bookImage'],
                                 'imageId' => 0
                             )
                         )
@@ -1234,14 +1250,10 @@ class BookManagementApiController extends Controller
 
         $simpleXml = simplexml_load_string($fileContents);
 
-//        echo "<pre>";
-//        print_r($simpleXml);
-//        echo "</pre>";
-//        die();
 
         $booksArray = array();
 
-        if ($simpleXml != null) {
+        if ($simpleXml != null && count($simpleXml->Items->Item)>0) {
             foreach ($simpleXml->Items->Item as $item) {
                 $book = $this->_createJsonFromItemAmazon($item);
                 if ($book['bookIsbn'] != '' && strcmp($book['bookPriceAmazon'], "Not Found")) {
@@ -1301,13 +1313,13 @@ class BookManagementApiController extends Controller
         if (!empty($item->MediumImage->URL)) {
             $book_image_medium_url = (string)$item->MediumImage->URL;
         } else {
-            $book_image_medium_url = $_SERVER['HTTP_ORIGIN'] . $_SERVER['BASE'] . '/assets/images/no_image.jpg';
+            $book_image_medium_url = $_SERVER['REQUEST_SCHEME']."://".$_SERVER['HTTP_HOST'].$_SERVER['BASE'].'/assets/images/no_image.jpg';
         }
 
         if (!empty($item->LargeImage->URL)) {
             $book_image_large_url = (string)$item->LargeImage->URL;
         } else {
-            $book_image_large_url = $_SERVER['HTTP_ORIGIN'] . $_SERVER['BASE'] . '/assets/images/no_image.jpg';
+            $book_image_large_url = $_SERVER['REQUEST_SCHEME']."://".$_SERVER['HTTP_HOST'].$_SERVER['BASE'].'/assets/images/no_image.jpg';
         }
 
         //Getting Description
@@ -1352,6 +1364,19 @@ class BookManagementApiController extends Controller
         if ($logForm->isValid()) {
             $em->persist($log);
             $em->flush();
+        }
+    }
+
+    public function _headerTokenDecode($headerData)
+    {
+        $webAppConfig = $this->getParameter('web_app_config');
+        $mobileAppConfig = $this->getParameter('mobile_device_config');
+        if(!strcmp($headerData['request-source'][0],$webAppConfig['source_type'])){
+            return !strcmp($headerData['header-token'][0], hash_hmac("sha256", base64_encode($headerData['timestamp'][0]), $webAppConfig['api_key']))?true:false;
+        }else if(!strcmp($headerData['request-source'][0],$mobileAppConfig['source_type'])){
+            return !strcmp($headerData['header-token'][0], hash_hmac("sha256", base64_encode($headerData['timestamp'][0]), $mobileAppConfig['api_key']))?true:false;
+        }else{
+            return false;
         }
     }
 
