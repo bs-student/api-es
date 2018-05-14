@@ -86,9 +86,14 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
             );
             $this->_saveLog($logData);
 
-            return $this->_createJsonResponse('success', array(
-                'successTitle' => "Login Successful"
-            ), 200);
+            return $this->_createJsonResponse('success',array(
+                'successTitle' => "Hola, bienvenido ".$user->getUsername(),
+                'successDescription' => "Usted ha iniciado sesión",
+                'successData'=>array(
+                    'username'=>$user->getUsername(),
+                    'registrationStatus'=>$user->getRegistrationStatus()
+                )
+            ),200);
 
         } else {
             return $this->_createJsonResponse('error', array(
