@@ -697,6 +697,15 @@ class BookDealManagementApiController extends Controller
         //Check If User owns that deal
         if ($bookDeal->getSeller()->getId() == $this->container->get('security.token_storage')->getToken()->getUser()->getId() && $bookDeal->getBookSellingStatus() == "Selling") {
 
+            $em->getConnection()->beginTransaction();
+
+            //Remove Older Images
+            foreach($bookDeal->getBookDealImages() as $image){
+                $bookDeal->removeBookDealImage($image);
+            }
+            $em->persist($bookDeal);
+            $em->flush();
+
             $bookDealForm = $this->createForm(new BookDealType(), $bookDeal);
 
             $bookDealForm->remove('seller');
@@ -718,36 +727,35 @@ class BookDealManagementApiController extends Controller
                 $bookDealData['bookContactEmail'] = $this->container->get('security.token_storage')->getToken()->getUser()->getEmail();
             }
 
-            //Remove Older Images
-            foreach ($bookDeal->getBookDealImages() as $image) {
-                $em->remove($image);
-
-            }
-            $em->flush();
-
             $bookDealForm->submit($bookDealData);
 
             if ($bookDealForm->isValid()) {
-                $em->persist($bookDeal);
-                $em->flush();
+                try {
+                    $em->persist($bookDeal);
+                    $em->flush();
+                    $em->getConnection()->commit();
 
-                $logData = array(
-                    'user' => $this->get('security.token_storage')->getToken()->getUser()->getId(),
-                    'logType' => "Update Book Deal",
-                    'logDateTime' => gmdate('Y-m-d H:i:s'),
-                    'logDescription' => $this->get('security.token_storage')->getToken()->getUser()->getUsername() . " has updated a book deal",
-                    'userIpAddress' => $this->container->get('request')->getClientIp(),
-                    'logUserType' => in_array("ROLE_ADMIN_USER", $this->get('security.token_storage')->getToken()->getUser()->getRoles()) ? "Admin User" : "Normal User"
-                );
-                $this->_saveLog($logData);
+                    $logData = array(
+                        'user' => $this->get('security.token_storage')->getToken()->getUser()->getId(),
+                        'logType' => "Update Book Deal",
+                        'logDateTime' => gmdate('Y-m-d H:i:s'),
+                        'logDescription' => $this->get('security.token_storage')->getToken()->getUser()->getUsername() . " has updated a book deal",
+                        'userIpAddress' => $this->container->get('request')->getClientIp(),
+                        'logUserType' => in_array("ROLE_ADMIN_USER", $this->get('security.token_storage')->getToken()->getUser()->getRoles()) ? "Admin User" : "Normal User"
+                    );
+                    $this->_saveLog($logData);
 
-                return $this->_createJsonResponse('success', array(
+                    return $this->_createJsonResponse('success', array(
 //                    "successTitle" => "Book Deal has been updated into you selling List"
-                    "successTitle"=>"Oferta de libro actualizada",
-                    "successDescription" => "El acuerdo del libro se actualizo en tu lista de ventas"
-                ), 200);
+                        "successTitle" => "Oferta de libro actualizada",
+                        "successDescription" => "El acuerdo del libro se actualizo en tu lista de ventas"
+                    ), 200);
+                }catch(\Exception $e){
+                    $em->getConnection()->rollBack();
+                    return $this->_createJsonResponse('error', array("errorTitle"=>"No se puede actualizar el acuerdo del libro","errorData" => $bookDealForm), 400);
+                }
             } else {
-                return $this->_createJsonResponse('error', array("errorData" => $bookDealForm), 400);
+                return $this->_createJsonResponse('error', array("errorTitle"=>"No se puede actualizar el acuerdo del libro","errorData" => $bookDealForm), 400);
 
             }
         } else {
