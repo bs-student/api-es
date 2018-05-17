@@ -145,7 +145,7 @@ class RegistrationController extends BaseController
 
 
                         'successTitle' => "Registro correcto",
-                        'successDescription' => "Se ha enviado un correo de confirmación. Por favor comprueba tu email y confirma el registro registración."
+                        'successDescription' => "Se ha enviado un correo de confirmación. Por favor comprueba tu email y confirma el registro registración. Verifique también el correo no deseado o basura si no puede encontrar el correo electrónico."
                     );
 
                     $this->setFlash('fos_user_success', 'registration.flash.user_created');

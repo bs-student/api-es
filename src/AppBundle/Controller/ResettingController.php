@@ -110,7 +110,7 @@ class ResettingController extends BaseController
 //                    "successDescription"=>"A mail has been sent to your email address for resetting password"
 
                     'successTitle' => "Contraseña reseteada",
-                    "successDescription" => "Se te ha enviado un correo para resetear la contraseña"
+                    "successDescription" => "Se te ha enviado un correo para resetear la contraseña. Verifique también el correo no deseado o basura si no puede encontrar el correo electrónico."
                 );
                 return $this->_createJsonResponse('success', $data, 200);
             } else {

@@ -94,7 +94,7 @@ class BookDealManagementApiController extends Controller
                 ));
             }
             $deal['bookImages'] = $images;
-            $deal['bookPriceSell'] = str_replace(".", ",", $deal['bookPriceSell']);
+            $deal['bookPriceSell'] = str_replace(".", ",", number_format(floatval($deal['bookPriceSell']),2));
             array_push($deals, $deal);
 
         }
@@ -188,7 +188,7 @@ class BookDealManagementApiController extends Controller
             }
             $deal['bookImages'] = $images;
             $deal['bookPriceSellOriginal'] = $deal['bookPriceSell'];
-            $deal['bookPriceSell'] = str_replace(".", ",", $deal['bookPriceSell']);
+            $deal['bookPriceSell'] = str_replace(".", ",", number_format(floatval($deal['bookPriceSell']),2));
 
             array_push($deals, $deal);
 
@@ -426,7 +426,7 @@ class BookDealManagementApiController extends Controller
                 ));
             }
             $deal['bookImages'] = $images;
-            $deal['bookPriceSell'] = str_replace(".", ",", $deal['bookPriceSell']);
+            $deal['bookPriceSell'] = str_replace(".", ",", number_format(floatval($deal['bookPriceSell']),2));
             array_push($deals, $deal);
 
 
@@ -515,7 +515,7 @@ class BookDealManagementApiController extends Controller
                 'contactDateTime' => $deal['contactDateTime'],
                 'contactId' => $deal['contactId']
             ));
-            $deal['bookPriceSell'] = str_replace(".", ",", $deal['bookPriceSell']);
+            $deal['bookPriceSell'] = str_replace(".", ",", number_format(floatval($deal['bookPriceSell']),2));
             array_push($deals, $deal);
 
 
@@ -623,7 +623,7 @@ class BookDealManagementApiController extends Controller
 
         if ($lowestPriceOnCampus[0][1] != null) {
             return $this->_createJsonResponse('success', array('successData' => array(
-                'lowestCampusPrice' => "€" . str_replace(".", ",", $lowestPriceOnCampus[0][1])
+                'lowestCampusPrice' => "€" . str_replace(".", ",", number_format(floatval($lowestPriceOnCampus[0][1]),2))
             )), 200);
         } else {
             return $this->_createJsonResponse('success', array('successData' => array()), 200);
@@ -721,7 +721,7 @@ class BookDealManagementApiController extends Controller
 
             $date = new \DateTime($bookDealData['bookAvailableDate']);
             $bookDealData['bookAvailableDate'] = $date->format("Y-m-d");
-            $bookDealData['bookPriceSell'] = str_replace(",", ".", $bookDealData['bookPriceSell']);
+            $bookDealData['bookPriceSell'] = number_format(floatval(str_replace(",", ".", $bookDealData['bookPriceSell'])),2);
             //Set Email on Book Deal
             if (!array_key_exists('bookContactEmail', $bookDealData)) {
                 $bookDealData['bookContactEmail'] = $this->container->get('security.token_storage')->getToken()->getUser()->getEmail();
@@ -872,7 +872,7 @@ class BookDealManagementApiController extends Controller
                     ));
                 }
                 $deal['bookImages'] = $images;
-                $deal['bookPriceSell'] = str_replace(".", ",", $deal['bookPriceSell']);
+                $deal['bookPriceSell'] = str_replace(".", ",", number_format(floatval($deal['bookPriceSell']),2));
                 array_push($deals, $deal);
 
             }
@@ -1111,7 +1111,7 @@ class BookDealManagementApiController extends Controller
             $finalArray = array();
             foreach ($newArray as $deal) {
                 if (count($deal['contacts']) > 0) {
-                    $deal['bookPriceSell'] = str_replace(".", ",", $deal['bookPriceSell']);
+                    $deal['bookPriceSell'] = str_replace(".", ",", number_format(floatval($deal['bookPriceSell']),2));
                     array_push($finalArray, $deal);
                 }
             }
