@@ -40,7 +40,7 @@ class AuthenticationFailureHandler implements AuthenticationFailureHandlerInterf
 
         if (!strcmp($error, "User account is disabled.")) {
 //            $error .= " Please Check Your Email for the Activation Link.";
-            $error = "La cuenta de usuario está deshabilitada. Revisar el link de activación en tu correo.";
+            $error = "La cuenta de usuario está deshabilitada. Revisar el link de activación en tu correo. Verifique también el correo no deseado o basura si no puede encontrar el correo electrónico.";
         }
 
         if (!strcmp($error, "Bad credentials.")) {
