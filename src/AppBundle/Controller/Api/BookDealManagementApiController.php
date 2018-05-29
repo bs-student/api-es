@@ -784,23 +784,33 @@ class BookDealManagementApiController extends Controller
 
         $bookDeal = $bookDealRepo->findOneById($data['bookDealId']);
         if ($bookDeal->getSeller()->getId() == $userId) {
-            $em->remove($bookDeal);
-            $em->flush();
+            if($bookDeal->getBuyer()!==null){
+                return $this->_createJsonResponse('error', array(
+//                'errorTitle' => "Cannot Delete Book Deal",
+//                'errorDescription' => "This book is sold."
+                    'errorTitle' => "No se puede eliminar el acuerdo del libro",
+                    'errorDescription' => "Este libro se vende"
+                ), 400);
+            }else{
+                $em->remove($bookDeal);
+                $em->flush();
 
-            $logData = array(
-                'user' => $this->get('security.token_storage')->getToken()->getUser()->getId(),
-                'logType' => "Delete Book Deal",
-                'logDateTime' => gmdate('Y-m-d H:i:s'),
-                'logDescription' => $this->get('security.token_storage')->getToken()->getUser()->getUsername() . " has deleted a book deal named " . $bookDeal->getBook()->getBookTitle(),
-                'userIpAddress' => $this->container->get('request')->getClientIp(),
-                'logUserType' => in_array("ROLE_ADMIN_USER", $this->get('security.token_storage')->getToken()->getUser()->getRoles()) ? "Admin User" : "Normal User"
-            );
-            $this->_saveLog($logData);
+                $logData = array(
+                    'user' => $this->get('security.token_storage')->getToken()->getUser()->getId(),
+                    'logType' => "Delete Book Deal",
+                    'logDateTime' => gmdate('Y-m-d H:i:s'),
+                    'logDescription' => $this->get('security.token_storage')->getToken()->getUser()->getUsername() . " has deleted a book deal named " . $bookDeal->getBook()->getBookTitle(),
+                    'userIpAddress' => $this->container->get('request')->getClientIp(),
+                    'logUserType' => in_array("ROLE_ADMIN_USER", $this->get('security.token_storage')->getToken()->getUser()->getRoles()) ? "Admin User" : "Normal User"
+                );
+                $this->_saveLog($logData);
 
-            return $this->_createJsonResponse('success', array(
-//                'successTitle' => "Book Deal is Deleted"
-                'successTitle' => "El acuerdo del libro se elimino"
-            ), 200);
+                return $this->_createJsonResponse('success', array(
+    //                'successTitle' => "Book Deal is Deleted"
+                    'successTitle' => "El acuerdo del libro se elimino"
+                ), 200);
+            }
+
         } else {
             return $this->_createJsonResponse('error', array(
 //                'errorTitle' => "Cannot Delete Book Deal",
