@@ -1175,14 +1175,23 @@ class BookManagementApiController extends Controller
 
         $arrayData = json_decode($jsonOutput, true);
 
-        $lowestPrice = 99999999;
+        $lowestPrice = number_format(floatval(99999999),2);
         if (!strcmp($arrayData['findItemsAdvancedResponse'][0]['ack'][0], "Success")) {
-            foreach ($arrayData['findItemsAdvancedResponse'][0]['searchResult'][0]['item'] as $ebayItem) {
-                if ($ebayItem['sellingStatus'][0]['currentPrice'][0]['__value__'] < $lowestPrice) {
-                    $lowestPrice = $ebayItem['sellingStatus'][0]['currentPrice'][0]['__value__'];
+
+            if(intval($arrayData['findItemsAdvancedResponse'][0]['searchResult'][0]['@count'])>0){
+
+                foreach ($arrayData['findItemsAdvancedResponse'][0]['searchResult'][0]['item'] as $ebayItem) {
+
+                    $totalPrice = (number_format(floatval($ebayItem['sellingStatus'][0]['currentPrice'][0]['__value__']),2)+number_format(floatval($ebayItem['shippingInfo'][0]['shippingServiceCost'][0]['__value__']),2));
+                    if ( $totalPrice< $lowestPrice) {
+                        $lowestPrice = $totalPrice;
+                    }
                 }
+                return $lowestPrice;
+
+            }else{
+                return false;
             }
-            return $lowestPrice;
 
         } else {
             return false;
