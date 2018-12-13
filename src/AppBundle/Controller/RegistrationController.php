@@ -143,7 +143,8 @@ class RegistrationController extends BaseController
 //                        'successTitle' => "Registration Successful",
 //                        'successDescription' => "A verification Email has been sent to your mail. Please check verify your email to confirm registration."
 
-
+                        'successTitleKey' => "REGISTRATION_SUCCESSFUL",
+                        'successDescriptionKey' =>"VERIFICATION_EMAIL_HAS_BEEN_SENT",
                         'successTitle' => "Registro correcto",
                         'successDescription' => "Se ha enviado un correo de confirmación. Por favor comprueba tu email y confirma el registro registración. Verifique también el correo no deseado o basura si no puede encontrar el correo electrónico."
                     );
@@ -224,6 +225,7 @@ class RegistrationController extends BaseController
 
         $user->setConfirmationToken(null);
         $user->setEnabled(true);
+        $user->setEmailVerified("Yes");
         $user->setLastLogin(new \DateTime());
 
         $this->container->get('fos_user.user_manager')->updateUser($user);

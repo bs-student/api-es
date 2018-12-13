@@ -37,21 +37,26 @@ class AuthenticationFailureHandler implements AuthenticationFailureHandlerInterf
     {
 
         $error = $exception->getMessage();
+        $errorDescKey = "";
 
         if (!strcmp($error, "User account is disabled.")) {
 //            $error .= " Please Check Your Email for the Activation Link.";
+            $errorDescKey ="PLEASE_CHECK_EMAIL_ACTIVATION";
             $error = "La cuenta de usuario está deshabilitada. Revisar el link de activación en tu correo. Verifique también el correo no deseado o basura si no puede encontrar el correo electrónico.";
         }
 
         if (!strcmp($error, "Bad credentials.")) {
 //            $error = "The Username or Password you entered is incorrect";
             $error = "Usuario / Email o Contraseña incorrecta";
+            $errorDescKey = "USER_NAME_OR_EMAIL_ENTERED_INCORRECT";
         }
 
         return $this->_createJsonResponse('error', array(
 //            "errorTitle" => "Login Unsuccessful",
             "errorTitle" => "Acceso Incorrecto",
-            "errorDescription" => $error
+            "errorDescription" => $error,
+            "errorTitleKey" => "LOGIN_UNSUCCESSFUL",
+            "errorDescriptionKey"=>$errorDescKey,
         ), 400);
     }
 
