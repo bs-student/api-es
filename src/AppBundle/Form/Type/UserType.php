@@ -16,7 +16,6 @@ class UserType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-
         $builder->add('fullName','text',array(
             'constraints' => array(
                 new NotBlank(),
@@ -85,6 +84,10 @@ class UserType extends AbstractType
 
             )
         ));
+//        $builder->add('enabled','integer',array(
+//            'required'   => false,
+//            'empty_data' => 0,
+//        ));
 
     }
 

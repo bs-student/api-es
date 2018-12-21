@@ -182,6 +182,7 @@ class AdminUserApiController extends Controller
      */
     public function adminUpdateUserDataAction(Request $request)
     {
+
         $user = $this->container->get('security.context')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
         $userRepo = $em->getRepository('AppBundle:User');
@@ -204,9 +205,8 @@ class AdminUserApiController extends Controller
                     ),400);
 
                 } else {
-
+                    $editedUser->setEnabled(true);
                     $userForm = $this->createForm(new UserType(), $editedUser);
-
                     $userForm->remove('fullName');
                     $userForm->remove('email');
                     $userForm->remove('referral');
@@ -214,10 +214,13 @@ class AdminUserApiController extends Controller
                     $userForm->remove('wishLists');
                     $userForm->remove('emailVerified');
                     $userForm->submit(array(
-                        "adminVerified"=>$request_data['adminVerified'],
+                       "adminVerified"=>$request_data['adminVerified'],
                         "adminApproved"=>$request_data['adminApproved'],
                         "username"=>$request_data['username'],
+
+
                     ));
+
                     if($userForm->isValid()){
                         $em->persist($editedUser);
                         $em->flush();
@@ -234,7 +237,7 @@ class AdminUserApiController extends Controller
                         $this->_saveLog($logData);
 
                         return $this->_createJsonResponse('success',array(
-                            'successTitle'=>"User Updated",
+                            'successTitle'=>"User Updatedrtt",
                         ),200);
                     }else{
                         return $this->_createJsonResponse('error',array(
