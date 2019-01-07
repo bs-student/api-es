@@ -464,7 +464,9 @@ class BookManagementApiController extends Controller
 //            'errorDescription' => "Some Files are more than 300 KB"
 
             'errorTitle' => "No se puede vender el libro",
-            'errorDescription' => "Algunos ficheros son más de 300KB"
+            'errorDescription' => "Algunos ficheros son más de 300KB",
+            "errorTitleKey" => "COULD_NOT_ADD_BOOK_ON_SELL_PAGE",
+            "errorDescriptionKey" => "SOME_FILES_ARE_MORE_THAN_300_KB"
         ), 400);
 
 
@@ -591,7 +593,8 @@ class BookManagementApiController extends Controller
 
                 return $this->_createJsonResponse('success', array(
 //                    "successTitle" => "Book has been successfully posted"
-                    "successTitle" => "El libro se ha publicado con éxito"
+                    "successTitle" => "El libro se ha publicado con éxito",
+                    "successTitleKey" => "BOOK_HAS_BEEN_SUCCESSFULLY_POSTED"
                 ), 200);
             } else {
                 return $this->_createJsonResponse('error', array("errorData" => $bookDealForm), 400);
@@ -604,7 +607,9 @@ class BookManagementApiController extends Controller
 //                "errorTitle" => "Could not add book on sell page",
 //                "errorDescription" => "Check the form and submit again"
                 "errorTitle" => "No se puede añadir el libro en la página de venta",
-                "errorDescription" => "Comprueba el formulario y envíalo de nuevo"
+                "errorDescription" => "Comprueba el formulario y envíalo de nuevo",
+                "errorTitleKey" => "COULD_NOT_ADD_BOOK_ON_SELL_PAGE",
+                "errorDescriptionKey" => "CHECK_THE_FORM_AND_SUBMIT_AGAIN"
             ), 400);
         }
 

@@ -56,7 +56,7 @@ class AuthenticationFailureHandler implements AuthenticationFailureHandlerInterf
             "errorTitle" => "Acceso Incorrecto",
             "errorDescription" => $error,
             "errorTitleKey" => "LOGIN_UNSUCCESSFUL",
-            "errorDescriptionKey"=>$errorDescKey,
+            "errorDescriptionKey"=>$errorDescKey
         ), 400);
     }
 

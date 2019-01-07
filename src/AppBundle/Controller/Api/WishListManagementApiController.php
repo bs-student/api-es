@@ -49,12 +49,14 @@ class WishListManagementApiController extends Controller
                 $em->flush();
                 return $this->_createJsonResponse('success', array(
 //                    'successTitle'=>"Wish List Item has been removed"
-                    'successTitle' => "Eliminado de favoritos"
+                    'successTitle' => "Eliminado de favoritos",
+                    'successTitleKey'=>"WISH_LIST_ITEM_HAS_BEEN_REMOVED"
                 ), 200);
             } catch (Exception $e) {
                 return $this->_createJsonResponse('error', array(
 //                    'errorTitle'=>"Wish List Item could not be removed"
-                    'errorTitle' => "No se ha podido eliminar de favoritos"
+                    'errorTitle' => "No se ha podido eliminar de favoritos",
+                    'errorTitleKey'=>"WISH_LIST_ITEM_COULD_NOT_BE_REMOVED"
                 ), 400);
             }
         } else {
@@ -70,13 +72,15 @@ class WishListManagementApiController extends Controller
                 $em->flush();
                 return $this->_createJsonResponse('success', array(
 //                    "successTitle" => "Book Successfully Added to WishList"
-                    "successTitle" => "Libro añadido a favoritos"
+                    "successTitle" => "Libro añadido a favoritos",
+                    "successTitleKey" => "BOOK_SUCCESSFULLY_ADDED_TO_WISHLIST"
                 ), 200);
             } else {
                 return $this->_createJsonResponse('error', array(
 //                    "errorTitle" => "Couldn't Add to Wishlist"
-                    "errorTitle" => "No se ha podido añadir a favoritos"
-                , "errorData" => $wishListForm), 400);
+                    "errorTitle" => "No se ha podido añadir a favoritos",
+                    "errorTitleKey" => "COULD_NOT_ADDED_TO_WISHLIST",
+                    "errorData" => $wishListForm), 400);
             }
         }
 
@@ -161,7 +165,11 @@ class WishListManagementApiController extends Controller
         $data = $wishListRepo->findBy(array('book' => $data['bookId'], 'user' => $user->getId()));
 
         if($data==null){
-            return $this->_createJsonResponse('error',array('errorTitle'=>"Lo siento, no puede borrar","errorDescription"=>"Este libro no está en su lista de deseos"),400);
+            return $this->_createJsonResponse('error',array(
+                'errorTitle'=>"Lo siento, no puede borrar",
+                "errorDescription"=>"Este libro no está en su lista de deseos",
+                'errorTitleKey'=>"SORRY_CAN_NOT_DELETE",
+                "errorDescriptionKey"=>"THIS_BOOK_IS_NT_IN_YOUR_WISHLIST"),400);
         }
 
         $em->remove($data[0]);
@@ -170,12 +178,14 @@ class WishListManagementApiController extends Controller
             $em->flush();
             return $this->_createJsonResponse('success', array(
 //                'successTitle'=>"Wish List Item has been removed"
-                'successTitle' => "Eliminado de favoritos"
+                'successTitle' => "Eliminado de favoritos",
+                'successTitleKey'=>"WISH_LIST_ITEM_HAS_BEEN_REMOVED"
             ), 200);
         } catch (Exception $e) {
             return $this->_createJsonResponse('error', array(
 //                'errorTitle'=>"Wish List Item could not be removed"
-                'errorTitle' => "No se ha podido eliminar de favoritos"
+                'errorTitle' => "No se ha podido eliminar de favoritos",
+                'errorTitleKey'=>"WISH_LIST_ITEM_COULD_NOT_BE_REMOVED"
             ), 400);
         }
 

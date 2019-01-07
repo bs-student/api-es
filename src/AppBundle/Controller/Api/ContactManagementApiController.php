@@ -352,6 +352,7 @@ class ContactManagementApiController extends Controller
                 return $this->_createJsonResponse('success', array(
 //                    'successTitle'=>"Successfully Sent Message",
                     'successTitle' => "El mensaje ha sido enviado correctamente",
+                    'successTitleKey'=>"SUCCESSFULLY_SENT_MESSAGE",
                     'successData' => array(
                         'sender' => $message->getUser()->getUsername(),
                         'messageBody' => $message->getMessageBody(),
@@ -367,6 +368,8 @@ class ContactManagementApiController extends Controller
 //                    'errorDescription' => "Please reload and send valid data again.",
                     'errorTitle' => "No se puede enviar el mensaje",
                     'errorDescription' => "Por favor vuelve a cargar y envía de nuevo el dato valido.",
+                    'errorTitleKey' => "CAN_NOT_SEND_MESSAGE",
+                    'errorDescriptionKey' => "PLEASE_RELOAD_AND_SEND_VALID_DATA_AGAIN",
                     'errorData' => $messageForm
                 ), 400);
             }
@@ -375,7 +378,9 @@ class ContactManagementApiController extends Controller
 //                'errorTitle' => "Wrong data",
 //                'errorDescription' => "Please reload and send valid data again."
                 'errorTitle' => "Dato erróneo",
-                'errorDescription' => "Por favor vuelve a cargar y envía de nuevo el dato valido."
+                'errorDescription' => "Por favor vuelve a cargar y envía de nuevo el dato valido.",
+                'errorTitleKey' => "WRONG_DATA",
+                'errorDescriptionKey' => "PLEASE_RELOAD_AND_SEND_VALID_DATA_AGAIN"
             ), 400);
 
         }

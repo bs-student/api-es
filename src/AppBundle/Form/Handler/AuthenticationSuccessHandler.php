@@ -67,9 +67,12 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
             );
 
             return $this->_createJsonResponse('success', array(
-                'successTitle' => "Login Successful",
+                'successTitle' => "Inicio de sesión correcto",
 //                'successDescription'=>"Please Complete your registration process.",
                 'successDescription' => "Por favor completa el formulario.",
+                'successTitleKey' =>"LOGIN_SUCCESSFUL",
+                'successDescriptionKey' => "PLEASE_COMPLETE_YOUR_REGISTRATION_PROCESS",
+
                 'successData' => $user_data
             ), 200);
 
@@ -80,6 +83,9 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
                 return $this->_createJsonResponse('error',array(
 //                                'errorTitle'=>"Account is Blocked by Admin",
 //                                'errorDescription'=>"Your account is blocked by the admin. Please contact support or try with another Google account.",
+
+                        'errorTitleKey'=>"ACCOUNT_BLOCKED_BY_ADMIN",
+                        'errorDescriptionKey'=>"YOUR_ACCOUNT_IS_BLOCKED_BY_ADMIN",
                         'errorTitle'=>"La cuenta está bloqueada por el administrador",
                         'errorDescription'=>"Tu cuenta ha sido bloqueada por el administrador. Por favor, póngase en contacto con soporte o cree una nueva cuenta."
                     )
@@ -96,6 +102,8 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
                 $this->_saveLog($logData);
 
                 return $this->_createJsonResponse('success', array(
+                    'successTitleKey' => "HEY_WELCOME",
+                    'successDescriptionKey' => "YOU_ARE_LOGGED_IN",
                     'successTitle' => "Hola, bienvenido " . $user->getUsername(),
                     'successDescription' => "Usted ha iniciado sesión",
                     'successData' => array(
@@ -109,6 +117,8 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
             return $this->_createJsonResponse('error', array(
 //                'errorTitle' => "Login Unsuccessful",
 //                'errorDescription' => "Please try to Login again."
+                'errorTitleKey' => "LOGIN_UNSUCCESSFUL",
+                'errorDescriptionKey' => "PLEASE_TRY_TO_LOGIN_AGAIN",
                 'errorTitle' => "Iniciar sesión sin éxito",
                 'errorDescription' => "Intenta iniciar sesión de nuevo."
             ), 400);

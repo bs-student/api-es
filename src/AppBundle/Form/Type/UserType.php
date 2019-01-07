@@ -84,10 +84,6 @@ class UserType extends AbstractType
 
             )
         ));
-//        $builder->add('enabled','integer',array(
-//            'required'   => false,
-//            'empty_data' => 0,
-//        ));
 
     }
 

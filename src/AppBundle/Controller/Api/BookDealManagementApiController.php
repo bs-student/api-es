@@ -687,7 +687,9 @@ class BookDealManagementApiController extends Controller
 //            'errorTitle' => "Cannot Update Book Deal",
 //            'errorDescription' => "Some Files are more than 300 KB"
             'errorTitle' => "No se puede actualizar el acuerdo del libro",
-            'errorDescription' => "Algunos archivos superan los 300KB"
+            'errorDescription' => "Algunos archivos superan los 300KB",
+            'errorTitleKey' => "COULD_NOT_UPDATE_BOOK_DEAL",
+            'errorDescriptionKey' => "SOME_FILES_ARE_MORE_THAN_300_KB"
         ), 400);
 
 
@@ -748,14 +750,23 @@ class BookDealManagementApiController extends Controller
                     return $this->_createJsonResponse('success', array(
 //                    "successTitle" => "Book Deal has been updated into you selling List"
                         "successTitle" => "Oferta de libro actualizada",
-                        "successDescription" => "El acuerdo del libro se actualizo en tu lista de ventas"
+                        "successDescription" => "El acuerdo del libro se actualizo en tu lista de ventas",
+                        "successTitleKey" => "BOOK_DEAL_UPDATED",
+                        "successDescriptionKey" => "THIS_BOOK_DEAL_HAS_BEEN_UPDATED_INTO_YOUR_SELLING_BOOK"
                     ), 200);
                 }catch(\Exception $e){
                     $em->getConnection()->rollBack();
-                    return $this->_createJsonResponse('error', array("errorTitle"=>"No se puede actualizar el acuerdo del libro","errorData" => $bookDealForm), 400);
+                    return $this->_createJsonResponse('error', array(
+                        "errorTitle"=>"No se puede actualizar el acuerdo del libro",
+                        "errorTitleKey" => "COULD_NOT_UPDATE_BOOK_DEAL",
+                        "errorData" => $bookDealForm), 400);
                 }
             } else {
-                return $this->_createJsonResponse('error', array("errorTitle"=>"No se puede actualizar el acuerdo del libro","errorData" => $bookDealForm), 400);
+                return $this->_createJsonResponse('error', array(
+                    "errorTitle"=>"No se puede actualizar el acuerdo del libro",
+                    "errorTitleKey" => "COULD_NOT_UPDATE_BOOK_DEAL",
+                    "errorDescriptionKey" => "PLEASE_CHECK_THE_FORM_TRY_AGAIN",
+                    "errorData" => $bookDealForm), 400);
 
             }
         } else {
@@ -763,7 +774,9 @@ class BookDealManagementApiController extends Controller
 //                'errorTitle' => "Cannot Update Book Deal",
 //                'errorDescription' => "You are not owner of that book deal or the book is already sold"
                 'errorTitle' => "No se puede actualizar el acuerdo del libro",
-                'errorDescription' => "No eres el propietario de este acuerdo del libro o el libro ya se ha vendido"
+                'errorDescription' => "No eres el propietario de este acuerdo del libro o el libro ya se ha vendido",
+                "errorTitleKey" => "COULD_NOT_UPDATE_BOOK_DEAL",
+                "errorDescriptionKey" => "YOU_ARE_NOT_OWNER_OF_THAT_BOOK_DEAL_OR"
             ), 400);
         }
 
@@ -789,7 +802,9 @@ class BookDealManagementApiController extends Controller
 //                'errorTitle' => "Cannot Delete Book Deal",
 //                'errorDescription' => "This book is sold."
                     'errorTitle' => "No se puede eliminar el acuerdo del libro",
-                    'errorDescription' => "Este libro se vende"
+                    'errorDescription' => "Este libro se vende",
+                    'errorTitleKey' => "CAN_NOT_DELETE_BOOK_DEAL",
+                    'errorDescriptionKey' => "THIS_BOOK_IS_SOLD"
                 ), 400);
             }else{
                 $em->remove($bookDeal);
@@ -807,7 +822,8 @@ class BookDealManagementApiController extends Controller
 
                 return $this->_createJsonResponse('success', array(
     //                'successTitle' => "Book Deal is Deleted"
-                    'successTitle' => "El acuerdo del libro se elimino"
+                    'successTitle' => "El acuerdo del libro se elimino",
+                    'successTitleKey' => "BOOK_DEAL_IS_DELETED"
                 ), 200);
             }
 
@@ -816,7 +832,9 @@ class BookDealManagementApiController extends Controller
 //                'errorTitle' => "Cannot Delete Book Deal",
 //                'errorDescription' => "You are not owner of that book deal."
                 'errorTitle' => "No se puede eliminar el acuerdo del libro",
-                'errorDescription' => "No eres el propietario de este acuerdo del libro."
+                'errorDescription' => "No eres el propietario de este acuerdo del libro.",
+                'errorTitleKey' => "CAN_NOT_DELETE_BOOK_DEAL",
+                'errorDescriptionKey' => "YOU_ARE_NOT_OWNER_OF_THAT_BOOK_DEAL"
             ), 400);
         }
     }

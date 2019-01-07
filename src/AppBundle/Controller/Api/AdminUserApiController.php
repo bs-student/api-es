@@ -237,7 +237,7 @@ class AdminUserApiController extends Controller
                         $this->_saveLog($logData);
 
                         return $this->_createJsonResponse('success',array(
-                            'successTitle'=>"User Updatedrtt",
+                            'successTitle'=>"User Updated",
                         ),200);
                     }else{
                         return $this->_createJsonResponse('error',array(
