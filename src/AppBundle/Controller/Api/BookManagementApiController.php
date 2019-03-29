@@ -32,9 +32,9 @@ class BookManagementApiController extends Controller
     {
 
         if ($this->_headerTokenDecode($request->headers->all())) {
+
             $content = $request->getContent();
             $data = json_decode($content, true);
-
             if (array_key_exists('keyword', $data)) {
                 $keyword = $data['keyword'];
             } else {
@@ -52,11 +52,14 @@ class BookManagementApiController extends Controller
             }
 
             if (is_numeric($keyword) && (strlen($keyword) == 10 || strlen($keyword) == 13)) {
+
                 return $this->_getBooksByIsbnAmazon($keyword, $campusId);
             } else {
+
                 return $this->_getBooksByKeywordAmazon($keyword, $page);
             }
         }else{
+
             return $this->_createJsonResponse('error', array('errorTitle' => "Unauthorized Access Denied"), 400);
         }
     }
@@ -66,7 +69,6 @@ class BookManagementApiController extends Controller
      */
     public function searchByKeywordAmazonApiWithApiCallAction(Request $request)
     {
-
         $content = $request->getContent();
         $data = json_decode($content, true);
 
@@ -84,6 +86,7 @@ class BookManagementApiController extends Controller
         if (is_numeric($keyword) && (strlen($keyword) == 10 || strlen($keyword) == 13)) {
             return $this->_getBooksByIsbnAmazon($keyword, $campusId);
         } else {
+
             return $this->_getBooksByKeywordAmazon($keyword, $page);
         }
 
@@ -166,17 +169,21 @@ class BookManagementApiController extends Controller
      */
     public function searchByAsinAmazonApiAction(Request $request)
     {
+
         if ($this->_headerTokenDecode($request->headers->all())) {
             $content = $request->getContent();
             $data = json_decode($content, true);
 
-            if (array_key_exists('asin', $data)) {
+            if (array_key_exists('asin', $data) && is_numeric($data['asin']) && (strlen($data['asin']) == 10 || strlen($data['asin']) == 13)) {
                 $asin = $data['asin'];
+                return $this->_getBooksByAsinAmazon($asin);
             } else {
-                $asin = "";
+                return $this->_createJsonResponse('error', array( 'errorTitle' => "Libro no encontrado",
+                    "errorDescription" => "Por favor facilita un número ISBN real"),400);
             }
 
-            return $this->_getBooksByAsinAmazon($asin);
+
+
         }else{
             return $this->_createJsonResponse('error', array('errorTitle' => "Unauthorized Access Denied"), 400);
         }
@@ -656,37 +663,40 @@ class BookManagementApiController extends Controller
         curl_close($ch);
 
         $booksArray = $this->_parseMultipleBooksAmazonXmlResponse($xmlOutput);
-
-
-        //Search for manually entered book
-        if (count($booksArray['books']) == 0) {
-            $em = $this->getDoctrine()->getManager();
-            $bookRepo = $em->getRepository("AppBundle:Book");
-            $customBooks = $bookRepo->findCustomBook($keyword);
-
-            if (count($customBooks) > 0) {
-                foreach ($customBooks as $book) {
-                    $bookData = array(
-                        'bookAsin' => $book['bookIsbn10'],
-                        'bookTitle' => $book['bookTitle'],
-                        'bookDirectorAuthorArtist' => $book['bookDirectorAuthorArtist'],
-                        'bookPriceAmazon' => "Not Found",
-                        'bookIsbn' => $book['bookIsbn10'],
-                        'bookEan' => array_key_exists('bookIsbn13', $book) ? $book['bookIsbn13'] : "",
-                        'bookEdition' => array_key_exists('bookEdition', $book) ? $book['bookEdition'] : "",
-                        'bookPublisher' => array_key_exists('bookPublisher', $book) ? $book['bookPublisher'] : "",
-                        'bookPublishDate' => $book['bookPublishDate']->format('d-M-Y'),
-                        'bookBinding' => array_key_exists('bookBinding', $book) ? $book['bookBinding'] : "",
-                        'bookDescription' => array_key_exists('bookDescription', $book) ? $book['bookDescription'] : "",
-                        'bookPages' => array_key_exists('bookPages', $book) ? $book['bookPages'] : "",
-                        'bookImages' => array(
-                            array(
-                                'image'=>$_SERVER['REQUEST_SCHEME']."://".$_SERVER['HTTP_HOST'].$_SERVER['BASE'].$book['bookImage'],
-                                'imageId' => 0
+        if (count($booksArray['books']) == 0){
+            //search book by google book api
+            $booksArray =  $this->_getGoogleBooks($keyword,$page,10);
+            //Search for manually entered book
+            if (count($booksArray['books']) == 0) {
+                $em = $this->getDoctrine()->getManager();
+                $bookRepo = $em->getRepository("AppBundle:Book");
+                $totalSearchNumber = $bookRepo->getCustomBookSearchNumber($keyword);
+                $booksArray['totalSearchResults'] = $totalSearchNumber;
+                $customBooks = $bookRepo->findCustomBook($keyword, $page, 10);
+                if (count($customBooks) > 0) {
+                    foreach ($customBooks as $book) {
+                        $bookData = array(
+                            'bookAsin' => $book['bookIsbn10'],
+                            'bookTitle' => $book['bookTitle'],
+                            'bookDirectorAuthorArtist' => $book['bookDirectorAuthorArtist'],
+                            'bookPriceAmazon' => "Not Found",
+                            'bookIsbn' => $book['bookIsbn10'],
+                            'bookEan' => array_key_exists('bookIsbn13', $book) ? $book['bookIsbn13'] : "",
+                            'bookEdition' => array_key_exists('bookEdition', $book) ? $book['bookEdition'] : "",
+                            'bookPublisher' => array_key_exists('bookPublisher', $book) ? $book['bookPublisher'] : "",
+                            'bookPublishDate' => $book['bookPublishDate']->format('d-M-Y'),
+                            'bookBinding' => array_key_exists('bookBinding', $book) ? $book['bookBinding'] : "",
+                            'bookDescription' => array_key_exists('bookDescription', $book) ? $book['bookDescription'] : "",
+                            'bookPages' => array_key_exists('bookPages', $book) ? $book['bookPages'] : "",
+                            'bookImages' => array(
+                                array(
+                                    'image'=>$_SERVER['REQUEST_SCHEME']."://".$_SERVER['HTTP_HOST'].$_SERVER['BASE'].$book['bookImage'],
+                                    'imageId' => 0
+                                )
                             )
-                        )
-                    );
-                    array_push($booksArray['books'], $bookData);
+                        );
+                        array_push($booksArray['books'], $bookData);
+                    }
                 }
             }
         }
@@ -741,6 +751,54 @@ class BookManagementApiController extends Controller
 
 
     }
+    function _getGoogleBooks($keyword, $page, $maxResult){
+        $googleBookApiInfo = $this->getParameter('google_books_api_info');
+        $searchData = (is_numeric($keyword) && (strlen($keyword) == 10 || strlen($keyword) == 13))? 'isbn:'.$keyword : preg_replace('/\s+/','',$keyword);
+        $getUrl = $googleBookApiInfo['host'] . $searchData . '&key=' .$googleBookApiInfo['api_key'] .'&maxResults='. $maxResult . $googleBookApiInfo['uri'].(($page - 1) * 10);
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $getUrl);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+        $xmlOutput  = curl_exec($ch);
+        curl_close($ch);
+        $booksArray = array();
+        $responseBooks = json_decode($xmlOutput,true);
+        $totalSearchResults = isset($responseBooks['totalItems'])?$responseBooks['totalItems']:0;
+        foreach ($responseBooks['items'] as $book){
+            $volumeInfo = $book['volumeInfo'];
+            $ISBN_10_key = array_search('ISBN_10', array_column($volumeInfo['industryIdentifiers'], 'type'));
+            $ISBN_13_key = array_search('ISBN_13', array_column($volumeInfo['industryIdentifiers'], 'type'));
+
+            $bookData = array(
+                'bookAsin'=>array_key_exists('identifier',$volumeInfo['industryIdentifiers'][$ISBN_10_key])?$volumeInfo['industryIdentifiers'][$ISBN_10_key]['identifier']:"",
+                'bookTitle'=>array_key_exists('title',$volumeInfo)?$volumeInfo['title']:"",
+                'bookDirectorAuthorArtist'=>array_key_exists('authors',$volumeInfo)?$volumeInfo['authors'][0]:"",
+                'bookPriceAmazon'=>"Not Found",
+                'bookIsbn'=>array_key_exists('identifier',$volumeInfo['industryIdentifiers'][$ISBN_10_key])?$volumeInfo['industryIdentifiers'][$ISBN_10_key]['identifier']:"",
+                'bookEan'=>array_key_exists('identifier',$volumeInfo['industryIdentifiers'][$ISBN_13_key])?$volumeInfo['industryIdentifiers'][$ISBN_13_key]['identifier']:"",
+                'bookEdition'=>array_key_exists('edition',$volumeInfo)?$volumeInfo['edition']:"",
+                'bookPublisher'=>array_key_exists('publisher',$volumeInfo)?$volumeInfo['publisher']:"",
+                'bookPublishDate'=>array_key_exists('publishedDate',$volumeInfo)?date('d-M-Y',strtotime($volumeInfo['publishedDate'])):"",
+                'bookBinding'=>array_key_exists('bookBinding',$volumeInfo)?$volumeInfo['bookBinding']:"Not Found",
+                'bookDescription'=>array_key_exists('description',$volumeInfo)?$volumeInfo['description']:"",
+                'bookPages'=>array_key_exists('pageCount',$volumeInfo)?$volumeInfo['pageCount']:"",
+                'bookImages'=>array(
+                    array(
+                        'image'=>array_key_exists('imageLinks',$volumeInfo)?$volumeInfo['imageLinks']['thumbnail']:"",
+                        'imageId'=>0
+                    )
+                )
+            );
+            array_push($booksArray,$bookData);
+
+        }
+
+        return array(
+            'books' => $booksArray,
+            'totalSearchResults' => $totalSearchResults
+        );
+
+
+    }
 
     function _getBooksByAsinAmazon($asin)
     {
@@ -759,9 +817,12 @@ class BookManagementApiController extends Controller
         $xmlOutput = curl_exec($ch);
         curl_close($ch);
 
-
         $booksArray = $this->_parseMultipleBooksAmazonXmlResponse($xmlOutput);
-
+        //search through google book api
+        if (count($booksArray['books']) == 0){
+            $page = 1;
+            $maxResult = 1;
+            $booksArray = $this->_getGoogleBooks($asin,$page,$maxResult);
         //Search for manually entered book
         if (count($booksArray['books']) == 0) {
             $em = $this->getDoctrine()->getManager();
@@ -785,7 +846,7 @@ class BookManagementApiController extends Controller
                         'bookPages' => array_key_exists('bookPages', $book) ? $book['bookPages'] : "",
                         'bookImages' => array(
                             array(
-                                'image'=>$_SERVER['REQUEST_SCHEME']."://".$_SERVER['HTTP_HOST'].$_SERVER['BASE'].$book['bookImage'],
+                                'image' => $_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['HTTP_HOST'] . $_SERVER['BASE'] . $book['bookImage'],
                                 'imageId' => 0
                             )
                         )
@@ -794,7 +855,7 @@ class BookManagementApiController extends Controller
                 }
             }
         }
-
+    }
         if (count($booksArray['books']) > 0) {
             //Insert Book INTo DB
             $insertedBookId = $this->_insertBookIntoDatabase($booksArray['books'][0]);
@@ -936,17 +997,25 @@ class BookManagementApiController extends Controller
         $booksArray = $this->_parseMultipleBooksAmazonXmlResponse($xmlOutput);
 
         $newBookArray = array();
-        foreach ($booksArray['books'] as $book) {
-            if (strcmp($book['bookBinding'], "Kindle Edition") && strcmp($book['bookPriceAmazon'], "Not Found")) {
+        if(count($booksArray['books'])>0){
+            foreach ($booksArray['books'] as $book) {
+                if (strcmp($book['bookBinding'], "Kindle Edition") && strcmp($book['bookPriceAmazon'], "Not Found")) {
 
-                //Title Subtitle Formatting
-                if (strpos($book['bookTitle'], ":")) {
-                    $book['bookSubTitle'] = substr($book['bookTitle'], strpos($book['bookTitle'], ":") + 2);
-                    $book['bookTitle'] = substr($book['bookTitle'], 0, strpos($book['bookTitle'], ":"));
+                    //Title Subtitle Formatting
+                    if (strpos($book['bookTitle'], ":")) {
+                        $book['bookSubTitle'] = substr($book['bookTitle'], strpos($book['bookTitle'], ":") + 2);
+                        $book['bookTitle'] = substr($book['bookTitle'], 0, strpos($book['bookTitle'], ":"));
+                    }
+                    array_push($newBookArray, $book);
                 }
-                array_push($newBookArray, $book);
+            }
+        }else{
+            $booksArray = $this->_getGoogleBooks($isbn, 1,1);
+            if (count($booksArray['books']) > 0){
+                $newBookArray = $booksArray['books'];
             }
         }
+
 
 
         //Getting Lowest Price In campus
@@ -1172,6 +1241,7 @@ class BookManagementApiController extends Controller
             "&affiliate.networkId=" . $affiliateNetworkId . "&affiliate.trackingId=" . $affiliateTrackingId . "&geoTargeting=" . $geoTracking;
 
 
+
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
@@ -1388,6 +1458,7 @@ class BookManagementApiController extends Controller
 
     public function _headerTokenDecode($headerData)
     {
+
         $webAppConfig = $this->getParameter('web_app_config');
         $mobileAppConfig = $this->getParameter('mobile_device_config');
         if(!strcmp($headerData['request-source'][0],$webAppConfig['source_type'])){

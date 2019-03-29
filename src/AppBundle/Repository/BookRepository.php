@@ -31,8 +31,23 @@ class BookRepository extends EntityRepository
             ->getResult();
 
     }
+    function getCustomBookSearchNumber($keyword){
+        return $this->getEntityManager()
+            ->createQueryBuilder('b')
+            ->select("count(b)")
+            ->from('AppBundle:Book', 'b')
+            ->andwhere('b.bookTitle LIKE :keyword OR
+                        b.bookIsbn10 LIKE :keyword OR
+                        b.bookIsbn13 LIKE :keyword OR
+                        b.bookDirectorAuthorArtist LIKE :keyword
+                        ')
+            ->setParameter('keyword', '%' . $keyword . '%')
+            ->getQuery()
+            ->getSingleScalarResult();
 
-    function findCustomBook($keyword){
+    }
+
+    function findCustomBook($keyword, $pageNo, $maxResult){
         return $this->getEntityManager()
             ->createQueryBuilder('b')
             ->select('b.bookTitle,
@@ -61,6 +76,8 @@ class BookRepository extends EntityRepository
 
 
             ->setParameter('keyword', "%".$keyword."%")
+            ->setFirstResult(($pageNo -1)* $maxResult)
+            ->setMaxResults($maxResult)
             ->getQuery()
             ->getResult();
     }
