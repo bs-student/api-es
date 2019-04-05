@@ -284,7 +284,7 @@ class BookManagementApiController extends Controller
 
         if (empty($cartUrl))
         {
-            $cartUrl = $amazonApiInfo['apiInfo']['redirect_url'] . $bookOfferId ."/". $amazonApiInfo['params']['AssociateTag'] ;
+            $cartUrl = "https://www.amazon.es/exec/obidos/tg/detail/-/" . $bookOfferId ."/". $amazonApiInfo['params']['AssociateTag'] ;
 
         }
 
@@ -1321,7 +1321,7 @@ class BookManagementApiController extends Controller
         $apiInfo['host'] = $amazonApiInfo['host'];
         $apiInfo['uri'] = $amazonApiInfo['uri'];
         $apiInfo['privateKey'] = $amazonApiInfo['private_key'];
-        $apiInfo['redirect_url'] = $amazonApiInfo['redirect_url'];
+
 
 
         $params = array();
