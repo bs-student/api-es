@@ -779,7 +779,7 @@ class BookManagementApiController extends Controller
                 'bookAsin'=>array_key_exists('identifier',$volumeInfo['industryIdentifiers'][$ISBN_10_key])?$volumeInfo['industryIdentifiers'][$ISBN_10_key]['identifier']:"",
                 'bookTitle'=>array_key_exists('title',$volumeInfo)?$volumeInfo['title']:"",
                 'bookDirectorAuthorArtist'=>array_key_exists('authors',$volumeInfo)?$volumeInfo['authors'][0]:"",
-                'bookPriceAmazon'=>"Not Found",
+                'bookPriceAmazon'=>"",
                 'bookIsbn'=>array_key_exists('identifier',$volumeInfo['industryIdentifiers'][$ISBN_10_key])?$volumeInfo['industryIdentifiers'][$ISBN_10_key]['identifier']:"",
                 'bookEan'=>array_key_exists('identifier',$volumeInfo['industryIdentifiers'][$ISBN_13_key])?$volumeInfo['industryIdentifiers'][$ISBN_13_key]['identifier']:"",
                 'bookEdition'=>array_key_exists('edition',$volumeInfo)?$volumeInfo['edition']:"",
@@ -790,7 +790,7 @@ class BookManagementApiController extends Controller
                 'bookPages'=>array_key_exists('pageCount',$volumeInfo)?$volumeInfo['pageCount']:"",
                 'bookImages'=>array(
                     array(
-                        'image'=>array_key_exists('imageLinks',$volumeInfo)?str_replace("zoom=1","zoom=3",$volumeInfo['imageLinks']['thumbnail']):"",
+                        'image'=>array_key_exists('imageLinks',$volumeInfo)?str_replace(array("http","zoom=1","edge=curl"),array("https","zoom=3", "edge=full"),$volumeInfo['imageLinks']['thumbnail']):"",
                         'imageId'=>0
                     )
                 ),
@@ -1022,6 +1022,41 @@ class BookManagementApiController extends Controller
             }
         }else{
             $booksArray = $this->_getGoogleBooks($isbn, 1,1);
+            //Search for manually entered book
+            if (count($booksArray['books']) == 0) {
+                $em = $this->getDoctrine()->getManager();
+                $bookRepo = $em->getRepository("AppBundle:Book");
+//                $totalSearchNumber = $bookRepo->getCustomBookSearchNumber($isbn);
+//                $booksArray['totalSearchResults'] = $totalSearchNumber;
+                $customBooks = $bookRepo->findCustomBook($isbn, 1, 1);
+                if (count($customBooks) > 0) {
+                    $booksArray['totalSearchResults'] = 1;
+                    foreach ($customBooks as $book) {
+                        $bookData = array(
+                            'bookAsin' => $book['bookIsbn10'],
+                            'bookTitle' => $book['bookTitle'],
+                            'bookDirectorAuthorArtist' => $book['bookDirectorAuthorArtist'],
+                            'bookPriceAmazon' => "Not Found",
+                            'bookIsbn' => $book['bookIsbn10'],
+                            'bookEan' => array_key_exists('bookIsbn13', $book) ? $book['bookIsbn13'] : "",
+                            'bookEdition' => array_key_exists('bookEdition', $book) ? $book['bookEdition'] : "",
+                            'bookPublisher' => array_key_exists('bookPublisher', $book) ? $book['bookPublisher'] : "",
+                            'bookPublishDate' => $book['bookPublishDate']->format('d-M-Y'),
+                            'bookBinding' => array_key_exists('bookBinding', $book) ? $book['bookBinding'] : "",
+                            'bookDescription' => array_key_exists('bookDescription', $book) ? $book['bookDescription'] : "",
+                            'bookPages' => array_key_exists('bookPages', $book) ? $book['bookPages'] : "",
+                            'bookImages' => array(
+                                array(
+                                    'image'=>$_SERVER['REQUEST_SCHEME']."://".$_SERVER['HTTP_HOST'].$_SERVER['BASE'].$book['bookImage'],
+                                    'imageId' => 0
+                                )
+                            )
+                        );
+                        array_push($booksArray['books'], $bookData);
+                    }
+                }
+            }
+
             if (count($booksArray['books']) > 0){
                 $newBookArray = $booksArray['books'];
             }
